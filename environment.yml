@@ -1,0 +1,13 @@
+# We have an environment.yml to manage installation of Jupyter and r-irkernel. Everything else is handled by renv.
+name: toy-demand-model
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyterlab
+  - r-recommended
+  - r-renv
+  - r-irkernel
+  - pip
+  - pip:
+    - radian
