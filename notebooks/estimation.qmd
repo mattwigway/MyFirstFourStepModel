@@ -1,0 +1,43 @@
+---
+title: Model estimation
+---
+
+```{r}
+devtools::load_all()
+# needed to prevent incomes turning into scientific notation in R
+options(scipen=10)
+```
+
+```{r}
+nhts = load_nhts(here::here("data/nhts/"))
+```
+
+## Estimate trip generation models
+
+```{r}
+generation_models = estimate_generation_functions(nhts)
+```
+
+
+## Get marginals
+
+```{r}
+m = get_base_marginals(state="NC", county="Durham", year=2021)
+```
+
+## Get trip counts
+
+```{r}
+counts = get_trip_counts(m$marginals, m$areas, generation_models)
+```
+
+## Plot counts temporal distribution
+
+```{r}
+counts %>%
+    group_by(trip_type, time_period) %>%
+    summarize(n_trips=sum(n_trips)) %>%
+    ungroup() %>%
+    ggplot2::ggplot(ggplot2::aes(x=time_period, y=n_trips, fill=trip_type)) +
+        ggplot2::geom_col(position="dodge")
+```

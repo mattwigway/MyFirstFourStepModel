@@ -1,0 +1,5 @@
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DataFramesMeta = "1313f7d8-7da2-5740-9ea0-a2ca25f37964"
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+IPUMS = "87abf0c3-8417-4f14-b6f9-37ae1cd0a135"

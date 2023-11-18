@@ -22,14 +22,14 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
         year=year,
         survey="acs5"
     ) %>%
-    mutate(
-        marginal = stringr::str_split_i(variable, "_", 1),
-        tenure = stringr::str_split_i(variable, "_", 2),
-        value = pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE),
-    ) %>%
-    group_by(GEOID, marginal, value) %>%
-    summarize(count=sum(estimate), moe=sqrt(sum(moe^2))) %>%
-    rename(geoid="GEOID")
+        mutate(
+            marginal = stringr::str_split_i(variable, "_", 1),
+            tenure = stringr::str_split_i(variable, "_", 2),
+            value = pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE),
+        ) %>%
+        group_by(GEOID, marginal, value) %>%
+        summarize(count=sum(estimate), moe=sqrt(sum(moe^2))) %>%
+        rename(geoid="GEOID")
 
     # we force everything to match total hhs from the vehicles table
     total_hh = vehicles %>%
@@ -119,7 +119,22 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
     ungroup() %>%
     select(-total_hh)
 
-    result = dplyr::bind_rows(hhsize, vehicles, workers, income) %>%
-    arrange(geoid, marginal, value) %>%
-    return()
+
+    # now, get tract areas
+    areas = tigris::tracts(state=state, county=county, year=year) %>%
+        as_tibble() %>%
+        mutate(area_sqmi=ALAND / (1609^2)) %>%
+        rename(geoid="GEOID") %>%
+        select(geoid, area_sqmi)
+
+    marginals = dplyr::bind_rows(hhsize, vehicles, workers, income) %>%
+        group_by(geoid) %>%
+        filter(!all(replace_na(count, 0) == 0)) %>%
+        ungroup() %>%
+        arrange(geoid, marginal, value) 
+    
+    return(list(
+        marginals=marginals,
+        areas=areas
+    ))
 }

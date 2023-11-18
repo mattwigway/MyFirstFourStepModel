@@ -25,9 +25,18 @@ load_nhts <- function (base_path) {
             HHSIZE = col_integer(),
             HHFAMINC = col_integer(),
             HTRESDN = col_integer(),
-            WRKCOUNT = col_integer()
+            WRKCOUNT = col_integer(),
+            WTHHFIN = col_double()
         )) %>%
-        filter(HTRESDN > 0)
+        filter(HTRESDN > 0 & HHFAMINC > 0) %>%
+        mutate(
+            income=case_when(
+                HHFAMINC <= 3 ~ 0,
+                HHFAMINC <= 6 ~ 35000,
+                HHFAMINC <= 7 ~ 75000,
+                .default=100000
+            )
+        )
     ) %>% return()
 }
 

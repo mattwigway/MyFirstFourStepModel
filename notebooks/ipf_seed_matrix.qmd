@@ -1,0 +1,58 @@
+---
+title: IPF seed matrix
+author: Matt Bhagat-Conway
+---
+
+This notebook generates the IPF seed matrix from IPUMS data. Matrix is a bit of a misnomer, it's actually a long file with one row for each combination of traits. This is done in Julia, because R was too slow.
+
+```{julia}
+using DataFrames, DataFramesMeta, IPUMS, CSV
+```
+
+
+```{julia}
+data = read_ipums("data/ipums/usa_00022.xml", "data/ipums/usa_00022.dat", DataFrame)
+```
+
+## Create the seed matrix
+
+```{julia}
+function inccat(inc)
+    if inc < 35000
+        0
+    elseif inc < 75000
+        35000
+    elseif inc < 100000
+        75000
+    else
+        100000
+    end
+end
+
+hh = @chain data begin
+    @subset :VEHICLES .> 0 .&& :HHINCOME .< 9999999
+    groupby(:SERIAL)
+    @combine(:income=inccat(first(:HHINCOME)), :vehicles=min(first(:VEHICLES) == 9 ? 0 : first(:VEHICLES), 3), :hhsize=min(length(:VEHICLES), 4), :workers=min(sum(:EMPSTAT .== 1), 3), :weight=sum(:HHWT))
+end
+
+seed = @chain hh begin
+    groupby([:income, :vehicles, :hhsize, :workers])
+    @combine(:weight=sum(:weight), :n=length(:weight))
+end
+
+# four categories for each, but three hhsize/worker are impossible:
+# 1 person, 2 workers
+# 1 person, 3 workers
+# 2 people, 3 workers
+# multiplied 16 for four incomes and four vehicle ownership levels
+@assert nrow(seed) == 4 * 4 * 4 * 4 - 4 * 4 * 3
+
+# make sure our results are stableish
+@assert minimum(seed.n) > 100
+```
+
+## Write the seed matrix
+
+```{julia}
+CSV.write("R/inst/extdata/seed.csv", seed)
+```
