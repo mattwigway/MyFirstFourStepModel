@@ -1,4 +1,4 @@
-# This contains code to estimate trip generation models. It expects data from the 2017 NHTS to estimate the models,
+# This contains code to estimate trip production models. It expects data from the 2017 NHTS to estimate the models,
 # but you are welcome to filter the data to your region, etc. before estimation.
 
 # home purposes, for the WHYFROM and WHYTO variables
@@ -8,17 +8,15 @@ HOME_PURPOSES = c(1, 2)
 WORK_PURPOSES = c(3, 4)
 
 #' This returns the trip type for each trip in an NHTS trip table. It will classify trips as
-#' HBW_Outbound - Home based work, from home
-#' HBW_Return - Home based work, return home
-#' HBO_Outbound - Home based other, from home
-#' HBO_Return - Home based other, return home
+#' HBW - Home based work
+#' HBO - Home based other
 #' NHB - Non-home-based
 get_trip_type <- function (whyfrom, whyto) {
     case_when(
-        whyfrom %in% HOME_PURPOSES & whyto %in% WORK_PURPOSES ~ "HBW_Outbound",
-        whyfrom %in% WORK_PURPOSES & whyto %in% HOME_PURPOSES ~ "HBW_Return",
-        whyfrom %in% HOME_PURPOSES ~ "HBO_Outbound",
-        whyto %in% HOME_PURPOSES ~ "HBO_Return",
+        whyfrom %in% HOME_PURPOSES & whyto %in% WORK_PURPOSES ~ "HBW",
+        whyfrom %in% WORK_PURPOSES & whyto %in% HOME_PURPOSES ~ "HBW",
+        whyfrom %in% HOME_PURPOSES ~ "HBO",
+        whyto %in% HOME_PURPOSES ~ "HBO",
         # unknown purposes wind up here
         .default = "NHB"
     ) %>%
@@ -41,13 +39,13 @@ get_nhts_trip_counts <- function (trips) {
         return()
 }
 
-#' This estimates 20 trip generation regressions - home based work (from home), home based work (to home),
+#' This estimates 20 trip production regressions - home based work (from home), home based work (to home),
 #' home based other (from home), home based other (to home), and non-home-based, stratified by time of day
 #' (AM peak, PM peak, midday, overnight).
 #' 
 #' Note that everything is ultimately joined to the households table; if you wish to filter households, you
 #' can filter that table and not any of the others.
-estimate_generation_functions <- function (nhts) {
+estimate_production_functions <- function (nhts) {
     # calculate trip counts by purpose and time of day
     hh_trip_counts = get_nhts_trip_counts(nhts$trips)
 
@@ -148,7 +146,7 @@ prepare_regression_data = function (marginals, areas) {
 #' trip regressions. It expects marginals in the format described in the docs for
 #' get_hh_counts, and areas with a geoid and area_sqmi column with the area of each
 #' geographic unit
-get_trip_counts = function (marginals, areas, generation_functions) {
+get_production_counts = function (marginals, areas, generation_functions) {
     hh_counts = prepare_regression_data(marginals, areas)
 
     # now, apply each model

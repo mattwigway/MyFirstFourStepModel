@@ -6,6 +6,8 @@ title: Model estimation
 devtools::load_all()
 # needed to prevent incomes turning into scientific notation in R
 options(scipen=10)
+library(readr)
+library(ggplot2)
 ```
 
 ```{r}
@@ -15,7 +17,7 @@ nhts = load_nhts(here::here("data/nhts/"))
 ## Estimate trip generation models
 
 ```{r}
-generation_models = estimate_generation_functions(nhts)
+production_models = estimate_production_functions(nhts)
 ```
 
 
@@ -28,7 +30,7 @@ m = get_base_marginals(state="NC", county="Durham", year=2021)
 ## Get trip counts
 
 ```{r}
-counts = get_trip_counts(m$marginals, m$areas, generation_models)
+productions = get_production_counts(m$marginals, m$areas, production_models)
 ```
 
 ## Plot counts temporal distribution
@@ -41,3 +43,31 @@ counts %>%
     ggplot2::ggplot(ggplot2::aes(x=time_period, y=n_trips, fill=trip_type)) +
         ggplot2::geom_col(position="dodge")
 ```
+
+## Trip distribution model
+
+```{r}
+lodes = read_csv(here::here("data/lodes/wa_wac_S000_JT00_2019.csv.gz"))
+skims = read_csv(here::here("data/seattle-skims.csv"), col_types=cols(orig_geoid=col_character(), dest_geoid=col_character()))
+trips = read_csv(here::here("data/psrc_trips.csv"), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
+att_models = estimate_attraction_functions(trips, lodes, skims)
+```
+
+## Get trip attractions
+
+```{r}
+nc_lodes = read_csv(here::here("data/lodes/nc_wac_S000_JT00_2021.csv.gz"))
+attractions = get_attraction_counts(att_models, m, nc_lodes)
+```
+
+## Balance
+
+```{r}
+balanced = balance_production_attraction(productions, attractions)
+```
+
+```{r}
+ggplot(balanced$balance_factors, aes(x=balance_factor)) +
+    geom_boxplot()
+```
+
