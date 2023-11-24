@@ -134,3 +134,42 @@ estimate_median_crow_flies_distance = function (nhts) {
         NHB = meddist$NHB[[1]]
     ))
 }
+
+#' Perform the singly-constrained gravity model to get zone-to-zone flows based on balanced
+#' trip tables and estimated betas from above.
+get_flows = function (balanced, marginals, betas) {
+    dmat = get_distance_matrix(marginals)
+    purrr::map(unique(balanced$productions$trip_type), function (tt) {
+        purrr::map(unique(balanced$productions$time_period), function (tp) {
+            # get trip counts for this trip type and time period
+            # for NHB, we use attractions for both trip ends
+            if (tt == "NHB") {
+                prod = filter(balanced$attractions,
+                    trip_type == tt & time_period == tp) %>%
+                    rename(orig_geoid="geoid", orig_ntrips="n_trips")
+            } else {
+                prod = filter(balanced$productions,
+                    trip_type == tt & time_period == tp) %>%
+                    rename(orig_geoid="geoid", orig_ntrips="n_trips")
+            }
+
+            
+            att = filter(balanced$attractions, trip_type == tt & time_period == tp) %>%
+                rename(dest_geoid="geoid", dest_ntrips="n_trips")
+            
+            prod %>%
+                cross_join(att) %>%
+                left_join(dmat, by=c("orig_geoid", "dest_geoid")) %>%
+                group_by(orig_geoid) %>%
+                mutate(
+                    # singly constrained gravity model: https://tfresource.org/topics/Destination_Choice_Theoretical_Foundations.html
+                    n_trips=(orig_ntrips * dest_ntrips * dist_km ^ betas[[tt]]) / sum(dest_ntrips * dist_km ^ betas[[tt]])
+                ) %>%
+                select(orig_geoid, dest_geoid, n_trips) %>%
+                mutate(trip_type=tt, time_period=tp) %>%
+                return()
+         }) %>%
+         list_rbind()
+    }) %>%
+    list_rbind()
+}

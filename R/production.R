@@ -157,7 +157,7 @@ get_production_counts = function (marginals, areas, generation_functions) {
                 trip_type = ttype,
                 time_period = period,
                 # predict trips for one household, multiply by hhs in category
-                n_trips = predict(model, hh_counts) * hh_counts$count
+                n_trips = pmax(predict(model, hh_counts), 0) * hh_counts$count
             )
         }) %>%
         list_rbind() %>%

@@ -120,12 +120,13 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
     select(-total_hh)
 
 
-    # now, get tract areas
+    # now, get tract areas - also contain lat/lons of a representative point in the tract
     areas = tigris::tracts(state=state, county=county, year=year) %>%
         as_tibble() %>%
         mutate(area_sqmi=ALAND / (1609^2)) %>%
-        rename(geoid="GEOID") %>%
-        select(geoid, area_sqmi)
+        rename(geoid="GEOID", lat=INTPTLAT, lon=INTPTLON) %>%
+        mutate(lat=as.numeric(lat), lon=as.numeric(lon)) %>%
+        select(geoid, area_sqmi, lat, lon)
 
     marginals = dplyr::bind_rows(hhsize, vehicles, workers, income) %>%
         group_by(geoid) %>%

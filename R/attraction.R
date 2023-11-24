@@ -99,7 +99,7 @@ get_attraction_counts = function (production_models, marginals, lodes) {
                     geoid=tract_lodes$geoid,
                     trip_type=trip_type,
                     time_period=time_period,
-                    n_trips=predict(model, tract_lodes)
+                    n_trips=pmax(predict(model, tract_lodes), 0)
                 )
             }) %>%
             list_rbind()
