@@ -1,85 +1,136 @@
-#' Aggregate LODES data to tracts
-aggregate_lodes_to_tracts = function (lodes) {
-    lodes %>%
+#' We use a singly-constrained (at origin) gravity model. For simplicity, we use straight-line
+#' (great circle) distance between points.
+#' This function estimates that distance matrix.
+get_distance_matrix = function (marginals) {
+    locs = sf::st_as_sf(marginals$areas, coords=c("lon", "lat"), crs=4269)
+    dists = sf::st_distance(locs, locs) %>% as_tibble()
+    colnames(dists) = marginals$areas$geoid
+    dists$orig_geoid = marginals$areas$geoid
+    dists$orig_area_sqmi = marginals$areas$area_sqmi
+    dists %>%
+        pivot_longer(-c("orig_geoid", "orig_area_sqmi"), names_to="dest_geoid", values_to="dist_m") %>%
         mutate(
-            # 2 state, 3 county, 6 tract = 11
-            tract = stringr::str_sub(w_geocode, 1, 11)
+            dist_km=ifelse(
+                    orig_geoid == dest_geoid,
+                    # within-zone trips have an average distance longer than zero meters, but figuring out what it is
+                    # is tricky. We use a "magic number" of 0.52 * sqrt(area). This is derived from a Monte Carlo simulation
+                    # of the average Euclidean distance between randomly chosen points in a square. There are two factors that
+                    # make this incorrect, but we hope they cancel out:
+                    # 1. Tracts are not square, they are more complex and less compact generally. This makes these
+                    #    estimated distances an underestimate.
+                    # 2. Development is not evenly distributed across a tract, but likely concentrated in certain areas. This
+                    #    makes these estimated distances an overestimate.
+                    0.52 * sqrt(orig_area_sqmi) * MILES_TO_KILOMETERS,
+                    as.numeric(dist_m) / 1000
+                )
         ) %>%
-        group_by(tract) %>%
-        summarize(across(starts_with("C"), sum)) %>%
+        select(-orig_area_sqmi, -dist_m) %>%
         return()
 }
 
-#' This estimates the distribution models on the Seattle data
-#' It expects LODES data already aggregated to tracts
-estimate_seattle_models = function (trips, lodes, skims) {
-    jobs = lodes %>%
-        aggregate_lodes_to_tracts() %>%
-        select(tract, C000) %>% rename(total_jobs="C000")
+#' This calibrates the trip distance beta, using the method described in Merlin (2020)
+#' A new method using medians to calibrate single-parameter spatial interaction models, JTLU.
+#' The basic idea is that we adjust the beta for the decay function until half the distance-weighted
+#' accessibility occurs in the median travel distance.
+#' For NHB, productions and attractions will be the same
+calibrate_trip_distance_beta = function (productions, attractions, median_dist_km, dmat) {
+    # we assume that the betas for each trip type are the same at all time periods
+    origins = productions %>%
+        group_by(geoid) %>%
+        summarize(n_trips=sum(n_trips)) %>%
+        rename(orig_geoid="geoid", orig_ntrips="n_trips")
 
-    counts = trips %>%
-        # remove trips without origin/destination 
-        filter(!is.na(o_tract10) & !is.na(d_tract10)) %>%
-        # retain trips we have skims for, remove out of region trips
-        inner_join(skims, by=c("o_tract10"="orig_geoid", "d_tract10"="dest_geoid")) %>%
-        # categorize trips
-        mutate(
-            # unlike counts, we don't estimate separate inbound and outbound models - we assume impedance is the 
-            # same in both directions
-            trip_type=case_when(
-                origin_purpose_cat == "Home" & dest_purpose_cat %in% c("Work", "Work-related") ~ "HBW",
-                origin_purpose_cat %in% c("Work", "Work-related") & dest_purpose_cat == "Home" ~ "HBW",
-                origin_purpose_cat == "Home" ~ "HBO",
-                dest_purpose_cat == "Home" ~ "HBO",
-                .default="NHB"
-            ),
-            # for NHB trips, home will be the start and nonhome will be the end
-            home_tract10=ifelse(dest_purpose_cat=="Home", d_tract10, o_tract10),
-            nonhome_tract10=ifelse(dest_purpose_cat=="Home", o_tract10, d_tract10)
-        ) %>%
-        group_by(home_tract10, nonhome_tract10, trip_type) %>%
-        summarize(
-            tr_count=sum(trip_weight_2017_2019, na.rm=T),
-            # weighted average of trips in each direction
-            duration_minutes=weighted.mean(duration_minutes, trip_weight_2017_2019)
-        ) %>%
-        pivot_wider(names_from=trip_type, values_from=tr_count) %>%
-        left_join(rename(jobs, home_total_jobs="total_jobs"), by=c("home_tract10"="tract")) %>%
-        left_join(rename(jobs, nonhome_total_jobs="total_jobs"), by=c("nonhome_tract10"="tract"))
+    dests = attractions %>%
+        group_by(geoid) %>%
+        summarize(n_trips=sum(n_trips)) %>%
+        rename(dest_geoid="geoid", dest_ntrips="n_trips")
 
-    # get hh counts
-    hh_counts = tidycensus::get_acs(
-        "tract",
-        state="WA",
-        county=c("King", "Snohomish", "Kitsap", "Pierce"),
-        year=2021,
-        survey="acs5",
-        variables=c("total_hh"="S1901_C01_001"),
-        output="wide"
-    ) %>%
-    select(GEOID, total_hhE)
 
-    counts = counts %>%
-        left_join(rename(hh_counts, home_total_hh="total_hhE"), by=c("home_tract10"="GEOID")) %>%
-        left_join(rename(hh_counts, nonhome_total_hh="total_hhE"), by=c("nonhome_tract10"="GEOID"))
+    access = origins %>%
+        cross_join(dests) %>%
+        # avoid overflow
+        mutate(weighted_attractions=
+            as.double(dest_ntrips) *
+            (as.double(orig_ntrips) / as.double(mean(orig_ntrips)))
+         ) %>%
+        left_join(dmat, by=c("orig_geoid", "dest_geoid"))
 
-    # note that we have a sample of trips, but they have expansion weights, so should be unbiased.
-    # It's not going to be perfect, as many tract-pairs will have no trips at all.
+    stopifnot(all(access$weighted_attractions > 0))
 
-    # expand to have all tract-pairs
-    tract_pairs = hh_counts %>%
-        select("GEOID") %>%
-        rename(home_tract10="GEOID") %>%
-        dplyr::cross_join(select(hh_counts, GEOID)) %>%
-        rename(nonhome_tract10="GEOID") %>%
-        left_join(counts, by=c("home_tract10", "nonhome_tract10")) %>%
-        mutate(across(everything(), \(x) replace_na(x, 0)))
+    opt_res = optim(c(-2.0), function (params) {
+        beta = params[[1]]
+
+        # calculate the objective function - the squared difference between
+        # the access before and the access after the median.
+        # The Merlin paper uses abs(), but we use squared so the derivative is smooth
+        # at the optimum
+        decayed_attractions = access$weighted_attractions * access$dist_km ^ beta
+        decayed_below = sum(decayed_attractions[access$dist_km < median_dist_km])
+        decayed_above = sum(decayed_attractions[access$dist_km >= median_dist_km])
+        return((decayed_below - decayed_above) ^ 2)
+        # Per Merlin's paper, the function should be globally con(cave or vex, I forget)
+        # so the constraints shouldn't matter, TODO that's not what I observe. I suspect
+        # it has to do with underflow when parameters get significantly negative. So constrain here.
+    }, method="Brent", lower=-3, upper=5)
+
+    stopifnot(opt_res$convergence == 0)
+
+    stopifnot(opt_res$value < 1e-3)
+    beta = opt_res$par[[1]]
+    stopifnot(beta < 0)
+
+    # make sure it's not a corner solution
+    stopifnot(beta > -3)
+    
+    return(beta)
+}
+
+#' Calibrate betas for all trip types
+#' median_distances should be a list with element HBW, HBO, and NHB with median crow-flies
+#' trip distances in each.
+calibrate_trip_distance_betas = function (balanced, marginals, median_distances_m) {
+    dmat = get_distance_matrix(marginals)
+    return(list(
+        HBW=calibrate_trip_distance_beta(
+            filter(balanced$productions, trip_type=="HBW"),
+            filter(balanced$attractions, trip_type=="HBW"),
+            median_distances_m$HBW,
+            dmat
+        ),
+
+        HBO=calibrate_trip_distance_beta(
+            filter(balanced$productions, trip_type=="HBO"),
+            filter(balanced$attractions, trip_type=="HBO"),
+            median_distances_m$HBO,
+            dmat
+        ),
+
+        # NHB is a little different. The NHB productions are linked to the home location, so we
+        # use the attractions for both ends of the trip.
+        NHB=calibrate_trip_distance_beta(
+            filter(balanced$attractions, trip_type=="NHB"),
+            filter(balanced$attractions, trip_type=="NHB"),
+            median_distances_m$NHB,
+            dmat
+        )
+    ))
+}
+
+#' Estimates the median crow-flies distance from the NHTS in kilometers, by dividing the horse-flies distance
+#' by the square root of two. The theoretical basis for this is that this is the worst-case ratio
+#' between the Euclidean and Manhattan distance. This would seem like too aggressive of a correction,
+#' but not every location has a grid. I determine this factor empirically from a dataset of network distances
+#' (I don't recall the details) when I was in undergrad (or possibly high school).
+estimate_median_crow_flies_distance = function (nhts) {
+    meddist = nhts$trips %>%
+        mutate(trip_type=get_trip_type(WHYFROM, WHYTO)) %>%
+        group_by(trip_type) %>%
+        summarize(dist_m=Hmisc::wtd.quantile(TRPMILES, WTTRDFIN, probs=c(0.5)) * MILES_TO_KILOMETERS / sqrt(2)) %>%
+        pivot_wider(names_from=trip_type, values_from=dist_m)
 
     return(list(
-        # home-based work and home-based other: hh counts at the home end and job counts at the nonhome end
-        HBW=lm(log(HBW + 1) ~ log(home_total_hh + 1) + log(nonhome_total_jobs + 1) + log(pmax(duration_minutes, 1)), tract_pairs),
-        HBO=lm(log(HBO + 1) ~ log(home_total_hh + 1) + log(nonhome_total_jobs + 1) + log(pmax(duration_minutes, 1)), tract_pairs),
-        # non-home-based: total jobs at each end. home_ and nonhome_ are misnomers, just refer to orig and dest
-        NHB=lm(log(NHB + 1) ~ log(home_total_jobs + 1) + log(nonhome_total_jobs + 1) + log(pmax(duration_minutes, 1)), tract_pairs)
+        HBW = meddist$HBW[[1]],
+        HBO = meddist$HBO[[1]],
+        NHB = meddist$NHB[[1]]
     ))
 }
