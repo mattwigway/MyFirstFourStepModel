@@ -165,7 +165,7 @@ get_flows = function (balanced, marginals, betas) {
                     # singly constrained gravity model: https://tfresource.org/topics/Destination_Choice_Theoretical_Foundations.html
                     n_trips=(orig_ntrips * dest_ntrips * dist_km ^ betas[[tt]]) / sum(dest_ntrips * dist_km ^ betas[[tt]])
                 ) %>%
-                select(orig_geoid, dest_geoid, n_trips) %>%
+                select(orig_geoid, dest_geoid, n_trips, dist_km) %>%
                 mutate(trip_type=tt, time_period=tp) %>%
                 return()
          }) %>%

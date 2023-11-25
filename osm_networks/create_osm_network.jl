@@ -58,6 +58,8 @@ function main(raw_args)
 
     G = build_graph(args["pbf"], highway_tags)
 
+    remove_islands!(G)
+
     graph_to_gis(args["out"] * ".gpkg", G)
     graph_to_graphml(args["out"] * ".graphml", G, pretty=args["pretty"])
 end
@@ -183,7 +185,8 @@ function get_lanes_per_direction(tags)
         end
     end
 
-    return lanes_per_direction
+    # every road has at least one lane
+    return max(lanes_per_direction, 1)
 end
 
 node_loc(node) = NodeData((node.lat, node.lon))
@@ -203,7 +206,7 @@ function create_edges!(G, tags, waynodes, wayid, nodes, intersection_nodes, next
         push!(edge_nodes, node)
 
         # if it's an intersection node and not at the start, or if it's at the end, create the edge
-        if (length(edge_nodes) > 1 && node ∈ intersection_nodes) || node_seq == length(waynodes)
+        if length(edge_nodes) > 1 && (node ∈ intersection_nodes || node_seq == length(waynodes))
             # calculate length
             length_m = 0.0
             prev, rest = Iterators.peel(edge_nodes)
@@ -243,6 +246,28 @@ function create_edges!(G, tags, waynodes, wayid, nodes, intersection_nodes, next
     return next_id
 end
 
+function remove_islands!(G)
+    components = strongly_connected_components(G)
+    sort!(components, by=length, rev=true)
+    @info "Largest component has size $(length(first(components))). Removing $(length(components) - 1) components with $(length(components[[2]])) or fewer vertices"
+
+    vs_to_remove = Int64[]
+
+    for component in components[begin + 1:end]
+        for v in component
+            push!(vs_to_remove, v)
+        end
+    end
+
+    # remove back to front to avoid changing indices affecting removal
+    sort!(vs_to_remove, rev=true)
+
+    @info "Removing $(length(vs_to_remove)) vertices"
+    for v in vs_to_remove
+        rem_vertex!(G, v)
+    end
+end
+
 function graph_to_gis(out, G)
     gdf = DataFrame(map(x->G[x[1], x[2]], edge_labels(G)))
     GeoDataFrames.write(out, gdf)
@@ -262,7 +287,7 @@ function graph_to_graphml(out, G; pretty=false)
     lanes["id"] = "lanes_per_direction"
     lanes["for"] = "edge"
     lanes["attr.name"] = "lanes_per_direction"
-    lanes["attr.type"] = "integer"
+    lanes["attr.type"] = "int"
     link!(root, lanes)
 
     length_m = ElementNode("key")
