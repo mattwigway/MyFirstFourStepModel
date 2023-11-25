@@ -125,9 +125,8 @@ get_hh_counts = function (marginals) {
         return()
 }
 
-prepare_regression_data = function (marginals, areas) {
-    # figure out densities based on marginals
-    densities = marginals %>%
+get_densities = function (marginals, areas) {
+    marginals %>%
         filter(marginal == "vehicles") %>%
         group_by(geoid) %>%
         summarize(total_hh=sum(count)) %>%
@@ -135,7 +134,13 @@ prepare_regression_data = function (marginals, areas) {
         left_join(areas, by="geoid") %>%
         # NB this is assuming 100% occupancy, because we have households not housing units
         mutate(HTRESDN=total_hh / area_sqmi) %>%
-        select(geoid, HTRESDN)
+        select(geoid, HTRESDN) %>%
+        return()
+}
+
+prepare_regression_data = function (marginals, areas) {
+    # figure out densities based on marginals
+    densities = get_densities(marginals, areas)
 
     get_hh_counts(marginals) %>%
         left_join(densities, by="geoid") %>%

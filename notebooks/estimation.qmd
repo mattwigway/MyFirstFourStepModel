@@ -12,6 +12,7 @@ library(ggplot2)
 
 ```{r}
 nhts = load_nhts(here::here("data/nhts/"))
+nhts$households = filter(nhts$households, HHSTATE == "NC")
 ```
 
 ## Estimate trip generation models
@@ -33,18 +34,7 @@ m = get_base_marginals(state="NC", county="Durham", year=2021)
 productions = get_production_counts(m$marginals, m$areas, production_models)
 ```
 
-## Plot counts temporal distribution
-
-```{r}
-counts %>%
-    group_by(trip_type, time_period) %>%
-    summarize(n_trips=sum(n_trips)) %>%
-    ungroup() %>%
-    ggplot2::ggplot(ggplot2::aes(x=time_period, y=n_trips, fill=trip_type)) +
-        ggplot2::geom_col(position="dodge")
-```
-
-## Trip distribution model
+## Attractions
 
 ```{r}
 lodes = read_csv(here::here("data/lodes/wa_wac_S000_JT00_2019.csv.gz"))
@@ -69,5 +59,28 @@ balanced = balance_production_attraction(productions, attractions)
 ```{r}
 ggplot(balanced$balance_factors, aes(x=balance_factor)) +
     geom_boxplot()
+```
+
+## Trip distribution model
+
+```{r}
+median_distances = estimate_median_crow_flies_distance(nhts)
+betas = calibrate_trip_distance_betas(balanced, m, median_distances)
+```
+
+```{r}
+odmat = get_flows(balanced, m, betas)
+```
+
+## Mode choice
+
+```{r}
+mode_choice_model = estimate_mode_choice_model(nhts)
+summary(mode_choice_model$HB)
+summary(mode_choice_model$NHB)
+```
+
+```{r}
+flows = flow_by_mode(odmat, m, mode_choice_model)
 ```
 
