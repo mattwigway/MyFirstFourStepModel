@@ -187,6 +187,7 @@ map_flows = function (flows, network, geo) {
             ggplot2::scale_color_fermenter(palette="RdBu")
 }
 
+#' @export
 map_congestion = function (flows, model) {
     ff_tt = get_freeflow_weights(model$network)
     con_tt = get_congested_tt(model$network, flows)

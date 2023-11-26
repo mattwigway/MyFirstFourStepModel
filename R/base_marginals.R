@@ -11,6 +11,7 @@ aggregate_lodes_to_tracts = function (lodes) {
 }
 
 #' This gets baseline marginals for a region, from the 5-year ACS
+#' @export
 get_base_marginals = function (state, county=NULL, year=NULL) {
     vehicles = tidycensus::get_acs(
         geography="tract",
@@ -171,6 +172,7 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
 }
 
 #' Save a land use scenario in Excel format
+#' @export
 save_landuse_scenario = function (marginals, filename) {
     write_xlsx(list(
         Residences=marginals$marginals,
@@ -180,6 +182,7 @@ save_landuse_scenario = function (marginals, filename) {
 }
 
 #' Load a land use scenario in Excel format
+#' @export
 load_landuse_scenario = function (filename) {
     return(list(
         marginals=read_excel(filename, sheet="Residences"),

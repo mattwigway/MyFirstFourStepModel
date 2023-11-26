@@ -21,6 +21,7 @@
 
 
 #' Estimate a four step model for later use
+#' @export
 estimate = function (nhts, seed_matrix, psrc, psrc_lodes, base_marginals, network, network_geo) {
     production_functions = estimate_production_functions(nhts)
     attraction_functions = estimate_attraction_functions(psrc, psrc_lodes)
@@ -49,11 +50,13 @@ estimate = function (nhts, seed_matrix, psrc, psrc_lodes, base_marginals, networ
 }
 
 #' Save a model as an RData file
+#' @export
 save_model = function (model, filename) {
     saveRDS(model, filename)
 }
 
 #' Load a model from an RData file
+#' @export
 load_model = function (filename) {
     return(readRDS(filename))
 }
@@ -63,6 +66,7 @@ load_model = function (filename) {
 #' Trip production is based on the marginal distributions for vehicles, workers, household size, and 
 #' income. Trip attraction is based on job counts. Attractions are balanced to match productions before
 #' being returned.
+#' @export
 trip_generation = function (model, marginals) {
     productions = get_production_counts(marginals, model$production_functions, model$seed_matrix)
     attractions = get_attraction_counts(marginals, model$attraction_functions)
@@ -74,12 +78,14 @@ trip_generation = function (model, marginals) {
 #' Trip distribution is based on the relative locations of the tracts (in `marginals`),
 #' the betas estimated during the estimation phase of the model, and the total trip productions
 #' and attractions.
+#' @export
 trip_distribution = function (model, marginals, balanced) {
     return(get_flows(balanced, marginals, model$distribution_betas))
 }
 
 #' This runs the mode choice step of the model, and returns flows differentiated
 #' by mode for each trip type and time of day.
+#' @export
 mode_choice = function (model, marginals, flows) {
     return(flow_by_mode(flows, marginals, model$mode_choice_models))
 }
@@ -89,6 +95,7 @@ mode_choice = function (model, marginals, flows) {
 #' Network assignment is based on a Frank-Wolfe static traffic assignment algorithm.
 #' This returns a list of link-level flows.
 #' Period can be "AM Peak", "Midday", "PM Peak", "Overnight".
+#' @export 
 network_assignment = function (model, marginals, mode_flows, period) {
     hourly_flows = mode_flows %>%
         filter(time_period == period) %>%

@@ -1,4 +1,5 @@
 #' Load 2017 NHTS data, handling types appropriately
+#' @export
 load_nhts <- function (base_path) {
     list(
         trips = read_csv(file.path(base_path, "trippub.csv"), col_types=cols_only(
