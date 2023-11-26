@@ -1,18 +1,16 @@
-#' Aggregate LODES data to tracts
-aggregate_lodes_to_tracts = function (lodes) {
-    lodes %>%
-        mutate(
-            # 2 state, 3 county, 6 tract = 11
-            tract = stringr::str_sub(w_geocode, 1, 11)
-        ) %>%
-        group_by(tract) %>%
-        summarize(across(starts_with("C"), sum)) %>%
-        return()
+#' Is a tract ID in the PSRC region?
+is_psrc_tract = function (tract_id) {
+    return(
+        stringr::str_starts(tract_id, "53033") | # King
+        stringr::str_starts(tract_id, "53035") | # Kitsap
+        stringr::str_starts(tract_id, "53053") | # Pierce
+        stringr::str_starts(tract_id, "53061") # Snohomish
+    )
 }
 
 #' This estimates the distribution models on the Seattle data
 #' It expects LODES data already aggregated to tracts
-estimate_attraction_functions = function (trips, lodes, skims) {
+estimate_attraction_functions = function (trips, lodes) {
     jobs = lodes %>%
         aggregate_lodes_to_tracts()
 
@@ -20,7 +18,7 @@ estimate_attraction_functions = function (trips, lodes, skims) {
         # remove trips without origin/destination 
         filter(!is.na(o_tract10) & !is.na(d_tract10)) %>%
         # retain trips we have skims for, remove out of region trips
-        inner_join(skims, by=c("o_tract10"="orig_geoid", "d_tract10"="dest_geoid")) %>%
+        filter(is_psrc_tract(o_tract10) & is_psrc_tract(d_tract10)) %>%
         # categorize trips
         mutate(
             trip_type=case_when(
@@ -50,7 +48,7 @@ estimate_attraction_functions = function (trips, lodes, skims) {
         group_by(attract_tract10, time_period, trip_type) %>%
         summarize(tr_count=sum(trip_weight_2017_2019)) %>%
         pivot_wider(names_from="trip_type", values_from="tr_count") %>%
-        left_join(jobs, by=c("attract_tract10"="tract")) %>%
+        left_join(jobs, by=c("attract_tract10"="geoid")) %>%
         mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
 
     # TODO are there tracts with no trips in the survey?
@@ -60,11 +58,11 @@ estimate_attraction_functions = function (trips, lodes, skims) {
     # distribution model
     nhb_counts = trips %>%
         filter(trip_type == "NHB") %>%
-        pivot_longer(c("prod_tract10", "attract_tract10"), values_to="tract") %>%
-        group_by(tract, time_period) %>%
+        pivot_longer(c("prod_tract10", "attract_tract10"), values_to="geoid") %>%
+        group_by(geoid, time_period) %>%
         # / 2 to get an average of origins and destinations
         summarize(tr_count=sum(trip_weight_2017_2019) / 2) %>%
-        left_join(jobs, by="tract") %>%
+        left_join(jobs, by="geoid") %>%
         mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
 
     result = list()
@@ -85,15 +83,15 @@ estimate_attraction_functions = function (trips, lodes, skims) {
 #' This generates attraction estimates from LODES data
 #' Marginals are only used to get the list of tracts, since
 #' LODES does not contain all tracts
-get_attraction_counts = function (production_models, marginals, lodes) {
+get_attraction_counts = function (marginals, attraction_functions) {
     tract_lodes = marginals$marginals %>%
         group_by(geoid) %>%
         summarize() %>% # make geoid unique (many marginals per tract)
-        left_join(aggregate_lodes_to_tracts(lodes), by=c("geoid"="tract")) %>%
+        left_join(marginals$jobs, by="geoid") %>%
         mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
 
     # apply each production model
-    purrr::imap(production_models, function (models, time_period) {
+    purrr::imap(attraction_functions, function (models, time_period) {
         purrr::imap(models, function (model, trip_type) {
                 tibble(
                     geoid=tract_lodes$geoid,
@@ -107,7 +105,6 @@ get_attraction_counts = function (production_models, marginals, lodes) {
     list_rbind() %>%
     return()
 }
-
 
 #' This adjusts the total attraction numbers to match total production. It returns a list
 #' with members attractions containing the balanced attractions, production containing the
@@ -125,7 +122,7 @@ balance_production_attraction = function (production, attraction) {
         left_join(total_attracted, by=c("trip_type", "time_period")) %>%
         mutate(balance_factor = n_produced / n_attracted)
 
-    balanced_attractions = attractions %>%
+    balanced_attractions = attraction %>%
         left_join(select(balance_factors, trip_type, time_period, balance_factor), by=c("trip_type", "time_period")) %>%
         mutate(n_trips = n_trips * balance_factor) %>%
         select(-c("balance_factor"))

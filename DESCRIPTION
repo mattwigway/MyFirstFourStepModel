@@ -12,6 +12,7 @@ RoxygenNote: 7.2.3
 Imports: 
     dfidx,
     dplyr,
+    ggplot2,
     Hmisc,
     igraph,
     ipfr,
@@ -20,9 +21,11 @@ Imports:
     nnet,
     purrr,
     readr,
+    readxl,
     sf,
     stringr,
     tibble,
     tidycensus,
     tidyr,
-    tidyselect
+    tidyselect,
+    writexl

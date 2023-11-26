@@ -1,3 +1,15 @@
+#' Aggregate LODES data to tracts
+aggregate_lodes_to_tracts = function (lodes) {
+    lodes %>%
+        mutate(
+            # 2 state, 3 county, 6 tract = 11
+            geoid = stringr::str_sub(w_geocode, 1, 11)
+        ) %>%
+        group_by(geoid) %>%
+        summarize(across(starts_with("C"), sum)) %>%
+        return()
+}
+
 #' This gets baseline marginals for a region, from the 5-year ACS
 get_base_marginals = function (state, county=NULL, year=NULL) {
     vehicles = tidycensus::get_acs(
@@ -133,9 +145,45 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
         filter(!all(replace_na(count, 0) == 0)) %>%
         ungroup() %>%
         arrange(geoid, marginal, value) 
+
+    # get LODES data
+    # use LODES8 for 2020 tracts, LODES7 otherwise
+    lodes_version = ifelse(year >= 2020, "8", "7")
+    lodes_url = paste0("https://lehd.ces.census.gov/data/lodes/LODES", lodes_version, "/", str_to_lower(state),
+        "/wac/", str_to_lower(state), "_wac_S000_JT00_", year, ".csv.gz")
+
+    lodes = read_csv(lodes_url) %>%
+        aggregate_lodes_to_tracts() %>%
+        select(geoid, C000, CNS07, CNS15, CNS18)
+
+    # make jobs and marginals data match
+    jobs = marginals %>%
+        group_by(geoid) %>%
+        summarize() %>%
+        left_join(lodes) %>%
+        mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
     
     return(list(
         marginals=marginals,
-        areas=areas
+        areas=areas,
+        jobs=jobs
+    ))
+}
+
+#' Save a land use scenario in Excel format
+save_landuse_scenario = function (marginals, filename) {
+    write_xlsx(list(
+        Residences=marginals$marginals,
+        Jobs=marginals$jobs,
+        `Tract Areas`=marginals$areas
+    ), filename)
+}
+
+#' Load a land use scenario in Excel format
+load_landuse_scenario = function (filename) {
+    return(list(
+        marginals=read_excel(filename, sheet="Residences"),
+        jobs=read_excel(filename, sheet="Jobs"),
+        areas=read_excel(filename, sheet="Tract Areas")
     ))
 }

@@ -72,17 +72,13 @@ estimate_production_functions <- function (nhts) {
     return(result)
 }
 
-#' This generates a seed matrix for IPF of the variables in the regression.
-#' This seed matrix is used to disaggregate ACS marginals to household numbers so we can
-#' apply the regression. The software ships with a precalculated seed matrix based on the
-#' 2017-2021 PUMS five-year sample (see ipf_seed_matrix.qmd for calculations). This used the full 
-#' US, to ensure coverage in every category. This doesn't imply that every tract looks like the full
-#' US, only that the relationships between the marginals are constant across the US.
-get_seed_matrix = function () {
-    #return(read_csv(system.file("extdata/seed.csv", package="bf4sm")))
-    # FIXME path hardwirder
-    return(read_csv("R/inst/extdata/seed.csv"))
-}
+# This generates a seed matrix for IPF of the variables in the regression.
+# This seed matrix is used to disaggregate ACS marginals to household numbers so we can
+# apply the regression. The software ships with a precalculated seed matrix based on the
+# 2017-2021 PUMS five-year sample (see ipf_seed_matrix.qmd for calculations). This used the full 
+# US, to ensure coverage in every category. This doesn't imply that every tract looks like the full
+# US, only that the relationships between the marginals are constant across the US.
+
 
 #' This generates the number of households in each category for a specific geographic area (e.g. tract).
 get_hh_counts_for_tract = function(grp, id, seed) {
@@ -116,33 +112,31 @@ get_hh_counts_for_tract = function(grp, id, seed) {
 #' where geoid is a tract ID, marginal is the name of one of the marginals (above),
 #' value is the value for that marginal (e.g. vehicles = 2 for two-vehicle households),
 #' and count is the expected count in that category
-get_hh_counts = function (marginals) {
-    seed = get_seed_matrix()
-
-    marginals %>%
+get_hh_counts = function (marginals, seed) {
+    marginals$marginals %>%
         group_by(geoid) %>%
         group_modify(\(g, k) get_hh_counts_for_tract(g, k, seed)) %>%
         return()
 }
 
-get_densities = function (marginals, areas) {
-    marginals %>%
+get_densities = function (marginals) {
+    marginals$marginals %>%
         filter(marginal == "vehicles") %>%
         group_by(geoid) %>%
         summarize(total_hh=sum(count)) %>%
         ungroup() %>%
-        left_join(areas, by="geoid") %>%
+        left_join(marginals$areas, by="geoid") %>%
         # NB this is assuming 100% occupancy, because we have households not housing units
         mutate(HTRESDN=total_hh / area_sqmi) %>%
         select(geoid, HTRESDN) %>%
         return()
 }
 
-prepare_regression_data = function (marginals, areas) {
+prepare_regression_data = function (marginals, seed) {
     # figure out densities based on marginals
-    densities = get_densities(marginals, areas)
+    densities = get_densities(marginals)
 
-    get_hh_counts(marginals) %>%
+    get_hh_counts(marginals, seed) %>%
         left_join(densities, by="geoid") %>%
         return()
 }
@@ -151,11 +145,11 @@ prepare_regression_data = function (marginals, areas) {
 #' trip regressions. It expects marginals in the format described in the docs for
 #' get_hh_counts, and areas with a geoid and area_sqmi column with the area of each
 #' geographic unit
-get_production_counts = function (marginals, areas, generation_functions) {
-    hh_counts = prepare_regression_data(marginals, areas)
+get_production_counts = function (marginals, generation_functions, seed) {
+    hh_counts = prepare_regression_data(marginals, seed)
 
     # now, apply each model
-    result = purrr::imap(generation_functions, function (models, period) {
+    purrr::imap(generation_functions, function (models, period) {
         purrr::imap(models, function (model, ttype) {
             tibble(
                 geoid = hh_counts$geoid,
@@ -163,7 +157,8 @@ get_production_counts = function (marginals, areas, generation_functions) {
                 time_period = period,
                 # predict trips for one household, multiply by hhs in category
                 n_trips = pmax(predict(model, hh_counts), 0) * hh_counts$count
-            )
+            ) %>%
+            return()
         }) %>%
         list_rbind() %>%
         return()

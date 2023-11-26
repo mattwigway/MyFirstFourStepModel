@@ -60,7 +60,7 @@ estimate_mode_choice_model = function (nhts) {
 #' Estimate numbers of trips by purpose and mode
 flow_by_mode = function (odmat, marginals, mode_choice_models) {
     # density at the home end of home-based trips
-    densities = get_densities(marginals$marginals, marginals$areas)
+    densities = get_densities(marginals)
 
     hb_data = filter(odmat, trip_type != "NHB") %>%
         left_join(densities, by=c("orig_geoid"="geoid"))
