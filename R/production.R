@@ -82,21 +82,22 @@ estimate_production_functions <- function (nhts) {
 
 #' This generates the number of households in each category for a specific geographic area (e.g. tract).
 get_hh_counts_for_tract = function(grp, id, seed) {
-    # convert group to marginals, in ipfr format (named list with )
-    marginals = grp %>%
-        select(marginal, value, count) %>%
-        # use split to get a named list: https://github.com/tidyverse/dplyr/issues/4223
-        split(.$marginal) %>%
-        lapply(\(g) pivot_wider(g, names_from=value, values_from=count) %>% select(-marginal))
+    # marginals = grp %>%
+    #     select(marginal, value, count) %>%
+    #     # use split to get a named list: https://github.com/tidyverse/dplyr/issues/4223
+    #     split(.$marginal) %>%
+    #     lapply(\(g) pivot_wider(g, names_from=value, values_from=count) %>% select(-marginal))
 
-    if (any(is.na(marginals$vehicles))) stop(paste("At TAZ", id, "some vehicle marginals are NA"))
-    if (any(is.na(marginals$income))) stop(paste("At TAZ", id, "some income marginals are NA"))
-    if (any(is.na(marginals$hhsize))) stop(paste("At TAZ", id, "some hhsize marginals are NA"))
-    if (any(is.na(marginals$workers))) stop(paste("At TAZ", id, "some workers marginals are NA"))
+    # if (any(is.na(marginals$vehicles))) stop(paste("At TAZ", id, "some vehicle marginals are NA"))
+    # if (any(is.na(marginals$income))) stop(paste("At TAZ", id, "some income marginals are NA"))
+    # if (any(is.na(marginals$hhsize))) stop(paste("At TAZ", id, "some hhsize marginals are NA"))
+    # if (any(is.na(marginals$workers))) stop(paste("At TAZ", id, "some workers marginals are NA"))
 
     # running IPF on every tract is pretty slow, but this is a demo
-    result = ipfr::ipu(seed, marginals)
-    return(select(result$weight_tbl, -c("avg_weight", "weight_factor")) %>% rename(count="weight"))
+    result = ipf(seed, grp)
+    result %>%
+        rename(count="weight") %>%
+        return()
 }
 
 #' This generates the number of households in each category in a geographic area
