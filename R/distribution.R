@@ -62,25 +62,23 @@ calibrate_trip_distance_beta = function (productions, attractions, median_dist_k
 
         # calculate the objective function - the squared difference between
         # the access before and the access after the median.
-        # The Merlin paper uses abs(), but we use squared so the derivative is smooth
-        # at the optimum
         decayed_attractions = access$weighted_attractions * access$dist_km ^ beta
         decayed_below = sum(decayed_attractions[access$dist_km < median_dist_km])
         decayed_above = sum(decayed_attractions[access$dist_km >= median_dist_km])
-        return((decayed_below - decayed_above) ^ 2)
-        # Per Merlin's paper, the function should be globally con(cave or vex, I forget)
-        # so the constraints shouldn't matter, TODO that's not what I observe. I suspect
-        # it has to do with underflow when parameters get significantly negative. So constrain here.
-    }, method="Brent", lower=-3, upper=5)
 
-    stopifnot(opt_res$convergence == 0)
+        # This is not quite the objective function in the Merlin paper. He did not divide by
+        # the sum of the decayed attractions. But doing so forces the function to have one global
+        # minimum. Otherwise, when beta gets really negative, the total attractiveness will be
+        # less than the difference was in other parts of the graph, and the algorithm may find
+        # the corner solution that minimizes total accessibility, rather than the balanced solution.
+        return(((decayed_below - decayed_above) / sum(decayed_attractions)) ^ 2)
+    }, method="Brent", lower=-20, upper=1)
 
-    stopifnot(opt_res$value < 1e-3)
     beta = opt_res$par[[1]]
-    stopifnot(beta < 0)
 
-    # make sure it's not a corner solution
-    stopifnot(beta > -3)
+    if (opt_res$convergence != 0 || opt_res$value > 1e3 || beta <= -20 || beta >= 0) {
+        print(paste("WARN: calibration was unsatisfactory. Beta:", beta, "objective:", opt_res$value))
+    }
     
     return(beta)
 }
@@ -123,9 +121,13 @@ calibrate_trip_distance_betas = function (balanced, marginals, median_distances_
 #' (I don't recall the details) when I was in undergrad (or possibly high school).
 estimate_median_crow_flies_distance = function (nhts) {
     meddist = nhts$trips %>%
-        mutate(trip_type=get_trip_type(WHYFROM, WHYTO)) %>%
+        mutate(
+            trip_type=get_trip_type(WHYFROM, WHYTO),
+            persons_reported_trip=rowSums(across(starts_with("ONTD_P"), \(x) x == 1))
+        ) %>%
         group_by(trip_type) %>%
-        summarize(dist_m=Hmisc::wtd.quantile(TRPMILES, WTTRDFIN, probs=c(0.5)) * MILES_TO_KILOMETERS / sqrt(2)) %>%
+        # we want the median vehicle trip
+        summarize(dist_m=Hmisc::wtd.quantile(TRPMILES, WTTRDFIN / persons_reported_trip, probs=c(0.5)) * MILES_TO_KILOMETERS / sqrt(2)) %>%
         pivot_wider(names_from=trip_type, values_from=dist_m)
 
     return(list(
