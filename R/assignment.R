@@ -1,5 +1,47 @@
 # Assignment: this code implements a simple Frank-Wolfe static traffic assignment algorithm
 
+#' Up through the mode choice step, everything is done with productions at home and attractions at work.
+#' For assignment, we need origins and destinations.
+#' This calculates factors to figure out how many trips of each home-based type travel in each direction
+#' during a particular time period
+calculate_direction_factors = function (nhts) {
+    nhts$trips %>%
+        mutate(
+            trip_type=get_trip_type(WHYFROM, WHYTO),
+            time_period=get_time_period(STRTTIME),
+            # the number of people who likely reported this trip
+            # because youngchildren don't have trip records but are in NUMONTRP
+            persons_reported_trip=rowSums(across(starts_with("ONTD_P"), \(x) x == 1))
+        ) %>%
+        filter(trip_type != "NHB") %>%
+        group_by(trip_type, time_period) %>%
+        summarize(outbound=weighted.mean(WHYFROM %in% HOME_PURPOSES, WTTRDFIN / persons_reported_trip)) %>%
+        return()
+}
+
+#' This applies direction factors to an origin-destination matrix
+apply_direction_factors = function (matrix, direction_factors) {
+    mat_with_directions = matrix %>%
+        filter(trip_type != "NHB") %>%
+        left_join(direction_factors, by=c("trip_type", "time_period"))
+
+    # calculate the outbound and inbound
+    outbound = mat_with_directions %>%
+        mutate(across(c("Car", "Bike", "Walk", "Transit"), \(x) x * outbound))
+
+    inbound = mat_with_directions %>%
+        mutate(across(c("Car", "Bike", "Walk", "Transit"), \(x) x * (1 - outbound)))
+
+    # swap columns
+    inbound[,c("orig_geoid", "dest_geoid")] = inbound[,c("dest_geoid", "orig_geoid")]
+
+    # Put it all together, and bring back NHB
+    bind_rows(inbound, outbound, filter(matrix, trip_type=="NHB")) %>%
+        group_by(orig_geoid, dest_geoid, time_period, trip_type) %>%
+        summarize(across(c("Car", "Bike", "Walk", "Transit"), sum)) %>%
+        return()
+}
+
 # From the SCAG ABM
 BPR_ALPHA = 0.6
 BPR_BETA = 5.0
@@ -40,17 +82,17 @@ all_or_nothing = function (odflow_hourly, marginals, network, weights) {
             weights=weights
         )
 
+        fr_tracts = unique(marginals$areas$geoid[marginals$areas$node_idx == fr])
+        frflow_hourly = odflow_hourly[odflow_hourly$orig_geoid %in% fr_tracts, c("dest_geoid", "Car")]
+
         for (path in paths$vpath) {
             nodes = as.integer(path)
             to = last(nodes)
 
             # assume within-tract trips don't use the primary/congested network
             # NB there may be multiple tracts associated with a given vertex
-            fr_tracts = marginals$areas$geoid[marginals$areas$node_idx == fr]
-            to_tracts = marginals$areas$geoid[marginals$areas$node_idx == to]
-
-            flow = filter(odflow_hourly, orig_geoid %in% fr_tracts & dest_geoid %in% to_tracts) %>%
-                with(sum(Car))
+            to_tracts = unique(marginals$areas$geoid[marginals$areas$node_idx == to])
+            flow = sum(frflow_hourly[frflow_hourly$dest_geoid %in% to_tracts, "Car"])
 
             # for each edge in the path, add the flow
             # get_edge_ids assumes the vertex list will be pairwise, i.e. vertices
@@ -96,7 +138,7 @@ find_optimal_lambda = function (network, old_flows, aon_flows) {
 #' This does the network assignment
 #' The default relgap_tol is 1% instead of the recommended 0.01% to speed convergence in the
 #' teaching environment.
-network_assignment = function(odflow_hourly, marginals, network, maxiter=100, relgap_tol=1e-2) {
+frank_wolfe = function(odflow_hourly, marginals, network, maxiter=100, relgap_tol=1e-2) {
     # start with all-or-nothing flows
     current_flows = all_or_nothing(odflow_hourly, marginals, network, get_freeflow_weights(network))
     converged = F
@@ -145,17 +187,17 @@ map_flows = function (flows, network, geo) {
             ggplot2::scale_color_fermenter(palette="RdBu")
 }
 
-map_congestion = function (flows, network, geo) {
-    ff_tt = get_freeflow_weights(network)
-    con_tt = get_congested_tt(network, flows)
+map_congestion = function (flows, model) {
+    ff_tt = get_freeflow_weights(model$network)
+    con_tt = get_congested_tt(model$network, flows)
     ff_to_con_ratio = ff_tt / con_tt
 
     flow_tibble = tibble(
-        eid = as.integer(edge_attr(network, "id")),
+        eid = as.integer(edge_attr(model$network, "id")),
         ff_to_con_ratio = ff_to_con_ratio
     )
     
-    geo %>%
+    model$network_geo %>%
         left_join(flow_tibble, by="eid") %>%
         ggplot(aes(color=ff_to_con_ratio)) +
             ggplot2::geom_sf() +
