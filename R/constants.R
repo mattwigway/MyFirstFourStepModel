@@ -4,6 +4,7 @@ HHSIZE_TOPCODE = 4
 WORKER_TOPCODE = 3
 
 MILES_TO_KILOMETERS = 1.609
+MILES_TO_METERS = 1609
 
 # How much of a time period's traffic occurs during the busiest hour?
 PEAKING_FACTORS = list(
