@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom dfidx dfidx
 #' @importFrom dplyr across
 #' @importFrom dplyr arrange
 #' @importFrom dplyr bind_cols
@@ -33,7 +32,6 @@
 #' @importFrom igraph shortest_paths
 #' @importFrom igraph vertex_attr
 #' @importFrom magrittr %>%
-#' @importFrom mlogit mlogit
 #' @importFrom nnet multinom
 #' @importFrom purrr list_rbind
 #' @importFrom readr col_double
