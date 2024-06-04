@@ -9,7 +9,8 @@ const DEFAULT_SPEEDS_KMH = Dict{String, Float64}(
     "trunk" => 72.0,
     "primary" => 72.0,
     "trunk_link" => 40.0,
-    "primary_link" => 40.0
+    "primary_link" => 40.0,
+    "default" => 4.0
 )
 
 const MILES_TO_KILOMETERS = 1.609
@@ -49,6 +50,9 @@ function main(raw_args)
         "--pretty"
             help = "Pretty-print GraphML output"
             action = :store_true
+        "--no-remove-islands"
+            help = "Don't remove islands"
+            action = :store_true
     end
 
     args = parse_args(raw_args, argtable)
@@ -58,7 +62,11 @@ function main(raw_args)
 
     G = build_graph(args["pbf"], highway_tags)
 
-    remove_islands!(G)
+    if !args["no-remove-islands"]
+        remove_islands!(G)
+    else
+        @info "Not removing islands"
+    end
 
     graph_to_gis(args["out"] * ".gpkg", G)
     graph_to_graphml(args["out"] * ".graphml", G, pretty=args["pretty"])
@@ -249,7 +257,7 @@ end
 function remove_islands!(G)
     components = strongly_connected_components(G)
     sort!(components, by=length, rev=true)
-    @info "Largest component has size $(length(first(components))). Removing $(length(components) - 1) components with $(length(components[[2]])) or fewer vertices"
+    @info "Largest component has size $(length(first(components))). Removing $(length(components) - 1) components with $(length(components[2])) or fewer vertices"
 
     vs_to_remove = Int64[]
 
