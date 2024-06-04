@@ -110,7 +110,7 @@ network_assignment = function (model, marginals, mode_flows, period) {
 #' you would have to do this for each period to get total daily VMT.
 #' @export
 estimate_vmt = function (model, marginals, link_flows, period) {
-    total_vmt_peak_hour = link_flows * edge_attr(model$network, "length_m") / MILES_TO_METERS
+    total_vmt_peak_hour = sum(link_flows * edge_attr(model$network, "length_m") / MILES_TO_METERS)
     # expand out based on the factor we used to get peak hour demand
     # this isn't perfect, as off-peak people may take more direct/uncongested routes, but hey it works
     return(total_vmt_peak_hour / PEAKING_FACTORS[[period]])
