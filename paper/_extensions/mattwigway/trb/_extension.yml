@@ -1,0 +1,22 @@
+title: Trb
+author: Matt Bhagat-Conway
+version: 1.0.0
+quarto-required: ">=1.5.0"
+contributes:
+  formats:
+    common:
+      csl: transportation-research-record.csl
+      toc: false
+      filters:
+        - quarto
+        - citeproc.lua
+        - trb.lua
+      citeproc: false # disable default citation processing as it happens earlier, see https://github.com/andrewheiss/quarto-wordcount?tab=readme-ov-file#how-this-all-works
+    pdf:
+      include-in-header: header.tex
+      documentclass: article
+      classoption: 12pt
+      papersize: letter
+      template-partials:
+        - partials/before-body.tex
+

@@ -1,0 +1,29 @@
+% TODO: Add custom LaTeX header directives here
+
+\usepackage[pagewise]{lineno}
+\linenumbers
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+\usepackage[margin=1in]{geometry}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0.5in}
+
+\usepackage{titlesec}
+% https://tex.stackexchange.com/questions/339559/uppercase-bold-and-underlined-chapter-title
+\titleformat{\section}{\normalfont\small\bfseries}{}{\quad}{\MakeUppercase}
+\titleformat*{\subsection}{\normalfont\small\bfseries}
+\titleformat*{\subsubsection}{\normalfont\small\itshape}
+\titlespacing{\section}{0pt}{\baselineskip}{0pt}
+\titlespacing{\subsection}{0pt}{\baselineskip}{0pt}
+\titlespacing{\subsubsection}{0pt}{\baselineskip}{0pt}
+
+\usepackage{fancyhdr}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+% fancyhead is in before-body so pandoc directives are available
+\pagestyle{fancy}
+
+
+

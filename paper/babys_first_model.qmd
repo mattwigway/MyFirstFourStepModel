@@ -1,0 +1,120 @@
+---
+title: "Baby's First Four-Step Model: a simple and accessible tool to introduce students to travel demand modeling"
+author:
+  - name: Matthew Wigginton Bhagat-Conway
+    affiliations:
+      - name: University of North Carolina at Chapel Hill Test
+        department: Department of City and Regional Planning
+        address: "223 E Cameron Ave, CB #3140"
+        city: Chapel Hill
+        state: NC
+        country: USA
+        postal-code: 27599
+    orcid: 0000-0002-1210-2982
+    email: mwbc@unc.edu
+abstract: |
+  abstract
+keywords: [template, demo]
+bibliography: bibliography.bib
+format: trb-pdf
+date: 2024-06-05
+---
+
+# Introduction
+
+The four-step travel demand model is ubiquitous in transportation planning. It was one of the earliest models developed [@weiner_urban_2013;@federalhighwayadministration_planpac_1977]. While it has come under significant criticism lately [@mladenovic_shortcomings_2014], it remains in common use. Many large regions have transitioned to more modern activity-based models, but many smaller regions and even some large regions continue to use the four-step model.
+
+Travel demand models, both activity-based and four-step, are traditionally run by a small group of modeling staff within a metropolitan planning organization. A much larger group of planners and engineers work with model outputs, however. Model runs are used for project prioritization, long-range land use and transportation planning, development impact assessments, and much more. This larger group of model consumers generally receive little to no formal training in modeling, and most have not ever worked with a model themselves.
+
+In this article, I introduce my "Baby's First Four Step Model" R package, which is a framework for implementing a very simple four-step model that can run quickly on typical consumer-grade desktops and laptops without complex software dependency installation processes or expensive licensing. It can be estimated for any US metropolitan area using only publicly-available data. The goal of the package is to enable a much broader swath of planners and engineers to work with a travel demand model during their education. I use the package in my Introduction to Planning Methods course, where we spend only a week discussing transportation modeling and engineering, and at the conclusion the students run a simple demand model and future scenario for the Research Triangle region of North Carolina.
+
+# Literature review
+
+# Model architecture and input data
+
+The model is a completely vanilla, classical four-step model, consisting of trip generation, distribution, mode choice, and network assignment. There are no auxiliary models (e.g. freight, airport, or out-of-region trips), though there is a trivial population synthesis step embedded in the trip generation step.
+
+The entire model process is implemented in R [@r_2024] for ease of use and portability, with each step of the four-step model contained within a single function. For performance, some input data preparation is done using Julia [@bezanson_julia_2017], but Julia is not required to run the model itself. In practice, this means students using the model will need to install R, but not Julia.
+
+The sections that follow describe each of the four steps of the model, and detail the data sources and specific model architectures used.
+
+## Trip generation
+
+Trip generation is based on the 2017 National Household Travel Survey [NHTS; @NHTS_2017]. The model divides the day into four time periods: overnight (7:00 pm--5:59 am), AM Peak (6:00 am--9:59 am), midday (10:00 am--3:59 pm), and PM Peak (4:00 pm--6:59 pm). The model also divides trips into three purposes: home-based work (HBW), home-based other (HBO), and non-home-based (NHB). While this is somewhat fewer trip types and time periods than might be included in production travel models, it is consistent with the general practice of dividing trips by time of day and count.
+
+Household-level trip counts are estimated for each time period and trip type using a simple linear regression with the trip count as the dependent variable and independent variables for number of vehicles, household size, household income, Census tract residential density, and number of workers. This results in 12 regression equations, for each time period and trip purpose. Household income is represented by dummy variables for less than $35,000, $35,000–$74,999, $75,000–$99,999, and $100,000 or more.
+
+Simple linear regression is used rather than traditional cross-classification or more complex regression methods because of its ease of interpretation. I teach my basic unit on demand modeling shortly after teaching regression, and applying regression here provides a real-world example for students. I present the regression models to the students for practice interpreting regression outputs. It also allows students to better understand what is going on under the hood of the model, without teaching a new technique that would primarily be useful for students who are actually planning to become modelers (and, presumably, will take more advanced modeling classes).
+
+The trip generation regressions can be estimated either for the full NHTS, or a subset more relevant to the region at hand. For my in-class exercise using a model of the Research Triangle region, I use the XX household records in North Carolina as the estimation sample. This provides a reasonable balance between locally-relevant travel patterns and sample size.
+
+The model is an aggregate model, and when used for forecasting we do not have household-level data. Instead we have marginal data at the TAZ level. For simplicity and to make the model easily compatible with Census data, TAZ's directly correspond to Census tracts. The model expects marginals for household size (topcoded at 4), number of workers (topcoded at 3), number of vehicles (topcoded at 3), and income (in the categories used in the regression). 
+
+For forecasting, TAZ-level demographics are specified via a simple Excel format. The format for demographic data is shown in @tbl-demographic-scenario for a single TAZ/Census tract. The Census tract is presented in the first column. Each marginal value is presented in a separate row, with the name of the marginal (`hhsize`, `income`, `vehicles`, or `workers`) in one column, the value (e.g. `1` for one-person households), and the number of households in that category in that tract. For baseline years, this data is easily retrieved from the five-year American Community Survey. For future years, a variety of statistical and GIS tools can be used to generate files in the appropriate format.
+
+|  `geoid`      | `marginal` | `value` | `count` |
+|:------------|:-------|--:|---:|
+| 37183053411 | `hhsize` | 1 | 514 |
+| 37183053411 | `hhsize` | 2 | 711 |
+| 37183053411 | `hhsize` | 3 | 940 |
+| 37183053411 | `hhsize` | 4 | 1907 |
+| 37183053411 | `income` | 0 | 358 |
+| 37183053411 | `income` | 35000 | 595 |
+| 37183053411 | `income` | 75000 | 183 |
+| 37183053411 | `income` | 100000 | 2936 |
+| 37183053411 | `vehicles` | 0 | 110 |
+| 37183053411 | `vehicles` | 1 | 921 |
+| 37183053411 | `vehicles` | 2 | 2089 |
+| 37183053411 | `vehicles` | 3 | 952 |
+| 37183053411 | `workers` | 0 | 288 |
+| 37183053411 | `workers` | 1 | 1784 |
+| 37183053411 | `workers` | 2 | 1711 |
+| 37183053411 | `workers` | 3 | 289 |
+
+: Specification of a demographic scenario {#tbl-demographic-scenario}
+
+To apply the household-level model to this aggregate data, I disaggregate the data to household-level records (i.e. a synthetic population) using iterative proportional fitting with a seed matrix derived from the Integrated Public Use Microdata Sample 2021 Five-Year American Community Survey data for the entire US [@ruggles_ipums_2024]. This seed matrix is precalculated and ships with the software. The regression equations are then used to predict household-level tripmaking, which is then re-aggregated to the tract level.
+
+<!--# The readme says we then disaggregate to higher numbers of vehicles, workers, household members using the unconditional distribution from the PUMS. It looks like we don't actually do that based on the source code. -->
+
+Trip attraction is somewhat more complicated, as the NHTS does not provide sufficient spatial detail to know where trips go. Instead, we use the Puget Sound Household Travel Survey, which includes origin and destination Census tract in the public-use dataset [@PSRC_Household_Travel_Survey]. I calculate the total number of home-based work and home-based other trips in each time period that have the non-home end in each Census tract in the Puget Sound region. I also calculate half the number of non-home-based trips in each time period that have either end in each tract (we divide by two to correctly reproduce the total number of non-home-based trips).
+
+To extrapolate this data to tracts outside the region, I build linear regression models for each trip type and time period based on total employment and employment in retail, education, and accomodation/food services from the US Census Bureau Longitudinal Employer-Household Dynamics Origin-Destination Employment Statistics. For future-year scenarios, employment in each tract in each of these categories must be predicted, and supplied in a similar format to @tbl-demographic-scenario. Since the trip production model is likely to be more accurate, I balance total attractions by trip type in each time period to match estimated productions.
+
+## Trip distribution
+
+The trip distribution step uses a singly-constrained (at the production end) gravity model, of the form
+$$
+t_{ijpc} = P_{ipc} \frac{A_{jpc} d_{ij}^{\beta_c}}{\displaystyle\sum_{j'} A_{j'pc} d_{ij'}^{\beta_c}}
+$$
+where $t_{ijpc}$ is the total number of trips of type $c$ (home-based work, home-based other, or non-home-based) from TAZ $i$ to $j$ during time period $p$. $P_{ipc}$ is the total trips of type $c$ produced in TAZ $i$ during timne period $p$, and $A_{jpc}$ is the total trips attracted to TAZ $j$. $\beta_c$ is the decay parameter for trip type $c$; the decay parameter is expected to be negative, and differs by trip type but not time period (though the spatial distribution of productions and attractions does vary by time period.) $d_{ij}$ is the crow-flies distance from the TAZ $i$ to TAZ $j$.
+
+$\beta_c$ is calibrated for each trip type using the method introduced by Merlin [-@merlin_new_2020] based on the median trip length. The method observes that half of the weighted destinations should be closer to the origin than the median trip, and half should be further away. The parameter is calibrated using Brent's method to solve the problem^[This is slightly different than the function presented in Merlin [-@merlin_new_2020]. It divides by total weighted destinations to make the function have a single minimum; otherwise $\beta = -\infty$ is also a minimum as the total weighted destinations are zero. I replace the absolute value with squaring to make the derivative continuous at the optimal value.]
+$$
+\displaystyle\min_\beta \left(\frac{\displaystyle\sum_{i, j, d_{ij} < \tilde d} P_i A_j d_{ij}^\beta - \displaystyle\sum_{i, j, d_{ij} \geq \tilde d} P_i A_j d_{ij}^\beta}{\displaystyle\sum_{i, j} P_i A_j d_{ij}^\beta}\right)^2
+$$
+where $\tilde d$ is the median trip distance for the trip type under consideration (subscript $c$ suppressed for readability), and other variables are as defined previously.
+
+The median trip distance is derived from the NHTS, or a subsample more relevant to the region being modeled. Since the NHTS reports network rather than crow-flies distance, we approximate the crow-flies distance for each NHTS trip by dividing the network distance by $\sqrt{2}$. <!--# or just use network distance? that might be easier than justifying sqrt(2) -->
+
+For intrazonal trips, we assume a travel distance of $0.52 \sqrt{s}$, where $s$ is the area of the TAZ. This is based on a Monte Carlo simulation of the average distance between random points in a square. There are two opposing factors that bias this, which should somewhat cancel out. TAZ's are not square, and are less compact than a square, which increases average travel distance. However, development within a TAZ is also concentrated in certain areas, which decreases average travel distance.
+
+## Mode choice
+
+The mode choice model is a simple multinomial logit model estimated based on the NHTS. Because we do not have detailed information about each trip and the alternatives available in the NHTS, the model is based solely on trip type, time period, travel distance, and housing unit density in the home tract. For non-home-based trips, a separate model is estimated excluding housing unit density. Goodness of fit is expected to be poor, but the point of the model is to demonstrate the simplest possible demand model, not to produce a highly accurate forecasting system. In theory it would be possible to include household characteristics, since trip productions are modeled using a disaggregate model. However, this would complicate the model system and defeat the purpose of building the simplest possible model for teaching purposes.
+
+## Network assignment
+
+The network assignment uses a Frank-Wolfe static traffic assignment algorithm [@ortuzar_modelling_2011]. Impedances are based on a Bureau of Public Roads-style function:
+$$
+t_{\mathrm{congested}} = \left(1 + 0.6 \left[\frac{f}{c}\right] ^ 5 \right) t_{\mathrm{freeflow}} 
+$$
+where $f$ is the predicted flow, $c$ is the link capacity, and $t_{\mathrm{congested}}$ and $t_\mathrm{freeflow}$ are congested and free-flow link travel times. The factors 0.6 and 5 are derived from the Southern California Association of Governments travel demand model [@southerncaliforniaassociationofgovernments_scag_2012].
+
+The assignment algorithm is written in pure R. This is quite slow, but will run anywhere R does—an advantage when the model will be run on students' computers. For this reason, networks need to be simple, and regions small. In the example below, I use only the central three counties of the Research Triangle region. I derive the network from OpenStreetMap, and retain only motorways, trunk, and primary roads (and associated ramps).
+
+# Example model application to the Research Triangle region
+
+# Discussion and conclusion
+
+# References

@@ -1,0 +1,27 @@
+\thispagestyle{empty}\noindent\textbf{$title$}\\%
+\\%
+$for(by-author)$
+    \textbf{$it.name.literal$}\\%
+    $for(it.affiliations)$
+        $if(it.department)$$it.department$\\%
+        $endif$$if(it.name)$$it.name$$endif$\\%
+        $if(it.address)$$it.address$, $endif$$if(it.city)$$it.city$, $endif$$if(it.state)$$it.state$ $endif$$if(it.region)$$it.region$ $endif$$if(it.postal-code)$$it.postal-code$ $endif$$if(it.country)$$it.country$$endif$\\%
+    $endfor$
+    Email: \href{mailto:$it.email$}{$it.email$}\\%
+    $if(it.orcid)$ORCiD: \href{https://orcid.org/$it.orcid$}{$it.orcid$}$endif$\\%
+    \\%
+$endfor$
+Word count: $nwords$ + $ntables$ (250 words per table) = $nwords_with_tables$ words\\%
+\\%
+\\%
+\textit{Submitted $date$}
+\fancyhead[L]{$authorheader$}
+\fancyhead[R]{}
+\newpage
+
+\section*{Abstract}
+
+$abstract$\\%
+\textbf{Keywords:} $for(keywords)$$it$$sep$, $endfor$
+
+\newpage

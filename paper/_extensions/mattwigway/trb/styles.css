@@ -1,0 +1,21 @@
+/* TODO: Use css to format the HTML output */
+
+body  {
+    counter-reset: page 1 line 1;
+}
+
+@media print {
+
+    @page {
+        counter-reset: line 1;
+        size: letter portrait;
+        @bottom-center {
+            content: counter(page)
+        }
+    }
+}
+
+p::before {
+    content: counter(line) " ";
+    counter-increment: line;
+}
