@@ -20,9 +20,17 @@
 # There is additionally a function estimate(), which will create the model object
 
 
-#' Estimate a four step model for later use
+#' Estimate a four step model for later use, based on 2017 NHTS data and PSRC household
+#' survey data (for distribution functions).
+#' 
+#' Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
+#' you want to use in estimation. 
 #' @export
-estimate = function (nhts, seed_matrix, psrc, psrc_lodes, base_marginals, network, network_geo) {
+estimate = function (nhts, osm, state, county, year, highway_types=c("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"), installJulia=T) {
+    psrc = read_csv(system.file("extdata", "psrc_trips.csv", package="bf4sm"), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
+    psrc_lodes = read_csv(system.file("extdata", "wa_wac_S000_JT00_2019.csv.gz", package="bf4sm"))
+    seed_matrix = read_csv(system.file("extdata", "seed_matrix.csv", package="bf4sm"))
+
     production_functions = estimate_production_functions(nhts)
     attraction_functions = estimate_attraction_functions(psrc, psrc_lodes)
     median_distances = estimate_median_crow_flies_distance(nhts)
@@ -37,6 +45,9 @@ estimate = function (nhts, seed_matrix, psrc, psrc_lodes, base_marginals, networ
 
     distribution_betas = calibrate_trip_distance_betas(balanced, base_marginals, median_distances)
 
+    # build network
+    network = build_network(osm, highway_types, installJulia=installJulia)
+
     return(list(
         production_functions=production_functions,
         attraction_functions=attraction_functions,
@@ -44,8 +55,8 @@ estimate = function (nhts, seed_matrix, psrc, psrc_lodes, base_marginals, networ
         distribution_betas=distribution_betas,
         mode_choice_models=mode_choice_models,
         direction_factors=direction_factors,
-        network=network,
-        network_geo=network_geo
+        network=network$network,
+        network_geo=network$network_geo
     ))
 }
 
