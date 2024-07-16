@@ -27,15 +27,18 @@
 #' you want to use in estimation. 
 #' @export
 estimate = function (nhts, osm, state, county, year, highway_types=c("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"), installJulia=T) {
-    psrc = read_csv(system.file("extdata", "psrc_trips.csv", package="bf4sm"), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
-    psrc_lodes = read_csv(system.file("extdata", "wa_wac_S000_JT00_2019.csv.gz", package="bf4sm"))
-    seed_matrix = read_csv(system.file("extdata", "seed_matrix.csv", package="bf4sm"))
+    psrc = read_csv(path_package("bf4sm", "extdata", "psrc_trips.csv"), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
+    psrc_lodes = read_csv(path_package("bf4sm", "extdata", "wa_wac_S000_JT00_2019.csv.gz"))
+    seed_matrix = read_csv(path_package("bf4sm", "extdata", "seed_matrix.csv"))
 
     production_functions = estimate_production_functions(nhts)
     attraction_functions = estimate_attraction_functions(psrc, psrc_lodes)
     median_distances = estimate_median_crow_flies_distance(nhts)
     mode_choice_models = estimate_mode_choice_model(nhts)
     direction_factors = calculate_direction_factors(nhts)
+
+    # get marginals
+    base_marginals = get_base_marginals(state, county, year)
 
     # calibrating the betas is harder, as we need to run the generation and distribution steps
     # before we can calibrate
