@@ -17,7 +17,7 @@ estimate_mode_choice_model = function (nhts) {
                 c(3, 4, 5, 6, 18) ~ "Car",
                 c(10, 11, 12, 13, 14, 15, 16) ~ "Transit",
                 .default=NA
-            ),
+            ) %>% factor(levels=c("Car", "Transit", "Walk", "Bike")),
             trip_type=get_trip_type(WHYFROM, WHYTO),
             time_period=get_time_period(STRTTIME),
             dist_km=TRPMILES * MILES_TO_KILOMETERS / sqrt(2)
