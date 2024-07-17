@@ -110,6 +110,11 @@ trip_distribution = function (model, marginals, balanced) {
 
 #' This runs the mode choice step of the model, and returns flows differentiated
 #' by mode for each trip type and time of day.
+#' 
+#' @param model The estimated model object
+#' @param marginals The scenario to use
+#' @param flows The output of trip_distribution
+#' 
 #' @export
 mode_choice = function (model, marginals, flows) {
     return(flow_by_mode(flows, marginals, model$mode_choice_models))
@@ -119,7 +124,12 @@ mode_choice = function (model, marginals, flows) {
 #' 
 #' Network assignment is based on a Frank-Wolfe static traffic assignment algorithm.
 #' This returns a list of link-level flows.
-#' Period can be "AM Peak", "Midday", "PM Peak", "Overnight".
+#' 
+#' @param model The estimated model
+#' @param marginals The scenario to use
+#' @param mode_flows Flows by mode and time of day, output of mode_choice function
+#' @param period Time period to assign, can be "AM Peak", "Midday", "PM Peak", or "Overnight".
+#' 
 #' @export 
 network_assignment = function (model, marginals, mode_flows, period) {
     hourly_flows = mode_flows %>%
@@ -131,10 +141,16 @@ network_assignment = function (model, marginals, mode_flows, period) {
     return(frank_wolfe(hourly_flows, marginals, model$network))
 }
 
-#' This function calculates VMT based on flows. Note that this is total VMT for the period the flows are for;
+#' Calculates VMT based on flows.
+#' 
+#' Note that this is total VMT for the period the flows are for;
 #' you would have to do this for each period to get total daily VMT.
+#' 
+#' @param model The estimated model object
+#' @param link_flows Estimated link flows from the network assignment function
+#' 
 #' @export
-estimate_vmt = function (model, marginals, link_flows, period) {
+estimate_vmt = function (model, link_flows, period) {
     total_vmt_peak_hour = sum(link_flows * edge_attr(model$network, "length_m") / MILES_TO_METERS)
     # expand out based on the factor we used to get peak hour demand
     # this isn't perfect, as off-peak people may take more direct/uncongested routes, but hey it works

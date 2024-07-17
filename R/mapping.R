@@ -45,7 +45,7 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
 }
 
 #' @export
-map_congestion = function (flows, model) {
+map_congestion = function (model, flows) {
     ff_tt = get_freeflow_weights(model$network)
     con_tt = get_congested_tt(model$network, flows)
     ff_to_con_ratio = ff_tt / con_tt
