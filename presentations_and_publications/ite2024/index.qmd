@@ -182,7 +182,7 @@ summary(model$production_functions$`AM Peak`$HBW)$coefficients %>%
     as_tibble(rownames="Coefficient") %>%
     gt() %>%
         fmt_number() %>%
-        tab_options(table.font.size=36)
+        tab_options(table.font.size=48)
 ```
 
 
@@ -236,7 +236,7 @@ model$distribution_betas
 as_tibble(model$distribution_betas) %>%
     gt() %>%
         fmt_number() %>%
-        tab_options(table.font.size=36)
+        tab_options(table.font.size=48)
 ```
 
 ## Running the model: trip distribution
@@ -274,7 +274,7 @@ cf[abs(t) > 3.29] = paste0(cf[abs(t) > 3.29], "*")
 cf %>%
     as.tibble() %>%
     gt() %>%
-        tab_options(table.font.size=36)
+        tab_options(table.font.size=48)
 ```
 
 ## Running the mode choice model
@@ -291,7 +291,7 @@ flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
 get_mode_shares(flows_by_mode) %>%
     gt() %>%
         fmt_number() %>%
-        tab_options(table.font.size=36)
+        tab_options(table.font.size=48)
 ```
 
 ## Assignment
@@ -330,7 +330,7 @@ bind_cols(head(select(model$scenarios$baseline$marginals, -c("moe", "count"))), 
         tab_spanner("Residential", 1:3) %>%
         tab_spanner("Employment", 4:8) %>%
         cols_label(1 ~ "geoid", 4 ~ "geoid") %>%
-        tab_options(table.font.size=36)
+        tab_options(table.font.size=48)
 ```
 
 
