@@ -186,23 +186,3 @@ map_flows = function (flows, network, geo) {
             ggplot2::scale_linewidth_binned() +
             ggplot2::scale_color_fermenter(palette="RdBu")
 }
-
-#' @export
-map_congestion = function (flows, model) {
-    ff_tt = get_freeflow_weights(model$network)
-    con_tt = get_congested_tt(model$network, flows)
-    ff_to_con_ratio = ff_tt / con_tt
-
-    flow_tibble = tibble(
-        eid = as.integer(edge_attr(model$network, "id")),
-        ff_to_con_ratio = ff_to_con_ratio
-    )
-    
-    model$network_geo %>%
-        left_join(flow_tibble, by="eid") %>%
-        ggplot(aes(color=ff_to_con_ratio)) +
-            ggplot2::geom_sf() +
-            ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1) +
-            ggplot2::labs(color="Percent of free-flow speed")
-
-}
