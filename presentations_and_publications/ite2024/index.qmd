@@ -27,6 +27,7 @@ library(JuliaCall)
 library(fs)
 library(gridExtra)
 library(gt)
+library(tidyverse)
 
 # get the path to the OSM data, auto-downloading using the Julia artifact system
 presdir = here::here("presentations_and_publications")
