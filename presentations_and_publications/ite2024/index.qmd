@@ -355,4 +355,5 @@ This one is very wrong, but that makes it more useful.
 Matt Bhagat-Conway
 
 Project website: [https://projects.indicatrix.org/BabysFirstFourStepModel](https://projects.indicatrix.org/BabysFirstFourStepModel)
+
 Email: [mwbc@unc.edu](mailto:mwbc@unc.edu)
