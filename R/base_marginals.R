@@ -153,6 +153,7 @@ get_base_marginals = function (state, county=NULL, year=NULL) {
     lodes_url = paste0("https://lehd.ces.census.gov/data/lodes/LODES", lodes_version, "/", str_to_lower(state),
         "/wac/", str_to_lower(state), "_wac_S000_JT00_", year, ".csv.gz")
 
+    # TODO catch 404 here
     lodes = read_csv(lodes_url) %>%
         aggregate_lodes_to_tracts() %>%
         select(geoid, C000, CNS07, CNS15, CNS18)
