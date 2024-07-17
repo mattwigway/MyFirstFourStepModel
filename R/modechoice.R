@@ -78,3 +78,11 @@ flow_by_mode = function (odmat, marginals, mode_choice_models) {
 
     return(bind_rows(hb_data, nhb_data))
 }
+
+#' @export
+get_mode_shares = function (flows_by_mode) {
+    flows_by_mode %>%
+        ungroup() %>%
+        summarize(across(c("Car", "Bike", "Walk", "Transit"), \(x) sum(x) / sum(n_trips))) %>%
+        return()
+}

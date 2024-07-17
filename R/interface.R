@@ -16,6 +16,9 @@
 #      how many trips in each direction to expect at different time period for HB trips
 #   network - an igraph graph object representing the road network
 #   network_geo - an sf object representing the road network (for plotting)
+#   tazs_geo - an sf object with all TAZs (tracts)
+#   scenarios - any scenarios that are shipped with the model (by default, only the baseline
+#     that the model was estimated with, but more can be added before calling save_model if desired).
 # 
 # There is additionally a function estimate(), which will create the model object
 
@@ -51,6 +54,8 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
     # build network
     network = build_network(osm, highway_types, installJulia=installJulia)
 
+    tazs_geo = tigris::tracts(state, county)
+
     return(list(
         production_functions=production_functions,
         attraction_functions=attraction_functions,
@@ -59,7 +64,9 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
         mode_choice_models=mode_choice_models,
         direction_factors=direction_factors,
         network=network$network,
-        network_geo=network$network_geo
+        network_geo=network$network_geo,
+        tazs_geo=tazs_geo,
+        scenarios=list(baseline=base_marginals)
     ))
 }
 
