@@ -18,6 +18,7 @@ execute:
     echo: true
     output: true
     cache: true
+fig-dpi: 300
 ---
 
 ```{r}
