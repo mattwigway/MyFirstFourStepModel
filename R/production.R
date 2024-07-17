@@ -60,7 +60,8 @@ estimate_production_functions <- function (nhts) {
                     trip_count = replace_na(trip_count, 0),
                     vehicles = pmin(HHVEHCNT, VEHICLES_TOPCODE),
                     workers = pmin(WRKCOUNT, WORKER_TOPCODE),
-                    hhsize = pmin(HHSIZE, HHSIZE_TOPCODE)
+                    hhsize = pmin(HHSIZE, HHSIZE_TOPCODE),
+                    income = format(income, scientific=F)
                 )
 
             if (all(regdata$trip_count == 0)) error(paste("No trips for", tt, tp))
@@ -117,6 +118,8 @@ get_hh_counts = function (marginals, seed) {
     marginals$marginals %>%
         group_by(geoid) %>%
         group_modify(\(g, k) get_hh_counts_for_tract(g, k, seed)) %>%
+        # don't use scientific notation
+        mutate(income=format(income, scientific=F)) %>%
         return()
 }
 
@@ -157,6 +160,8 @@ get_production_counts = function (marginals, generation_functions, seed) {
                 trip_type = ttype,
                 time_period = period,
                 # predict trips for one household, multiply by hhs in category
+                # TODO: should we do the pmax here, or below when summarizing by tract? Could this be
+                # why congestion comes up worse in our model than it actually is?
                 n_trips = pmax(predict(model, hh_counts), 0) * hh_counts$count
             ) %>%
             return()
