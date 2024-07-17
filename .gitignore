@@ -49,3 +49,11 @@ po/*~
 rsconnect/
 
 data/
+
+/.quarto/
+
+.DS_Store
+
+*.model
+
+.vscode
