@@ -2,18 +2,21 @@
 % Please edit documentation in R/interface.R
 \name{estimate}
 \alias{estimate}
-\title{Estimate a four step model for later use}
+\title{Estimate a four step model for later use, based on 2017 NHTS data and PSRC household
+survey data (for distribution functions).}
 \usage{
 estimate(
   nhts,
-  seed_matrix,
-  psrc,
-  psrc_lodes,
-  base_marginals,
-  network,
-  network_geo
+  osm,
+  state,
+  county,
+  year,
+  highway_types = c("motorway", "motorway_link", "trunk", "trunk_link", "primary",
+    "primary_link"),
+  installJulia = T
 )
 }
 \description{
-Estimate a four step model for later use
+Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
+you want to use in estimation.
 }

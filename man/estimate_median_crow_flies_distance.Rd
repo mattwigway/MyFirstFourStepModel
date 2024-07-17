@@ -3,17 +3,11 @@
 \name{estimate_median_crow_flies_distance}
 \alias{estimate_median_crow_flies_distance}
 \title{Estimates the median crow-flies distance from the NHTS in kilometers, by dividing the horse-flies distance
-by the square root of two. The theoretical basis for this is that this is the worst-case ratio
-between the Euclidean and Manhattan distance. This would seem like too aggressive of a correction,
-but not every location has a grid. I determine this factor empirically from a dataset of network distances
-(I don't recall the details) when I was in undergrad (or possibly high school).}
+by 1.3. This is based on the paper https://arxiv.org/abs/2406.06490}
 \usage{
 estimate_median_crow_flies_distance(nhts)
 }
 \description{
 Estimates the median crow-flies distance from the NHTS in kilometers, by dividing the horse-flies distance
-by the square root of two. The theoretical basis for this is that this is the worst-case ratio
-between the Euclidean and Manhattan distance. This would seem like too aggressive of a correction,
-but not every location has a grid. I determine this factor empirically from a dataset of network distances
-(I don't recall the details) when I was in undergrad (or possibly high school).
+by 1.3. This is based on the paper https://arxiv.org/abs/2406.06490
 }
