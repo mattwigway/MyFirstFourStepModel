@@ -1,0 +1,81 @@
+# Median calibration
+
+This is the minimization function 
+
+```{julia}
+using Gadfly, DataFrames, Random
+```
+
+```{julia}
+rng = MersenneTwister(59299)
+df = DataFrame(
+    :jobs=>rand(rng, Float64, 100) * 100,
+    :distances=>1:100
+)
+```
+
+```{julia}
+βs = -5:0.1:-0.1
+# calculate the objective function
+function objective(data, β, median_tt)
+    data = copy(data, copycols=false)
+    data.weighted_jobs = data.jobs .* data.distances .^ β
+    return abs(sum(data.weighted_jobs[data.distances .< median_tt]) - sum(data.weighted_jobs[data.distances .≥ median_tt]))
+end
+
+ys = objective.(Ref(df), βs, 20)
+
+pdata = DataFrame(:β=>βs, :y=>ys)
+
+plot(pdata, x=:β, y=:y, Geom.line, Guide.ylabel("Objective function"))
+```
+
+```{julia}
+βs = -5:0.1:-0.1
+# calculate the objective function
+function objective(data, β, median_tt)
+    data = copy(data, copycols=false)
+    data.weighted_jobs = data.jobs .* data.distances .^ β
+    return abs(sum(data.weighted_jobs[data.distances .< median_tt]) - sum(data.weighted_jobs[data.distances .≥ median_tt])) / sum(data.weighted_jobs)
+end
+
+ys = objective.(Ref(df), βs, 20)
+
+pdata = DataFrame(:β=>βs, :y=>ys)
+
+plot(pdata, x=:β, y=:y, Geom.line)
+```
+
+## Negative exponential
+
+```{julia}
+βs = -2:0.01:-0.01
+# calculate the objective function
+function objective(data, β, median_tt)
+    data = copy(data, copycols=false)
+    data.weighted_jobs = data.jobs .* exp.(data.distances .* β)
+    return abs(sum(data.weighted_jobs[data.distances .< median_tt]) - sum(data.weighted_jobs[data.distances .≥ median_tt]))
+end
+
+ys = objective.(Ref(df), βs, 20)
+
+pdata = DataFrame(:β=>βs, :y=>ys)
+
+plot(pdata, x=:β, y=:y, Geom.line)
+```
+
+```{julia}
+βs = -2:0.01:-0.01
+# calculate the objective function
+function objective(data, β, median_tt)
+    data = copy(data, copycols=false)
+    data.weighted_jobs = data.jobs .* exp.(data.distances .* β)
+    return abs(sum(data.weighted_jobs[data.distances .< median_tt]) - sum(data.weighted_jobs[data.distances .≥ median_tt])) / sum(data.weighted_jobs)
+end
+
+ys = objective.(Ref(df), βs, 20)
+
+pdata = DataFrame(:β=>βs, :y=>ys)
+
+plot(pdata, x=:β, y=:y, Geom.line)
+```
