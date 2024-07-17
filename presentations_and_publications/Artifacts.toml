@@ -1,0 +1,6 @@
+[triangle_osm]
+git-tree-sha1 = "b5d963fcf733f3256797d07f18563255d7e70900"
+
+    [[triangle_osm.download]]
+    sha256 = "87f52f70b803a7031e93ee732a60b85010d4dbe8a534ea98fd2083c1b10161ca"
+    url = "https://gist.github.com/mattwigway/4a078f8b4b96aa59d797a91ff9279bc9/raw/b5d963fcf733f3256797d07f18563255d7e70900.tar.gz"

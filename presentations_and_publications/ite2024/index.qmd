@@ -1,0 +1,357 @@
+---
+title: "Baby's First Four-Step Model"
+author:
+    - name: Matt Bhagat-Conway
+      affiliations:
+        - name: University of North Carolina at Chapel Hill
+          department: Department of City and Regional Planning
+format:
+    revealjs:
+        theme: [default, unc.scss]
+        width: 1920
+        height: 1080
+        logo: UNC_logo_RGB.png
+        slide-number: true
+        html-math-method: katex
+execute:
+    eval: true
+    echo: true
+    output: true
+    cache: true
+---
+
+```{r}
+#| echo: false
+#| output: false
+library(JuliaCall)
+library(fs)
+library(gridExtra)
+library(gt)
+
+# get the path to the OSM data, auto-downloading using the Julia artifact system
+presdir = here::here("presentations_and_publications")
+Sys.setenv("JULIA_PROJECT"=presdir)
+julia_setup()
+julia_library("Artifacts")
+artifact_toml = here::here("presentations_and_publications", "Artifacts.toml")
+
+OSM_PATH = path_join(c(
+    julia_eval(paste0('artifact_path(artifact_hash("triangle_osm", "', artifact_toml, '"))')),
+    "triangle.osm.pbf"
+))
+
+# get the path to the NHTS data; you need to download it and put it in the directory "data/nhts" in this repository
+NHTS_PATH = here::here("data/nhts")
+
+# now change the project so that it works when estimating the model
+# Since julia has already been used in the session, it won't be restarted and won't pick up the change in project
+# from the environment change in network.R.
+julia_library("Pkg")
+julia_call("Pkg.activate", path_package("bf4sm", "julia"))
+```
+
+## About me
+
+- Assistant professor of City and Regional Planning at UNC Chapel Hill
+- Research interests in public transportation, transport modeling, and computational methods
+- Three years as a software developer prior to graduate school
+- I teach our Planning Methods class at UNC
+- I try to briefly cover a wide variety of methods used in planning, including demand modeling
+
+## Why introduce modeling to planners?
+
+- Most planners will never use a model directly
+- However, most planners will be _consumers_ of model output
+- Giving planners more experience with modeling will improve communication with modelers
+    - Provide a "healthy skepticism" of model results, but also
+    - Understand what the model can and can't do
+    - Understand how the model can fit into planning processes
+    - Think of novel ways to use models
+
+## Typical experience of planners with models
+
+![&copy; xkcd](img/xkcd_machine_learning.png){fig-alt="An image of a 'pile of linear algebra' with an input and an output, and text 'This is your machine learning system? Yup! You pour the data into this big pile of linear algebra, then collect the answers on the other side. What if the answers are wrong? Just stir the pile until they start looking right.'"}
+
+## Giving planners hands on experience with models
+
+- There's no substitute for hands-on experience working with a model
+- Very few planners ever work with a model themselves
+- Planners' experience with models usually comes from theoretical discussions and on-the-job experiences
+    - I am not an engineer, but I've heard this is fairly common for engineers as well
+
+## How we usually teach modeling
+
+1. Take transportation planning
+1. Take statistics
+1. Take econometrics
+1. Take choice modeling
+1. Take GIS
+1. Work with component models (mode choice, destination choice, etc.)
+1. **Actually run a model** [_(optional)_]{.fragment .smaller}
+
+## An alternate approach
+
+1. **Actually run a model** 
+1. Take transportation planning
+1. Take statistics
+1. Take econometrics _(optional)_
+1. Take choice modeling _(optional)_
+1. Take GIS _(optional)_
+1. Work with component models (mode choice, destination choice, etc.) _(optional)_
+
+## How do you run a model first?
+
+- In my planning methods course, I do _one lecture_ on modeling ([https://go.unc.edu/planmodel](https://go.unc.edu/planmodel))
+    - We primarily cover the four step model, with a nod to activity-based models
+- Then, every student runs a _very_ simple model and interprets the output
+
+## Baby's First Four Step Model
+
+- I implement this model using Baby's First Four Step Model, an R package I developed for implementing _very_ simple models
+- Running the model only requires R and minimal computing power, so students can run it on their laptops
+    - Even Chromebooks!
+- The four steps of the model map directly onto four functions in the package
+- TAZs directly map onto Census tracts
+- There are no extra steps: no university/airport model, no commercial vehicle model, no external travel zones
+- The model can be estimated for any region in the US, using only publicly-available data
+- All code is open-source: [https://github.com/mattwigway/BabysFirstFourStepModel](https://github.com/mattwigway/BabysFirstFourStepModel)
+
+## Why a four-step model?
+
+- Even as many regions have moved to activity-based models, four-step models are still ubiquitous
+- Most of our students stay in North Carolina, and all regions in NC use four-step models
+
+## Estimating the model
+
+- Estimating the model only requires the 2017 NHTS and an OpenStreetMap file for the network
+- I estimate the model myself, and share with students, since model estimation is fairly rare even for regular model users
+- Below is all the code required to estimate the model for the Research Triangle region
+
+```{r}
+#| output: false
+#| eval: false
+library(bf4sm)
+library(tidyverse)
+
+# Load NHTS and filter to North Carolina
+nhts = load_nhts(NHTS_PATH)
+nhts$households = filter(nhts$households, HHSTATE == "NC")
+
+# Estimate the model using 2021 Census/LODES data for the Triangle
+model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake"), 2021)
+
+# Save the model for sharing with students
+save_model(model, "rdu.model")
+```
+
+## Running the model: installation
+
+- Feel free to follow along if you have R!
+- To run the model, students just need to install the Baby's First Four Step Model package in R
+
+```{r}
+#| eval: false
+install.packages("devtools")
+devtools::install_github("mattwigway/BabysFirstFourStepModel")
+```
+
+## Loading the model
+
+- The next step is to load the already estimated model—either from a local file or a URL
+
+```{r}
+library(bf4sm)
+model = load_model("https://files.indicatrix.org/rdu.model")
+```
+
+## Understanding the trip generation process
+
+- The trip generation process uses linear regression, since my students are already familiar with that method
+- All of the model equations are embedded in the model object, so I also have students interpret them
+
+```{r}
+#| eval: false
+summary(model$production_functions$`AM Peak`$HBW)
+```
+
+```{r}
+#| echo: false
+summary(model$production_functions$`AM Peak`$HBW)$coefficients %>%
+    as_tibble(rownames="Coefficient") %>%
+    gt() %>%
+        fmt_number() %>%
+        tab_options(table.font.size=36)
+```
+
+
+## Running the model: trip generation
+
+- The entire trip generation process happens with one function, `trip_generation`,
+    - It requires the model and a land use scenario (here we're using the baseline)
+    - It returns the trip productions and attractions by location, trip type, and time of day
+
+```{r}
+#| eval: false
+# Run trip generation
+trip_ends = trip_generation(model, model$scenarios$baseline)
+
+# Map results
+map_trip_generation(model, trip_ends, "Productions", "AM Peak", "HBW")
+map_trip_generation(model, trip_ends, "Attractions", "AM Peak", "HBW")
+```
+
+## Trip generation results
+
+```{r}
+#| echo: false
+#| fig-alt: AM Peak home-based work trip productions and attractions. Productions are spread across the region, whereas attractions are more concentrated.
+# Run trip generation
+trip_ends = trip_generation(model, model$scenarios$baseline)
+
+# Map results
+grid.arrange(
+    map_trip_generation(model, trip_ends, "Productions", "AM Peak", "HBW") +
+        theme(legend.position="bottom", legend.text=element_text(angle=-45, hjust=0)),
+    map_trip_generation(model, trip_ends, "Attractions", "AM Peak", "HBW") +
+        theme(legend.position="bottom", legend.text=element_text(angle=-45, hjust=0)),
+    nrow=1,
+    ncol=2
+)
+```
+
+
+## Understanding the trip distribution process
+
+- Trip distribution uses a gravity function, and I have students interpret the parameters before running it
+
+```{r}
+#| eval: false
+model$distribution_betas
+```
+
+```{r}
+#| echo: false
+as_tibble(model$distribution_betas) %>%
+    gt() %>%
+        fmt_number() %>%
+        tab_options(table.font.size=36)
+```
+
+## Running the model: trip distribution
+
+- Trip distribution is likewise a single function
+- I have students map and interpret trip destinations from a tract of their choice
+
+```{r}
+#| fig-alt: AM Peak trip distribution from a census tract Carrboro, NC (near the UNC campus); most trips go to nearby destinations, but some go to further-flung large employment centers in Durham, Raleigh, and Research Triangle Park
+flows = trip_distribution(model, model$scenarios$baseline, trip_ends)
+map_trip_distribution(model, flows, "AM Peak", "HBW", origin_tract="37135010705")
+```
+
+## Understanding mode choice
+
+- Mode choice uses a multinomial logit model, which I explain _very_ briefly, but do have students interpret
+- The model is very simple as we have few attributes of the trips
+
+```{r}
+#| eval: false
+summary(model$mode_choice_models$HB)
+```
+
+```{r}
+#| echo: false
+s = summary(model$mode_choice_models$HB)
+cf = format(round(s$coefficients, 4), scientific=F)
+
+colnames(cf) = str_replace(colnames(cf), "factor\\(.*\\)", "")
+
+t = s$coefficients / s$standard.errors
+cf[abs(t) > 1.96] = paste0(cf[abs(t) > 1.96], "*")
+cf[abs(t) > 2.58] = paste0(cf[abs(t) > 2.58], "*")
+cf[abs(t) > 3.29] = paste0(cf[abs(t) > 3.29], "*")
+cf %>%
+    as.tibble() %>%
+    gt() %>%
+        tab_options(table.font.size=36)
+```
+
+## Running the mode choice model
+
+```{r}
+#| eval: false
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
+get_mode_shares(flows_by_mode)
+```
+
+```{r}
+#| echo: false
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
+get_mode_shares(flows_by_mode) %>%
+    gt() %>%
+        fmt_number() %>%
+        tab_options(table.font.size=36)
+```
+
+## Assignment
+
+- Traffic assignment uses a Frank-Wolfe algorithm in R and OpenStreetMap data
+
+```{r}
+#| eval: false
+pm_network_flows = network_assignment(model, model$scenarios$baseline, flows_by_mode, "PM Peak")
+map_congestion(pm_network_flows, model)
+```
+
+```{r}
+#| echo: false
+#| output: false
+pm_network_flows = network_assignment(model, model$scenarios$baseline, flows_by_mode, "PM Peak")
+```
+
+```{r}
+#| echo: false
+#| fig-alt: Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere.
+map_congestion(pm_network_flows, model)
+```
+
+## Land use scenarios
+
+- Models are most useful for scenario planning
+- Baby's First Four Step Model has a very simple Excel-based format to specify land use scenarios
+- Two sheets, one for residential characteristics by tract, one for jobs by tract
+- I create "business as usual" and "compact development" scenarios to share with my students
+
+```{r}
+#| echo: false
+bind_cols(head(select(model$scenarios$baseline$marginals, -c("moe", "count"))), head(model$scenario$baseline$jobs)) %>%
+    gt() %>%
+        tab_spanner("Residential", 1:3) %>%
+        tab_spanner("Employment", 4:8) %>%
+        cols_label(1 ~ "geoid", 4 ~ "geoid") %>%
+        tab_options(table.font.size=36)
+```
+
+
+## Future work
+
+- Transportation network scenarios
+- Tools for specifying your own scenarios
+
+## Conclusion
+
+All models are wrong, but some are useful. 
+
+---George Box
+
+. . .
+
+This one is very wrong, but that makes it more useful.
+
+---Also George Box, from beyond the grave
+
+## Questions / Contact
+
+Matt Bhagat-Conway
+
+Project website: [https://projects.indicatrix.org/BabysFirstFourStepModel](https://projects.indicatrix.org/BabysFirstFourStepModel)
+Email: [mwbc@unc.edu](mailto:mwbc@unc.edu)

@@ -1,0 +1,16 @@
+project:
+  type: website
+  render:
+    - index.qmd
+    - presentations_and_publications/ite2024/index.qmd
+  # render for gh-pages
+  output-dir: docs
+
+website:
+  title: "Baby's First Four-Step Model"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
