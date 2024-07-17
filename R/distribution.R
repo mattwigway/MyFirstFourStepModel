@@ -115,10 +115,7 @@ calibrate_trip_distance_betas = function (balanced, marginals, median_distances_
 }
 
 #' Estimates the median crow-flies distance from the NHTS in kilometers, by dividing the horse-flies distance
-#' by the square root of two. The theoretical basis for this is that this is the worst-case ratio
-#' between the Euclidean and Manhattan distance. This would seem like too aggressive of a correction,
-#' but not every location has a grid. I determine this factor empirically from a dataset of network distances
-#' (I don't recall the details) when I was in undergrad (or possibly high school).
+#' by 1.3. This is based on the paper https://arxiv.org/abs/2406.06490
 estimate_median_crow_flies_distance = function (nhts) {
     meddist = nhts$trips %>%
         mutate(
@@ -127,7 +124,8 @@ estimate_median_crow_flies_distance = function (nhts) {
         ) %>%
         group_by(trip_type) %>%
         # we want the median vehicle trip
-        summarize(dist_m=Hmisc::wtd.quantile(TRPMILES, WTTRDFIN / persons_reported_trip, probs=c(0.5)) * MILES_TO_KILOMETERS / sqrt(2)) %>%
+        # TODO labeled dist_m but calculated in km
+        summarize(dist_m=Hmisc::wtd.quantile(TRPMILES, WTTRDFIN / persons_reported_trip, probs=c(0.5)) * MILES_TO_KILOMETERS / 1.3) %>%
         pivot_wider(names_from=trip_type, values_from=dist_m)
 
     return(list(
