@@ -268,11 +268,11 @@ cf = format(round(s$coefficients, 4), scientific=F)
 colnames(cf) = str_replace(colnames(cf), "factor\\(.*\\)", "")
 
 t = s$coefficients / s$standard.errors
-cf[abs(t) > 1.96] = paste0(cf[abs(t) > 1.96], "*")
+cf[abs(t) > 1.96] = paste0(cf[abs(t) > 1.96], "*"
 cf[abs(t) > 2.58] = paste0(cf[abs(t) > 2.58], "*")
 cf[abs(t) > 3.29] = paste0(cf[abs(t) > 3.29], "*")
 cf %>%
-    as.tibble() %>%
+    as_tibble(rownames="mode") %>%
     gt() %>%
         tab_options(table.font.size=48)
 ```
