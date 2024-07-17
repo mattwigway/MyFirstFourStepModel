@@ -4,7 +4,7 @@
     "href": "presentations_and_publications/ite2024/index.html#about-me",
     "title": "Baby’s First Four-Step Model",
     "section": "About me",
-    "text": "About me\n\nAssistant professor of City and Regional Planning at UNC Chapel Hill\nResearch interests in public transportation, transport modeling, and computational methods\nThree years as a software developer prior to graduate school\nI teach our Planning Methods class at UNC\nI try to briefly cover a wide variety of methods used in planning, including demand modeling"
+    "text": "About me\n\nAssistant professor of City and Regional Planning at UNC Chapel Hill\nResearch interests in public transportation, transport modeling, and computational methods\nI teach our Planning Methods class at UNC\nI try to briefly cover a wide variety of methods used in planning, including demand modeling"
   },
   {
     "objectID": "presentations_and_publications/ite2024/index.html#why-introduce-modeling-to-planners",
@@ -46,14 +46,14 @@
     "href": "presentations_and_publications/ite2024/index.html#how-do-you-run-a-model-first",
     "title": "Baby’s First Four-Step Model",
     "section": "How do you run a model first?",
-    "text": "How do you run a model first?\n\nIn my planning methods course, I do one lecture on modeling (https://go.unc.edu/planmodel)\n\nWe primarily cover the four step model, with a nod to activity-based models\n\nThen, every student runs a very simple model and interprets the output"
+    "text": "How do you run a model first?\n\nIn my planning methods course, I do one lecture on modeling\n\nWe primarily cover the four step model, with a nod to activity-based models\n\nThen, every student runs a very simple model and interprets the output"
   },
   {
     "objectID": "presentations_and_publications/ite2024/index.html#babys-first-four-step-model",
     "href": "presentations_and_publications/ite2024/index.html#babys-first-four-step-model",
     "title": "Baby’s First Four-Step Model",
     "section": "Baby’s First Four Step Model",
-    "text": "Baby’s First Four Step Model\n\nI implement this model using Baby’s First Four Step Model, an R package I developed for implementing very simple models\nRunning the model only requires R and minimal computing power, so students can run it on their laptops\n\nEven Chromebooks!\n\nThe four steps of the model map directly onto four functions in the package\nTAZs directly map onto Census tracts\nThere are no extra steps: no university/airport model, no commercial vehicle model, no external travel zones\nThe model can be estimated for any region in the US, using only publicly-available data\nAll code is open-source: https://github.com/mattwigway/BabysFirstFourStepModel"
+    "text": "Baby’s First Four Step Model\n\nI implement this model using Baby’s First Four Step Model, an R package I developed for implementing very simple models\nRunning the model only requires R and minimal computing power, so students can run it on their laptops\n\nEven Chromebooks!\n\nThe four steps of the model map directly onto four functions in the package\nThere are no extra steps: no university/airport model, no commercial vehicle model, no external travel zones\nThe model can be estimated for any region in the US, using only publicly-available data"
   },
   {
     "objectID": "presentations_and_publications/ite2024/index.html#why-a-four-step-model",
@@ -123,7 +123,7 @@
     "href": "presentations_and_publications/ite2024/index.html#understanding-mode-choice",
     "title": "Baby’s First Four-Step Model",
     "section": "Understanding mode choice",
-    "text": "Understanding mode choice\n\nMode choice uses a multinomial logit model, which I explain very briefly, but do have students interpret\nThe model is very simple as we have few attributes of the trips\n\n\nsummary(model$mode_choice_models$HB)\n\n\n\n\n\n\n\n\n\n(Intercept)\nHTRESDN\ndist_km\nMidday\nPM Peak\nOvernight\nHBW\n\n\n\n\n4.6374***\n-0.0004***\n0.0633***\n0.1495***\n0.1379***\n0.2439***\n0.1609***\n\n\n1.8684***\n-0.0002**\n0.0423***\n-0.3816***\n-1.6429***\n-1.8556***\n-1.0556***\n\n\n4.0911***\n-0.0003***\n-0.4548***\n-0.2533***\n-0.0824**\n0.2451***\n-0.6660***"
+    "text": "Understanding mode choice\n\nMode choice uses a multinomial logit model, which I explain very briefly, but do have students interpret\nThe model is very simple as we have few attributes of the trips\n\n\nsummary(model$mode_choice_models$HB)\n\n\n\n\n\n\n\n\n\nMode\n(Intercept)\nHTRESDN\ndist_km\nMidday\nPM Peak\nOvernight\nHBW\n\n\n\n\nTransit\n-2.7680***\n0.0003***\n-0.0210***\n-0.5316***\n-1.7792***\n-2.0949***\n-1.2140***\n\n\nWalk\n-0.5484***\n0.0001***\n-0.5168***\n-0.4026***\n-0.2200***\n0.0015\n-0.8256***\n\n\nBike\n-4.5952***\n0.0004***\n-0.0723***\n-0.1526\n-0.1364\n-0.2461***\n-0.1370***"
   },
   {
     "objectID": "presentations_and_publications/ite2024/index.html#running-the-mode-choice-model",
@@ -138,6 +138,13 @@
     "title": "Baby’s First Four-Step Model",
     "section": "Assignment",
     "text": "Assignment\n\nTraffic assignment uses a Frank-Wolfe algorithm in R and OpenStreetMap data\n\n\npm_network_flows = network_assignment(model, model$scenarios$baseline, flows_by_mode, \"PM Peak\")\nmap_congestion(pm_network_flows, model)"
+  },
+  {
+    "objectID": "presentations_and_publications/ite2024/index.html#vmt",
+    "href": "presentations_and_publications/ite2024/index.html#vmt",
+    "title": "Baby’s First Four-Step Model",
+    "section": "VMT",
+    "text": "VMT\n\nThere is also a function to estimate VMT, to show that models go beyond congestion\n\n\nestimate_vmt(model, pm_network_flows, \"PM Peak\")\n\n[1] 66463276"
   },
   {
     "objectID": "presentations_and_publications/ite2024/index.html#land-use-scenarios",
@@ -161,11 +168,11 @@
     "text": "Conclusion\nAll models are wrong, but some are useful.\n—George Box\n\nThis one is very wrong, but that makes it more useful.\n—Also George Box, from beyond the grave"
   },
   {
-    "objectID": "presentations_and_publications/ite2024/index.html#questions-contact",
-    "href": "presentations_and_publications/ite2024/index.html#questions-contact",
+    "objectID": "presentations_and_publications/ite2024/index.html#questions-comments-contact",
+    "href": "presentations_and_publications/ite2024/index.html#questions-comments-contact",
     "title": "Baby’s First Four-Step Model",
-    "section": "Questions / Contact",
-    "text": "Questions / Contact\nMatt Bhagat-Conway\nProject website: https://projects.indicatrix.org/BabysFirstFourStepModel\nEmail: mwbc@unc.edu"
+    "section": "Questions / Comments / Contact",
+    "text": "Questions / Comments / Contact\nMatt Bhagat-Conway\nProject website: https://projects.indicatrix.org/BabysFirstFourStepModel\nEmail: mwbc@unc.edu\n\n\n\n\nhttps://projects.indicatrix.org/BabysFirstFourStepModel"
   },
   {
     "objectID": "index.html",

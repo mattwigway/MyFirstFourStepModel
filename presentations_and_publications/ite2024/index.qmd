@@ -13,6 +13,7 @@ format:
         logo: UNC_logo_RGB.png
         slide-number: true
         html-math-method: katex
+        footer: https://projects.indicatrix.org/BabysFirstFourStepModel
 execute:
     eval: true
     echo: true
@@ -56,7 +57,6 @@ julia_call("Pkg.activate", path_package("bf4sm", "julia"))
 
 - Assistant professor of City and Regional Planning at UNC Chapel Hill
 - Research interests in public transportation, transport modeling, and computational methods
-- Three years as a software developer prior to graduate school
 - I teach our Planning Methods class at UNC
 - I try to briefly cover a wide variety of methods used in planning, including demand modeling
 
@@ -103,7 +103,7 @@ julia_call("Pkg.activate", path_package("bf4sm", "julia"))
 
 ## How do you run a model first?
 
-- In my planning methods course, I do _one lecture_ on modeling ([https://go.unc.edu/planmodel](https://go.unc.edu/planmodel))
+- In my planning methods course, I do _one lecture_ on modeling
     - We primarily cover the four step model, with a nod to activity-based models
 - Then, every student runs a _very_ simple model and interprets the output
 
@@ -113,10 +113,8 @@ julia_call("Pkg.activate", path_package("bf4sm", "julia"))
 - Running the model only requires R and minimal computing power, so students can run it on their laptops
     - Even Chromebooks!
 - The four steps of the model map directly onto four functions in the package
-- TAZs directly map onto Census tracts
 - There are no extra steps: no university/airport model, no commercial vehicle model, no external travel zones
 - The model can be estimated for any region in the US, using only publicly-available data
-- All code is open-source: [https://github.com/mattwigway/BabysFirstFourStepModel](https://github.com/mattwigway/BabysFirstFourStepModel)
 
 ## Why a four-step model?
 
@@ -268,11 +266,11 @@ cf = format(round(s$coefficients, 4), scientific=F)
 colnames(cf) = str_replace(colnames(cf), "factor\\(.*\\)", "")
 
 t = s$coefficients / s$standard.errors
-cf[abs(t) > 1.96] = paste0(cf[abs(t) > 1.96], "*"
+cf[abs(t) > 1.96] = paste0(cf[abs(t) > 1.96], "*")
 cf[abs(t) > 2.58] = paste0(cf[abs(t) > 2.58], "*")
 cf[abs(t) > 3.29] = paste0(cf[abs(t) > 3.29], "*")
 cf %>%
-    as_tibble(rownames="mode") %>%
+    as_tibble(rownames="Mode") %>%
     gt() %>%
         tab_options(table.font.size=48)
 ```
@@ -313,7 +311,15 @@ pm_network_flows = network_assignment(model, model$scenarios$baseline, flows_by_
 ```{r}
 #| echo: false
 #| fig-alt: Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere.
-map_congestion(pm_network_flows, model)
+map_congestion(model, pm_network_flows)
+```
+
+## VMT
+
+- There is also a function to estimate VMT, to show that models go beyond congestion
+
+```{r}
+estimate_vmt(model, pm_network_flows, "PM Peak")
 ```
 
 ## Land use scenarios
@@ -351,7 +357,7 @@ This one is very wrong, but that makes it more useful.
 
 ---Also George Box, from beyond the grave
 
-## Questions / Contact
+## Questions / Comments / Contact
 
 Matt Bhagat-Conway
 
