@@ -30,7 +30,7 @@
 #' you want to use in estimation. 
 #' @export
 estimate = function (nhts, osm, state, county, year, highway_types=c("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"), installJulia=T) {
-    psrc = read_csv(gzfile(path_package("bf4sm", "extdata", "psrc_trips.csv.gz"), col_types=cols(o_tract10=col_character(), d_tract10=col_character())))
+    psrc = read_csv(gzfile(path_package("bf4sm", "extdata", "psrc_trips.csv.gz")), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
     psrc_lodes = read_csv(path_package("bf4sm", "extdata", "wa_wac_S000_JT00_2019.csv.gz"))
     seed_matrix = read_csv(path_package("bf4sm", "extdata", "seed_matrix.csv"))
 
