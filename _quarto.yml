@@ -7,7 +7,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Baby's First Four-Step Model"
+  title: "My First Four-Step Model"
 
 format:
   html:

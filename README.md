@@ -1,9 +1,9 @@
 ---
-title: Baby's First Four-Step Model
+title: My First Four-Step Model
 bibliography: docs/bibliography.bib
 ---
 
-Baby's First Four-Step Model is an R package and associated scripts that support a minimal [four-step travel demand model](https://transportgeography.org/contents/methods/spatial-interactions-gravity-model/transportation-land-use-four-stages-model/) intended for use in teaching. Simplicity is the primary goal; it is probably not advisable to use this for production travel forecasting, though I have tried to make the model as accurate as possible without compromising simplicity. Some of the simplifying assumptions that limit applicability are explained in the [limitations](#limitations) section.
+My First Four-Step Model is an R package and associated scripts that support a minimal [four-step travel demand model](https://transportgeography.org/contents/methods/spatial-interactions-gravity-model/transportation-land-use-four-stages-model/) intended for use in teaching. Simplicity is the primary goal; it is probably not advisable to use this for production travel forecasting, though I have tried to make the model as accurate as possible without compromising simplicity. Some of the simplifying assumptions that limit applicability are explained in the [limitations](#limitations) section.
 
 The overarching goal is to produce a four-step model based primarily on nationwide open datasources (the [National Household Travel Survey](https://nhts.ornl.gov), the American Community Survey, the [LODES dataset](https://lehd.ces.census.gov), and [OpenStreetMap data](https://openstreetmap.org)). It is possible to estimate a model for a new region of the country in just a few lines of code (see [Estimation](#estimation)), and run it in a Quarto notebook usable even by people with minimal R experience.
 
@@ -47,7 +47,7 @@ It does not currently link transit trips with transfers in the middle, though ma
 
 ### Induced demand
 
-Four-step models are known for not doing well at estimating induced demand, and Baby's First Four Step Model is even worse—it does not consider induced demand at all.
+Four-step models are known for not doing well at estimating induced demand, and My First Four Step Model is even worse—it does not consider induced demand at all.
 
 ## References
 

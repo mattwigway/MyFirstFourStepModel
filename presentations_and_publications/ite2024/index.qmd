@@ -1,5 +1,5 @@
 ---
-title: "Baby's First Four-Step Model"
+title: "My First Four-Step Model"
 author:
     - name: Matt Bhagat-Conway
       affiliations:
@@ -50,7 +50,7 @@ NHTS_PATH = here::here("data/nhts")
 # Since julia has already been used in the session, it won't be restarted and won't pick up the change in project
 # from the environment change in network.R.
 julia_library("Pkg")
-julia_call("Pkg.activate", path_package("bf4sm", "julia"))
+julia_call("Pkg.activate", path_package("mf4sm", "julia"))
 ```
 
 ## About me
@@ -107,9 +107,9 @@ julia_call("Pkg.activate", path_package("bf4sm", "julia"))
     - We primarily cover the four step model, with a nod to activity-based models
 - Then, every student runs a _very_ simple model and interprets the output
 
-## Baby's First Four Step Model
+## My First Four Step Model
 
-- I implement this model using Baby's First Four Step Model, an R package I developed for implementing _very_ simple models
+- I implement this model using My First Four Step Model, an R package I developed for implementing _very_ simple models
 - Running the model only requires R and minimal computing power, so students can run it on their laptops
     - Even Chromebooks!
 - The four steps of the model map directly onto four functions in the package
@@ -130,7 +130,7 @@ julia_call("Pkg.activate", path_package("bf4sm", "julia"))
 ```{r}
 #| output: false
 #| eval: false
-library(bf4sm)
+library(mf4sm)
 library(tidyverse)
 
 # Load NHTS and filter to North Carolina
@@ -147,7 +147,7 @@ save_model(model, "rdu.model")
 ## Running the model: installation
 
 - Feel free to follow along if you have R!
-- To run the model, students just need to install the Baby's First Four Step Model package in R
+- To run the model, students just need to install the My First Four Step Model package in R
 
 ```{r}
 #| eval: false
@@ -160,7 +160,7 @@ devtools::install_github("mattwigway/BabysFirstFourStepModel")
 - The next step is to load the already estimated model—either from a local file or a URL
 
 ```{r}
-library(bf4sm)
+library(mf4sm)
 model = load_model("https://files.indicatrix.org/rdu.model")
 ```
 
@@ -325,7 +325,7 @@ estimate_vmt(model, pm_network_flows, "PM Peak")
 ## Land use scenarios
 
 - Models are most useful for scenario planning
-- Baby's First Four Step Model has a very simple Excel-based format to specify land use scenarios
+- My First Four Step Model has a very simple Excel-based format to specify land use scenarios
 - Two sheets, one for residential characteristics by tract, one for jobs by tract
 - I create "business as usual" and "compact development" scenarios to share with my students
 

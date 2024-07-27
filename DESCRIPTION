@@ -1,10 +1,10 @@
-Package: bf4sm
-Title: What the Package Does (One Line, Title Case)
+Package: mf4sm
+Title: Highly Simplified Four-Step Travel Demand Models for Teaching
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Matt", "Bhagat-Conway", , "mwbc@unc.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1210-2982"))
+Description: This package provides a highly simplified four-step model. Running the model requires only R, and is designed to be computationally efficient and run even on consumer-grade equipment.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

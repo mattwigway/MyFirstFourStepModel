@@ -1,9 +1,9 @@
-# Install the Baby's First Four Step Model package (only needed once per machine)
+# Install the My First Four Step Model package (only needed once per machine)
 install.packages("devtools")
 devtools::install_github("mattwigway/BabysFirstFourStepModel")
 
-# Load the Baby's First Four Step Model package, and the Research Triangle model
-library(bf4sm)
+# Load the My First Four Step Model package, and the Research Triangle model
+library(mf4sm)
 model = load_model("https://files.indicatrix.org/rdu.model")
 
 # Print one of the trip production regressions

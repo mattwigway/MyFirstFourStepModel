@@ -1,4 +1,4 @@
-Baby's First Four Step Model resources
+My First Four Step Model resources
 
 - [ITE Transportation Educator's Workshop slides](presentations_and_publications/ite2024/)
 - [ITE Transportation Educator's Workshop example code](presentations_and_publications/ite2024/ite2024.R)

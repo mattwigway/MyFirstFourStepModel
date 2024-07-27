@@ -1,5 +1,5 @@
 ---
-title: "Baby's First Four-Step Model: a simple and accessible tool to introduce students to travel demand modeling"
+title: "My First Four-Step Model: a simple and accessible tool to teach students travel demand modeling"
 author:
   - name: Matthew Wigginton Bhagat-Conway
     affiliations:
@@ -22,11 +22,11 @@ date: 2024-06-05
 
 # Introduction
 
-The four-step travel demand model is ubiquitous in transportation planning. It was one of the earliest models developed [@weiner_urban_2013;@federalhighwayadministration_planpac_1977]. While it has come under significant criticism lately [@mladenovic_shortcomings_2014], it remains in common use. Many large regions have transitioned to more modern activity-based models, but many smaller regions and even some large regions continue to use the four-step model.
+The four-step travel demand model is ubiquitous in transportation planning. It was one of the earliest travel demand models developed [@weiner_urban_2013;@federalhighwayadministration_planpac_1977]. While it has come under significant criticism lately [@mladenovic_shortcomings_2014], it remains in common use. Many large regions have transitioned to more modern activity-based models, but many smaller regions and even some large regions continue to use the four-step model.
 
 Travel demand models, both activity-based and four-step, are traditionally run by a small group of modeling staff within a metropolitan planning organization. A much larger group of planners and engineers work with model outputs, however. Model runs are used for project prioritization, long-range land use and transportation planning, development impact assessments, and much more. This larger group of model consumers generally receive little to no formal training in modeling, and most have not ever worked with a model themselves.
 
-In this article, I introduce my "Baby's First Four Step Model" R package, which is a framework for implementing a very simple four-step model that can run quickly on typical consumer-grade desktops and laptops without complex software dependency installation processes or expensive licensing. It can be estimated for any US metropolitan area using only publicly-available data. The goal of the package is to enable a much broader swath of planners and engineers to work with a travel demand model during their education. I use the package in my Introduction to Planning Methods course, where we spend only a week discussing transportation modeling and engineering, and at the conclusion the students run a simple demand model and future scenario for the Research Triangle region of North Carolina.
+In this article, I introduce my "My First Four Step Model" R package, which is a framework for implementing a very simple four-step model that can run quickly on typical consumer-grade desktops and laptops without complex software dependency installation processes or expensive licensing. It can be estimated for any US metropolitan area using only publicly-available data. The goal of the package is to enable a much broader swath of planners and engineers to work with a travel demand model during their education. I use the package in my Introduction to Planning Methods course, where we spend only a week discussing transportation modeling and engineering, and at the conclusion the students run a simple demand model and future scenario for the Research Triangle region of North Carolina.
 
 # Literature review
 
