@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.5.40">
 
   <meta name="author" content="Matt Bhagat-Conway">
-  <title>Baby’s First Four-Step Model</title>
+  <title>My First Four-Step Model</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -391,7 +391,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Baby’s First Four-Step Model</h1>
+  <h1 class="title">My First Four-Step Model</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -477,10 +477,10 @@ Matt Bhagat-Conway
 <li>Then, every student runs a <em>very</em> simple model and interprets the output</li>
 </ul>
 </section>
-<section id="babys-first-four-step-model" class="slide level2">
-<h2>Baby’s First Four Step Model</h2>
+<section id="my-first-four-step-model" class="slide level2">
+<h2>My First Four Step Model</h2>
 <ul>
-<li>I implement this model using Baby’s First Four Step Model, an R package I developed for implementing <em>very</em> simple models</li>
+<li>I implement this model using My First Four Step Model, an R package I developed for implementing <em>very</em> simple models</li>
 <li>Running the model only requires R and minimal computing power, so students can run it on their laptops
 <ul>
 <li>Even Chromebooks!</li>
@@ -505,7 +505,7 @@ Matt Bhagat-Conway
 <li>Below is all the code required to estimate the model for the Research Triangle region</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(bf4sm)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(mf4sm)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a></a></span>
 <span id="cb1-4"><a></a><span class="co"># Load NHTS and filter to North Carolina</span></span>
@@ -523,7 +523,7 @@ Matt Bhagat-Conway
 <h2>Running the model: installation</h2>
 <ul>
 <li>Feel free to follow along if you have R!</li>
-<li>To run the model, students just need to install the Baby’s First Four Step Model package in R</li>
+<li>To run the model, students just need to install the My First Four Step Model package in R</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
@@ -536,7 +536,7 @@ Matt Bhagat-Conway
 <li>The next step is to load the already estimated model—either from a local file or a URL</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(bf4sm)</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(mf4sm)</span>
 <span id="cb3-2"><a></a>model <span class="ot">=</span> <span class="fu">load_model</span>(<span class="st">"https://files.indicatrix.org/rdu.model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -551,23 +551,23 @@ Matt Bhagat-Conway
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fyjcpawigq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fyjcpawigq table {
+<div id="xifvulvqzj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xifvulvqzj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fyjcpawigq thead, #fyjcpawigq tbody, #fyjcpawigq tfoot, #fyjcpawigq tr, #fyjcpawigq td, #fyjcpawigq th {
+#xifvulvqzj thead, #xifvulvqzj tbody, #xifvulvqzj tfoot, #xifvulvqzj tr, #xifvulvqzj td, #xifvulvqzj th {
   border-style: none;
 }
 
-#fyjcpawigq p {
+#xifvulvqzj p {
   margin: 0;
   padding: 0;
 }
 
-#fyjcpawigq .gt_table {
+#xifvulvqzj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -593,12 +593,12 @@ Matt Bhagat-Conway
   border-left-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_caption {
+#xifvulvqzj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fyjcpawigq .gt_title {
+#xifvulvqzj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -610,7 +610,7 @@ Matt Bhagat-Conway
   border-bottom-width: 0;
 }
 
-#fyjcpawigq .gt_subtitle {
+#xifvulvqzj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -622,7 +622,7 @@ Matt Bhagat-Conway
   border-top-width: 0;
 }
 
-#fyjcpawigq .gt_heading {
+#xifvulvqzj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -634,13 +634,13 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_bottom_border {
+#xifvulvqzj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_col_headings {
+#xifvulvqzj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -655,7 +655,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_col_heading {
+#xifvulvqzj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -675,7 +675,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#fyjcpawigq .gt_column_spanner_outer {
+#xifvulvqzj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -687,15 +687,15 @@ Matt Bhagat-Conway
   padding-right: 4px;
 }
 
-#fyjcpawigq .gt_column_spanner_outer:first-child {
+#xifvulvqzj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fyjcpawigq .gt_column_spanner_outer:last-child {
+#xifvulvqzj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fyjcpawigq .gt_column_spanner {
+#xifvulvqzj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -707,11 +707,11 @@ Matt Bhagat-Conway
   width: 100%;
 }
 
-#fyjcpawigq .gt_spanner_row {
+#xifvulvqzj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fyjcpawigq .gt_group_heading {
+#xifvulvqzj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -737,7 +737,7 @@ Matt Bhagat-Conway
   text-align: left;
 }
 
-#fyjcpawigq .gt_empty_group_heading {
+#xifvulvqzj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -752,15 +752,15 @@ Matt Bhagat-Conway
   vertical-align: middle;
 }
 
-#fyjcpawigq .gt_from_md > :first-child {
+#xifvulvqzj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fyjcpawigq .gt_from_md > :last-child {
+#xifvulvqzj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fyjcpawigq .gt_row {
+#xifvulvqzj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -779,7 +779,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#fyjcpawigq .gt_stub {
+#xifvulvqzj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -792,7 +792,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#fyjcpawigq .gt_stub_row_group {
+#xifvulvqzj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -806,15 +806,15 @@ Matt Bhagat-Conway
   vertical-align: top;
 }
 
-#fyjcpawigq .gt_row_group_first td {
+#xifvulvqzj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fyjcpawigq .gt_row_group_first th {
+#xifvulvqzj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fyjcpawigq .gt_summary_row {
+#xifvulvqzj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -824,16 +824,16 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#fyjcpawigq .gt_first_summary_row {
+#xifvulvqzj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_first_summary_row.thick {
+#xifvulvqzj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fyjcpawigq .gt_last_summary_row {
+#xifvulvqzj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -843,7 +843,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_grand_summary_row {
+#xifvulvqzj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -853,7 +853,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#fyjcpawigq .gt_first_grand_summary_row {
+#xifvulvqzj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -863,7 +863,7 @@ Matt Bhagat-Conway
   border-top-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_last_grand_summary_row_top {
+#xifvulvqzj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -873,11 +873,11 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_striped {
+#xifvulvqzj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fyjcpawigq .gt_table_body {
+#xifvulvqzj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -886,7 +886,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_footnotes {
+#xifvulvqzj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -900,7 +900,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_footnote {
+#xifvulvqzj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -909,7 +909,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#fyjcpawigq .gt_sourcenotes {
+#xifvulvqzj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -923,7 +923,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#fyjcpawigq .gt_sourcenote {
+#xifvulvqzj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -931,72 +931,72 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#fyjcpawigq .gt_left {
+#xifvulvqzj .gt_left {
   text-align: left;
 }
 
-#fyjcpawigq .gt_center {
+#xifvulvqzj .gt_center {
   text-align: center;
 }
 
-#fyjcpawigq .gt_right {
+#xifvulvqzj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fyjcpawigq .gt_font_normal {
+#xifvulvqzj .gt_font_normal {
   font-weight: normal;
 }
 
-#fyjcpawigq .gt_font_bold {
+#xifvulvqzj .gt_font_bold {
   font-weight: bold;
 }
 
-#fyjcpawigq .gt_font_italic {
+#xifvulvqzj .gt_font_italic {
   font-style: italic;
 }
 
-#fyjcpawigq .gt_super {
+#xifvulvqzj .gt_super {
   font-size: 65%;
 }
 
-#fyjcpawigq .gt_footnote_marks {
+#xifvulvqzj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fyjcpawigq .gt_asterisk {
+#xifvulvqzj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fyjcpawigq .gt_indent_1 {
+#xifvulvqzj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fyjcpawigq .gt_indent_2 {
+#xifvulvqzj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fyjcpawigq .gt_indent_3 {
+#xifvulvqzj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fyjcpawigq .gt_indent_4 {
+#xifvulvqzj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fyjcpawigq .gt_indent_5 {
+#xifvulvqzj .gt_indent_5 {
   text-indent: 25px;
 }
 
-#fyjcpawigq .katex-display {
+#xifvulvqzj .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#fyjcpawigq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xifvulvqzj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1107,23 +1107,23 @@ Matt Bhagat-Conway
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="hcljrwlvco" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#hcljrwlvco table {
+<div id="idbiwdhiep" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#idbiwdhiep table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#hcljrwlvco thead, #hcljrwlvco tbody, #hcljrwlvco tfoot, #hcljrwlvco tr, #hcljrwlvco td, #hcljrwlvco th {
+#idbiwdhiep thead, #idbiwdhiep tbody, #idbiwdhiep tfoot, #idbiwdhiep tr, #idbiwdhiep td, #idbiwdhiep th {
   border-style: none;
 }
 
-#hcljrwlvco p {
+#idbiwdhiep p {
   margin: 0;
   padding: 0;
 }
 
-#hcljrwlvco .gt_table {
+#idbiwdhiep .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1149,12 +1149,12 @@ Matt Bhagat-Conway
   border-left-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_caption {
+#idbiwdhiep .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#hcljrwlvco .gt_title {
+#idbiwdhiep .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1166,7 +1166,7 @@ Matt Bhagat-Conway
   border-bottom-width: 0;
 }
 
-#hcljrwlvco .gt_subtitle {
+#idbiwdhiep .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1178,7 +1178,7 @@ Matt Bhagat-Conway
   border-top-width: 0;
 }
 
-#hcljrwlvco .gt_heading {
+#idbiwdhiep .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1190,13 +1190,13 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_bottom_border {
+#idbiwdhiep .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_col_headings {
+#idbiwdhiep .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1211,7 +1211,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_col_heading {
+#idbiwdhiep .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1231,7 +1231,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#hcljrwlvco .gt_column_spanner_outer {
+#idbiwdhiep .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1243,15 +1243,15 @@ Matt Bhagat-Conway
   padding-right: 4px;
 }
 
-#hcljrwlvco .gt_column_spanner_outer:first-child {
+#idbiwdhiep .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#hcljrwlvco .gt_column_spanner_outer:last-child {
+#idbiwdhiep .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#hcljrwlvco .gt_column_spanner {
+#idbiwdhiep .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1263,11 +1263,11 @@ Matt Bhagat-Conway
   width: 100%;
 }
 
-#hcljrwlvco .gt_spanner_row {
+#idbiwdhiep .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#hcljrwlvco .gt_group_heading {
+#idbiwdhiep .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1293,7 +1293,7 @@ Matt Bhagat-Conway
   text-align: left;
 }
 
-#hcljrwlvco .gt_empty_group_heading {
+#idbiwdhiep .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1308,15 +1308,15 @@ Matt Bhagat-Conway
   vertical-align: middle;
 }
 
-#hcljrwlvco .gt_from_md > :first-child {
+#idbiwdhiep .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#hcljrwlvco .gt_from_md > :last-child {
+#idbiwdhiep .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#hcljrwlvco .gt_row {
+#idbiwdhiep .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1335,7 +1335,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#hcljrwlvco .gt_stub {
+#idbiwdhiep .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1348,7 +1348,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#hcljrwlvco .gt_stub_row_group {
+#idbiwdhiep .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1362,15 +1362,15 @@ Matt Bhagat-Conway
   vertical-align: top;
 }
 
-#hcljrwlvco .gt_row_group_first td {
+#idbiwdhiep .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#hcljrwlvco .gt_row_group_first th {
+#idbiwdhiep .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#hcljrwlvco .gt_summary_row {
+#idbiwdhiep .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1380,16 +1380,16 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#hcljrwlvco .gt_first_summary_row {
+#idbiwdhiep .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_first_summary_row.thick {
+#idbiwdhiep .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#hcljrwlvco .gt_last_summary_row {
+#idbiwdhiep .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1399,7 +1399,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_grand_summary_row {
+#idbiwdhiep .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1409,7 +1409,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#hcljrwlvco .gt_first_grand_summary_row {
+#idbiwdhiep .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1419,7 +1419,7 @@ Matt Bhagat-Conway
   border-top-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_last_grand_summary_row_top {
+#idbiwdhiep .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1429,11 +1429,11 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_striped {
+#idbiwdhiep .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#hcljrwlvco .gt_table_body {
+#idbiwdhiep .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1442,7 +1442,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_footnotes {
+#idbiwdhiep .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1456,7 +1456,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_footnote {
+#idbiwdhiep .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1465,7 +1465,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#hcljrwlvco .gt_sourcenotes {
+#idbiwdhiep .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1479,7 +1479,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#hcljrwlvco .gt_sourcenote {
+#idbiwdhiep .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1487,72 +1487,72 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#hcljrwlvco .gt_left {
+#idbiwdhiep .gt_left {
   text-align: left;
 }
 
-#hcljrwlvco .gt_center {
+#idbiwdhiep .gt_center {
   text-align: center;
 }
 
-#hcljrwlvco .gt_right {
+#idbiwdhiep .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#hcljrwlvco .gt_font_normal {
+#idbiwdhiep .gt_font_normal {
   font-weight: normal;
 }
 
-#hcljrwlvco .gt_font_bold {
+#idbiwdhiep .gt_font_bold {
   font-weight: bold;
 }
 
-#hcljrwlvco .gt_font_italic {
+#idbiwdhiep .gt_font_italic {
   font-style: italic;
 }
 
-#hcljrwlvco .gt_super {
+#idbiwdhiep .gt_super {
   font-size: 65%;
 }
 
-#hcljrwlvco .gt_footnote_marks {
+#idbiwdhiep .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#hcljrwlvco .gt_asterisk {
+#idbiwdhiep .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#hcljrwlvco .gt_indent_1 {
+#idbiwdhiep .gt_indent_1 {
   text-indent: 5px;
 }
 
-#hcljrwlvco .gt_indent_2 {
+#idbiwdhiep .gt_indent_2 {
   text-indent: 10px;
 }
 
-#hcljrwlvco .gt_indent_3 {
+#idbiwdhiep .gt_indent_3 {
   text-indent: 15px;
 }
 
-#hcljrwlvco .gt_indent_4 {
+#idbiwdhiep .gt_indent_4 {
   text-indent: 20px;
 }
 
-#hcljrwlvco .gt_indent_5 {
+#idbiwdhiep .gt_indent_5 {
   text-indent: 25px;
 }
 
-#hcljrwlvco .katex-display {
+#idbiwdhiep .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#hcljrwlvco div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#idbiwdhiep div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1601,23 +1601,23 @@ Matt Bhagat-Conway
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="zscysrevtp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zscysrevtp table {
+<div id="iirleziqwn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#iirleziqwn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zscysrevtp thead, #zscysrevtp tbody, #zscysrevtp tfoot, #zscysrevtp tr, #zscysrevtp td, #zscysrevtp th {
+#iirleziqwn thead, #iirleziqwn tbody, #iirleziqwn tfoot, #iirleziqwn tr, #iirleziqwn td, #iirleziqwn th {
   border-style: none;
 }
 
-#zscysrevtp p {
+#iirleziqwn p {
   margin: 0;
   padding: 0;
 }
 
-#zscysrevtp .gt_table {
+#iirleziqwn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1643,12 +1643,12 @@ Matt Bhagat-Conway
   border-left-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_caption {
+#iirleziqwn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zscysrevtp .gt_title {
+#iirleziqwn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1660,7 +1660,7 @@ Matt Bhagat-Conway
   border-bottom-width: 0;
 }
 
-#zscysrevtp .gt_subtitle {
+#iirleziqwn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1672,7 +1672,7 @@ Matt Bhagat-Conway
   border-top-width: 0;
 }
 
-#zscysrevtp .gt_heading {
+#iirleziqwn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1684,13 +1684,13 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_bottom_border {
+#iirleziqwn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_col_headings {
+#iirleziqwn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1705,7 +1705,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_col_heading {
+#iirleziqwn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1725,7 +1725,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#zscysrevtp .gt_column_spanner_outer {
+#iirleziqwn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1737,15 +1737,15 @@ Matt Bhagat-Conway
   padding-right: 4px;
 }
 
-#zscysrevtp .gt_column_spanner_outer:first-child {
+#iirleziqwn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zscysrevtp .gt_column_spanner_outer:last-child {
+#iirleziqwn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zscysrevtp .gt_column_spanner {
+#iirleziqwn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1757,11 +1757,11 @@ Matt Bhagat-Conway
   width: 100%;
 }
 
-#zscysrevtp .gt_spanner_row {
+#iirleziqwn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zscysrevtp .gt_group_heading {
+#iirleziqwn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1787,7 +1787,7 @@ Matt Bhagat-Conway
   text-align: left;
 }
 
-#zscysrevtp .gt_empty_group_heading {
+#iirleziqwn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1802,15 +1802,15 @@ Matt Bhagat-Conway
   vertical-align: middle;
 }
 
-#zscysrevtp .gt_from_md > :first-child {
+#iirleziqwn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zscysrevtp .gt_from_md > :last-child {
+#iirleziqwn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zscysrevtp .gt_row {
+#iirleziqwn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1829,7 +1829,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#zscysrevtp .gt_stub {
+#iirleziqwn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1842,7 +1842,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#zscysrevtp .gt_stub_row_group {
+#iirleziqwn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1856,15 +1856,15 @@ Matt Bhagat-Conway
   vertical-align: top;
 }
 
-#zscysrevtp .gt_row_group_first td {
+#iirleziqwn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zscysrevtp .gt_row_group_first th {
+#iirleziqwn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zscysrevtp .gt_summary_row {
+#iirleziqwn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1874,16 +1874,16 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#zscysrevtp .gt_first_summary_row {
+#iirleziqwn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_first_summary_row.thick {
+#iirleziqwn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zscysrevtp .gt_last_summary_row {
+#iirleziqwn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1893,7 +1893,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_grand_summary_row {
+#iirleziqwn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1903,7 +1903,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#zscysrevtp .gt_first_grand_summary_row {
+#iirleziqwn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1913,7 +1913,7 @@ Matt Bhagat-Conway
   border-top-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_last_grand_summary_row_top {
+#iirleziqwn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1923,11 +1923,11 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_striped {
+#iirleziqwn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zscysrevtp .gt_table_body {
+#iirleziqwn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1936,7 +1936,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_footnotes {
+#iirleziqwn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1950,7 +1950,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_footnote {
+#iirleziqwn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1959,7 +1959,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#zscysrevtp .gt_sourcenotes {
+#iirleziqwn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1973,7 +1973,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#zscysrevtp .gt_sourcenote {
+#iirleziqwn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1981,72 +1981,72 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#zscysrevtp .gt_left {
+#iirleziqwn .gt_left {
   text-align: left;
 }
 
-#zscysrevtp .gt_center {
+#iirleziqwn .gt_center {
   text-align: center;
 }
 
-#zscysrevtp .gt_right {
+#iirleziqwn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zscysrevtp .gt_font_normal {
+#iirleziqwn .gt_font_normal {
   font-weight: normal;
 }
 
-#zscysrevtp .gt_font_bold {
+#iirleziqwn .gt_font_bold {
   font-weight: bold;
 }
 
-#zscysrevtp .gt_font_italic {
+#iirleziqwn .gt_font_italic {
   font-style: italic;
 }
 
-#zscysrevtp .gt_super {
+#iirleziqwn .gt_super {
   font-size: 65%;
 }
 
-#zscysrevtp .gt_footnote_marks {
+#iirleziqwn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zscysrevtp .gt_asterisk {
+#iirleziqwn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zscysrevtp .gt_indent_1 {
+#iirleziqwn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zscysrevtp .gt_indent_2 {
+#iirleziqwn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zscysrevtp .gt_indent_3 {
+#iirleziqwn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zscysrevtp .gt_indent_4 {
+#iirleziqwn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zscysrevtp .gt_indent_5 {
+#iirleziqwn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zscysrevtp .katex-display {
+#iirleziqwn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zscysrevtp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#iirleziqwn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2066,34 +2066,34 @@ Matt Bhagat-Conway
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="Mode">Transit</td>
-<td class="gt_row gt_right" headers="(Intercept)">-2.7680***</td>
-<td class="gt_row gt_right" headers="HTRESDN">0.0003***</td>
-<td class="gt_row gt_right" headers="dist_km">-0.0210***</td>
-<td class="gt_row gt_right" headers="Midday">-0.5316***</td>
-<td class="gt_row gt_right" headers="PM Peak">-1.7792***</td>
-<td class="gt_row gt_right" headers="Overnight">-2.0949***</td>
-<td class="gt_row gt_right" headers="HBW">-1.2140***</td>
+<td class="gt_row gt_left" headers="Mode">Car</td>
+<td class="gt_row gt_right" headers="(Intercept)">4.6374***</td>
+<td class="gt_row gt_right" headers="HTRESDN">-0.0004***</td>
+<td class="gt_row gt_right" headers="dist_km">0.0633***</td>
+<td class="gt_row gt_right" headers="Midday">0.1495***</td>
+<td class="gt_row gt_right" headers="PM Peak">0.1379***</td>
+<td class="gt_row gt_right" headers="Overnight">0.2439***</td>
+<td class="gt_row gt_right" headers="HBW">0.1609***</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Mode">Walk</td>
-<td class="gt_row gt_right" headers="(Intercept)">-0.5484***</td>
-<td class="gt_row gt_right" headers="HTRESDN">0.0001***</td>
-<td class="gt_row gt_right" headers="dist_km">-0.5168***</td>
-<td class="gt_row gt_right" headers="Midday">-0.4026***</td>
-<td class="gt_row gt_right" headers="PM Peak">-0.2200***</td>
-<td class="gt_row gt_right" headers="Overnight">0.0015</td>
-<td class="gt_row gt_right" headers="HBW">-0.8256***</td>
+<td class="gt_row gt_left" headers="Mode">Transit</td>
+<td class="gt_row gt_right" headers="(Intercept)">1.8684***</td>
+<td class="gt_row gt_right" headers="HTRESDN">-0.0002**</td>
+<td class="gt_row gt_right" headers="dist_km">0.0423***</td>
+<td class="gt_row gt_right" headers="Midday">-0.3816***</td>
+<td class="gt_row gt_right" headers="PM Peak">-1.6429***</td>
+<td class="gt_row gt_right" headers="Overnight">-1.8556***</td>
+<td class="gt_row gt_right" headers="HBW">-1.0556***</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Mode">Bike</td>
-<td class="gt_row gt_right" headers="(Intercept)">-4.5952***</td>
-<td class="gt_row gt_right" headers="HTRESDN">0.0004***</td>
-<td class="gt_row gt_right" headers="dist_km">-0.0723***</td>
-<td class="gt_row gt_right" headers="Midday">-0.1526</td>
-<td class="gt_row gt_right" headers="PM Peak">-0.1364</td>
-<td class="gt_row gt_right" headers="Overnight">-0.2461***</td>
-<td class="gt_row gt_right" headers="HBW">-0.1370***</td>
+<td class="gt_row gt_left" headers="Mode">Walk</td>
+<td class="gt_row gt_right" headers="(Intercept)">4.0911***</td>
+<td class="gt_row gt_right" headers="HTRESDN">-0.0003***</td>
+<td class="gt_row gt_right" headers="dist_km">-0.4548***</td>
+<td class="gt_row gt_right" headers="Midday">-0.2533***</td>
+<td class="gt_row gt_right" headers="PM Peak">-0.0824**</td>
+<td class="gt_row gt_right" headers="Overnight">0.2451***</td>
+<td class="gt_row gt_right" headers="HBW">-0.6660***</td>
 </tr>
 </tbody>
 </table>
@@ -2110,23 +2110,23 @@ Matt Bhagat-Conway
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="gmhfsbvcrp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gmhfsbvcrp table {
+<div id="qnqyzgdfin" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qnqyzgdfin table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gmhfsbvcrp thead, #gmhfsbvcrp tbody, #gmhfsbvcrp tfoot, #gmhfsbvcrp tr, #gmhfsbvcrp td, #gmhfsbvcrp th {
+#qnqyzgdfin thead, #qnqyzgdfin tbody, #qnqyzgdfin tfoot, #qnqyzgdfin tr, #qnqyzgdfin td, #qnqyzgdfin th {
   border-style: none;
 }
 
-#gmhfsbvcrp p {
+#qnqyzgdfin p {
   margin: 0;
   padding: 0;
 }
 
-#gmhfsbvcrp .gt_table {
+#qnqyzgdfin .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2152,12 +2152,12 @@ Matt Bhagat-Conway
   border-left-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_caption {
+#qnqyzgdfin .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gmhfsbvcrp .gt_title {
+#qnqyzgdfin .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2169,7 +2169,7 @@ Matt Bhagat-Conway
   border-bottom-width: 0;
 }
 
-#gmhfsbvcrp .gt_subtitle {
+#qnqyzgdfin .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2181,7 +2181,7 @@ Matt Bhagat-Conway
   border-top-width: 0;
 }
 
-#gmhfsbvcrp .gt_heading {
+#qnqyzgdfin .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2193,13 +2193,13 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_bottom_border {
+#qnqyzgdfin .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_col_headings {
+#qnqyzgdfin .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2214,7 +2214,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_col_heading {
+#qnqyzgdfin .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2234,7 +2234,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#gmhfsbvcrp .gt_column_spanner_outer {
+#qnqyzgdfin .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2246,15 +2246,15 @@ Matt Bhagat-Conway
   padding-right: 4px;
 }
 
-#gmhfsbvcrp .gt_column_spanner_outer:first-child {
+#qnqyzgdfin .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gmhfsbvcrp .gt_column_spanner_outer:last-child {
+#qnqyzgdfin .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gmhfsbvcrp .gt_column_spanner {
+#qnqyzgdfin .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2266,11 +2266,11 @@ Matt Bhagat-Conway
   width: 100%;
 }
 
-#gmhfsbvcrp .gt_spanner_row {
+#qnqyzgdfin .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gmhfsbvcrp .gt_group_heading {
+#qnqyzgdfin .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2296,7 +2296,7 @@ Matt Bhagat-Conway
   text-align: left;
 }
 
-#gmhfsbvcrp .gt_empty_group_heading {
+#qnqyzgdfin .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2311,15 +2311,15 @@ Matt Bhagat-Conway
   vertical-align: middle;
 }
 
-#gmhfsbvcrp .gt_from_md > :first-child {
+#qnqyzgdfin .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gmhfsbvcrp .gt_from_md > :last-child {
+#qnqyzgdfin .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gmhfsbvcrp .gt_row {
+#qnqyzgdfin .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2338,7 +2338,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#gmhfsbvcrp .gt_stub {
+#qnqyzgdfin .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2351,7 +2351,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#gmhfsbvcrp .gt_stub_row_group {
+#qnqyzgdfin .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2365,15 +2365,15 @@ Matt Bhagat-Conway
   vertical-align: top;
 }
 
-#gmhfsbvcrp .gt_row_group_first td {
+#qnqyzgdfin .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gmhfsbvcrp .gt_row_group_first th {
+#qnqyzgdfin .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gmhfsbvcrp .gt_summary_row {
+#qnqyzgdfin .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2383,16 +2383,16 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#gmhfsbvcrp .gt_first_summary_row {
+#qnqyzgdfin .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_first_summary_row.thick {
+#qnqyzgdfin .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gmhfsbvcrp .gt_last_summary_row {
+#qnqyzgdfin .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2402,7 +2402,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_grand_summary_row {
+#qnqyzgdfin .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2412,7 +2412,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#gmhfsbvcrp .gt_first_grand_summary_row {
+#qnqyzgdfin .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2422,7 +2422,7 @@ Matt Bhagat-Conway
   border-top-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_last_grand_summary_row_top {
+#qnqyzgdfin .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2432,11 +2432,11 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_striped {
+#qnqyzgdfin .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gmhfsbvcrp .gt_table_body {
+#qnqyzgdfin .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2445,7 +2445,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_footnotes {
+#qnqyzgdfin .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2459,7 +2459,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_footnote {
+#qnqyzgdfin .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2468,7 +2468,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#gmhfsbvcrp .gt_sourcenotes {
+#qnqyzgdfin .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2482,7 +2482,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#gmhfsbvcrp .gt_sourcenote {
+#qnqyzgdfin .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2490,72 +2490,72 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#gmhfsbvcrp .gt_left {
+#qnqyzgdfin .gt_left {
   text-align: left;
 }
 
-#gmhfsbvcrp .gt_center {
+#qnqyzgdfin .gt_center {
   text-align: center;
 }
 
-#gmhfsbvcrp .gt_right {
+#qnqyzgdfin .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gmhfsbvcrp .gt_font_normal {
+#qnqyzgdfin .gt_font_normal {
   font-weight: normal;
 }
 
-#gmhfsbvcrp .gt_font_bold {
+#qnqyzgdfin .gt_font_bold {
   font-weight: bold;
 }
 
-#gmhfsbvcrp .gt_font_italic {
+#qnqyzgdfin .gt_font_italic {
   font-style: italic;
 }
 
-#gmhfsbvcrp .gt_super {
+#qnqyzgdfin .gt_super {
   font-size: 65%;
 }
 
-#gmhfsbvcrp .gt_footnote_marks {
+#qnqyzgdfin .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gmhfsbvcrp .gt_asterisk {
+#qnqyzgdfin .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gmhfsbvcrp .gt_indent_1 {
+#qnqyzgdfin .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gmhfsbvcrp .gt_indent_2 {
+#qnqyzgdfin .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gmhfsbvcrp .gt_indent_3 {
+#qnqyzgdfin .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gmhfsbvcrp .gt_indent_4 {
+#qnqyzgdfin .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gmhfsbvcrp .gt_indent_5 {
+#qnqyzgdfin .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gmhfsbvcrp .katex-display {
+#qnqyzgdfin .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gmhfsbvcrp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qnqyzgdfin div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2602,7 +2602,7 @@ Matt Bhagat-Conway
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">estimate_vmt</span>(model, pm_network_flows, <span class="st">"PM Peak"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 66463276</code></pre>
+<pre><code>[1] 66193281</code></pre>
 </div>
 </div>
 </section>
@@ -2610,29 +2610,29 @@ Matt Bhagat-Conway
 <h2>Land use scenarios</h2>
 <ul>
 <li>Models are most useful for scenario planning</li>
-<li>Baby’s First Four Step Model has a very simple Excel-based format to specify land use scenarios</li>
+<li>My First Four Step Model has a very simple Excel-based format to specify land use scenarios</li>
 <li>Two sheets, one for residential characteristics by tract, one for jobs by tract</li>
 <li>I create “business as usual” and “compact development” scenarios to share with my students</li>
 </ul>
 <div class="cell">
 <div class="cell-output-display">
-<div id="enztojwcdl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#enztojwcdl table {
+<div id="vybgveswoi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vybgveswoi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#enztojwcdl thead, #enztojwcdl tbody, #enztojwcdl tfoot, #enztojwcdl tr, #enztojwcdl td, #enztojwcdl th {
+#vybgveswoi thead, #vybgveswoi tbody, #vybgveswoi tfoot, #vybgveswoi tr, #vybgveswoi td, #vybgveswoi th {
   border-style: none;
 }
 
-#enztojwcdl p {
+#vybgveswoi p {
   margin: 0;
   padding: 0;
 }
 
-#enztojwcdl .gt_table {
+#vybgveswoi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2658,12 +2658,12 @@ Matt Bhagat-Conway
   border-left-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_caption {
+#vybgveswoi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#enztojwcdl .gt_title {
+#vybgveswoi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2675,7 +2675,7 @@ Matt Bhagat-Conway
   border-bottom-width: 0;
 }
 
-#enztojwcdl .gt_subtitle {
+#vybgveswoi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2687,7 +2687,7 @@ Matt Bhagat-Conway
   border-top-width: 0;
 }
 
-#enztojwcdl .gt_heading {
+#vybgveswoi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2699,13 +2699,13 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_bottom_border {
+#vybgveswoi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_col_headings {
+#vybgveswoi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2720,7 +2720,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_col_heading {
+#vybgveswoi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2740,7 +2740,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#enztojwcdl .gt_column_spanner_outer {
+#vybgveswoi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2752,15 +2752,15 @@ Matt Bhagat-Conway
   padding-right: 4px;
 }
 
-#enztojwcdl .gt_column_spanner_outer:first-child {
+#vybgveswoi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#enztojwcdl .gt_column_spanner_outer:last-child {
+#vybgveswoi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#enztojwcdl .gt_column_spanner {
+#vybgveswoi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2772,11 +2772,11 @@ Matt Bhagat-Conway
   width: 100%;
 }
 
-#enztojwcdl .gt_spanner_row {
+#vybgveswoi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#enztojwcdl .gt_group_heading {
+#vybgveswoi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2802,7 +2802,7 @@ Matt Bhagat-Conway
   text-align: left;
 }
 
-#enztojwcdl .gt_empty_group_heading {
+#vybgveswoi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2817,15 +2817,15 @@ Matt Bhagat-Conway
   vertical-align: middle;
 }
 
-#enztojwcdl .gt_from_md > :first-child {
+#vybgveswoi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#enztojwcdl .gt_from_md > :last-child {
+#vybgveswoi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#enztojwcdl .gt_row {
+#vybgveswoi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2844,7 +2844,7 @@ Matt Bhagat-Conway
   overflow-x: hidden;
 }
 
-#enztojwcdl .gt_stub {
+#vybgveswoi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2857,7 +2857,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#enztojwcdl .gt_stub_row_group {
+#vybgveswoi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2871,15 +2871,15 @@ Matt Bhagat-Conway
   vertical-align: top;
 }
 
-#enztojwcdl .gt_row_group_first td {
+#vybgveswoi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#enztojwcdl .gt_row_group_first th {
+#vybgveswoi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#enztojwcdl .gt_summary_row {
+#vybgveswoi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2889,16 +2889,16 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#enztojwcdl .gt_first_summary_row {
+#vybgveswoi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_first_summary_row.thick {
+#vybgveswoi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#enztojwcdl .gt_last_summary_row {
+#vybgveswoi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2908,7 +2908,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_grand_summary_row {
+#vybgveswoi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2918,7 +2918,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#enztojwcdl .gt_first_grand_summary_row {
+#vybgveswoi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2928,7 +2928,7 @@ Matt Bhagat-Conway
   border-top-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_last_grand_summary_row_top {
+#vybgveswoi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2938,11 +2938,11 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_striped {
+#vybgveswoi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#enztojwcdl .gt_table_body {
+#vybgveswoi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2951,7 +2951,7 @@ Matt Bhagat-Conway
   border-bottom-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_footnotes {
+#vybgveswoi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2965,7 +2965,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_footnote {
+#vybgveswoi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2974,7 +2974,7 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#enztojwcdl .gt_sourcenotes {
+#vybgveswoi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2988,7 +2988,7 @@ Matt Bhagat-Conway
   border-right-color: #D3D3D3;
 }
 
-#enztojwcdl .gt_sourcenote {
+#vybgveswoi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2996,72 +2996,72 @@ Matt Bhagat-Conway
   padding-right: 5px;
 }
 
-#enztojwcdl .gt_left {
+#vybgveswoi .gt_left {
   text-align: left;
 }
 
-#enztojwcdl .gt_center {
+#vybgveswoi .gt_center {
   text-align: center;
 }
 
-#enztojwcdl .gt_right {
+#vybgveswoi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#enztojwcdl .gt_font_normal {
+#vybgveswoi .gt_font_normal {
   font-weight: normal;
 }
 
-#enztojwcdl .gt_font_bold {
+#vybgveswoi .gt_font_bold {
   font-weight: bold;
 }
 
-#enztojwcdl .gt_font_italic {
+#vybgveswoi .gt_font_italic {
   font-style: italic;
 }
 
-#enztojwcdl .gt_super {
+#vybgveswoi .gt_super {
   font-size: 65%;
 }
 
-#enztojwcdl .gt_footnote_marks {
+#vybgveswoi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#enztojwcdl .gt_asterisk {
+#vybgveswoi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#enztojwcdl .gt_indent_1 {
+#vybgveswoi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#enztojwcdl .gt_indent_2 {
+#vybgveswoi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#enztojwcdl .gt_indent_3 {
+#vybgveswoi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#enztojwcdl .gt_indent_4 {
+#vybgveswoi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#enztojwcdl .gt_indent_5 {
+#vybgveswoi .gt_indent_5 {
   text-indent: 25px;
 }
 
-#enztojwcdl .katex-display {
+#vybgveswoi .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#enztojwcdl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#vybgveswoi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
