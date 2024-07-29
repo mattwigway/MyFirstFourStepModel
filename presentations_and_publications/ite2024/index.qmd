@@ -50,7 +50,7 @@ NHTS_PATH = here::here("data/nhts")
 # Since julia has already been used in the session, it won't be restarted and won't pick up the change in project
 # from the environment change in network.R.
 julia_library("Pkg")
-julia_call("Pkg.activate", path_package("mf4sm", "julia"))
+julia_call("Pkg.activate", path_package("MyFirstFourStepModel", "julia"))
 ```
 
 ## About me
@@ -130,7 +130,7 @@ julia_call("Pkg.activate", path_package("mf4sm", "julia"))
 ```{r}
 #| output: false
 #| eval: false
-library(mf4sm)
+library(MyFirstFourStepModel)
 library(tidyverse)
 
 # Load NHTS and filter to North Carolina
@@ -160,7 +160,7 @@ devtools::install_github("mattwigway/BabysFirstFourStepModel")
 - The next step is to load the already estimated model—either from a local file or a URL
 
 ```{r}
-library(mf4sm)
+library(MyFirstFourStepModel)
 model = load_model("https://files.indicatrix.org/rdu.model")
 ```
 

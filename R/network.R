@@ -5,10 +5,10 @@
 #' @return A list with members $network (igraph network) and $network_geo (sf DataFrame with geographic outline of network)
 build_network = function (osm, highway_types, installJulia=T) {
     # set up Julia
-    Sys.setenv(JULIA_PROJECT=path_package("mf4sm", "julia"))
+    Sys.setenv(JULIA_PROJECT=path_package("MyFirstFourStepModel", "julia"))
     julia = julia_setup(installJulia=installJulia)
     julia$eval("import Pkg; Pkg.resolve()") # make sure packages are up to date
-    julia$source(path_package("mf4sm", "julia", "create_osm_network.jl"))
+    julia$source(path_package("MyFirstFourStepModel", "julia", "create_osm_network.jl"))
 
     # build the graph
     G = julia$call("build_graph", osm, highway_types)
