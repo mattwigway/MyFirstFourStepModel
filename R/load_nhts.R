@@ -33,7 +33,8 @@ load_nhts <- function (base_path) {
             HTRESDN = col_integer(),
             WRKCOUNT = col_integer(),
             WTHHFIN = col_double(),
-            HHSTATE = col_character()
+            HHSTATE = col_character(),
+            TRAVDAY = col_integer()
         )) %>%
         filter(HTRESDN > 0 & HHFAMINC > 0) %>%
         mutate(
