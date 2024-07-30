@@ -2,3 +2,5 @@
 ^renv\.lock$
 ^environment\.yml$
 ^LICENSE\.md$
+presentations_and_publications
+.quarto
