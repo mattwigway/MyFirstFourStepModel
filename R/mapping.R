@@ -29,12 +29,20 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
     from_tract = flows %>%
         filter(time_period == timeperiod & trip_type == triptype & orig_geoid == origin_tract)
 
-    model$tazs_geo %>%
+    plot_data = model$tazs_geo %>%
         st_transform(3857) %>%
         left_join(from_tract, by=c("GEOID"="dest_geoid")) %>%
+        mutate(n_trips=replace_na(n_trips, 0))
+
+    # use quantile breaks so that there is some variation on the map and it's not dominated by nearby destinations
+    breaks = round(quantile(plot_data$n_trips, c(0, 0.2, 0.4, 0.6, 0.8, 1)), digits=0)
+    names(breaks) = NULL
+    breaks = pmax(breaks, 0:5)
+    
+    plot_data %>%
         ggplot(aes(fill=n_trips)) +
             geom_sf() +
-            scale_fill_fermenter(palette="Greens", direction=1) +
+            scale_fill_fermenter(palette="Greens", direction=1, breaks=breaks) +
             labs(fill=paste0("Number of trips\ndestined for tract\n", "(total: ",  format(round(sum(from_tract$n_trips)), scientific=F), ")")) +
             ggtitle(paste(triptype, "trips,", timeperiod, "from tract", origin_tract)) +
             geom_sf(data=filter(model$tazs_geo, GEOID==origin_tract), fill="blue") +
