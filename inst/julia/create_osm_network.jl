@@ -191,6 +191,7 @@ function create_edges!(G, tags, waynodes, wayid, nodes, intersection_nodes, next
             for nid in rest
                 length_m += node_dist_m(nodes[prev], nodes[nid])
                 push!(geom, (nodes[nid].lon, nodes[nid].lat))
+                prev = nid
             end
 
             data = EdgeData((
