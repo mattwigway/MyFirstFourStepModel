@@ -21,7 +21,7 @@ map_trip_generation = function (model, trip_counts, end, timeperiod, triptype) {
             ggtitle(paste0(triptype, " ", str_to_lower(end), ", ", timeperiod)) +
             geom_sf(data=model$network_geo, fill="black", linewidth=0.35) +
             theme_minimal() +
-            theme(axis.text = element_blank(), panel.grid = element_blank())
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
 }
 
 #' @export
@@ -40,7 +40,7 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
             geom_sf(data=filter(model$tazs_geo, GEOID==origin_tract), fill="blue") +
             geom_sf(data=model$network_geo, fill="black", size=0.35) +
             theme_minimal() +
-            theme(axis.text = element_blank(), panel.grid = element_blank())
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
 
 }
 
@@ -61,10 +61,10 @@ map_congestion = function (model, flows) {
         ggplot(aes(color=ff_to_con_ratio, linewidth=as.numeric(highway_type == "motorway"))) +
             ggplot2::geom_sf() +
             ggplot2::scale_linewidth_continuous(range=c(0.5, 0.75)) +
-            ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1) +
+            ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1, breaks=c(0, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
             ggplot2::labs(color="Percent of free-flow speed") +
             theme_minimal() +
-            theme(axis.text = element_blank(), panel.grid = element_blank()) +
-            guides(linewidth="none")
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank()) +
+            ggplot2::guides(linewidth="none")
 
 }

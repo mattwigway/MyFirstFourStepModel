@@ -19,6 +19,22 @@ calculate_direction_factors = function (nhts) {
         return()
 }
 
+#' This calculates vehicle occupancy factors by trip type and time period
+calculate_occupancy_factors = function (nhts) {
+    nhts$trips %>%
+        mutate(
+            trip_type=get_trip_type(WHYFROM, WHYTO),
+            time_period=get_time_period(STRTTIME),
+            # the number of people who likely reported this trip
+            # because youngchildren don't have trip records but are in NUMONTRP
+            persons_reported_trip=rowSums(across(starts_with("ONTD_P"), \(x) x == 1))
+        ) %>%
+        filter(TRPTRANS %in% NHTS_CAR_MODES) %>%
+        group_by(trip_type, time_period) %>%
+        summarize(average_occupancy=weighted.mean(persons_reported_trip, WTTRDFIN)) %>%
+        return()
+}
+
 #' This applies direction factors to an origin-destination matrix
 apply_direction_factors = function (matrix, direction_factors) {
     mat_with_directions = matrix %>%

@@ -14,6 +14,8 @@
 #   mode_choice_models - list containing mode choice models for HB and NHB
 #   direction_factors - tibble with "direction factors" -
 #      how many trips in each direction to expect at different time period for HB trips
+#   occupancy_factors - tibble with average vehicle occupancy for car trips by time period and
+#       trip type
 #   network - an igraph graph object representing the road network
 #   network_geo - an sf object representing the road network (for plotting)
 #   tazs_geo - an sf object with all TAZs (tracts)
@@ -39,6 +41,7 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
     median_distances = estimate_median_crow_flies_distance(nhts)
     mode_choice_models = estimate_mode_choice_model(nhts)
     direction_factors = calculate_direction_factors(nhts)
+    occupancy_factors = calculate_occupancy_factors(nhts)
 
     # get marginals
     base_marginals = get_base_marginals(state, county, year)
@@ -63,6 +66,7 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
         distribution_betas=distribution_betas,
         mode_choice_models=mode_choice_models,
         direction_factors=direction_factors,
+        occupancy_factors=occupancy_factors,
         network=network$network,
         network_geo=network$network_geo,
         tazs_geo=tazs_geo,
@@ -123,7 +127,8 @@ mode_choice = function (model, marginals, flows) {
 #' This runs the network assignment step of the model.
 #' 
 #' Network assignment is based on a Frank-Wolfe static traffic assignment algorithm.
-#' This returns a list of link-level flows.
+#' This returns a list of link-level flows. It applies peaking factors and average occupancy
+#' before doing assignment to convert period person-trips to hourly vehicle-trips.
 #' 
 #' @param model The estimated model
 #' @param marginals The scenario to use
@@ -134,7 +139,9 @@ mode_choice = function (model, marginals, flows) {
 network_assignment = function (model, marginals, mode_flows, period) {
     hourly_flows = mode_flows %>%
         filter(time_period == period) %>%
-        mutate(across(c("Car", "Transit", "Walk", "Bike"), \(x) x * PEAKING_FACTORS[[period]]))
+        mutate(across(c("Car", "Transit", "Walk", "Bike"), \(x) x * PEAKING_FACTORS[[period]])) %>%
+        left_join(filter(model$occupancy_factors, time_period == period), by="trip_type") %>%
+        mutate(Car = Car / average_occupancy)
 
     marginals = link_tracts(model$network, marginals)
 

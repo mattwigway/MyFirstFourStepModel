@@ -1,3 +1,5 @@
+NHTS_CAR_MODES = c(3, 4, 5, 6, 18)
+
 #' This estimates mode choice models based on the NHTS
 #' This is much simplified from the traditional mode choice models used in demand modeling,
 #' because we don't have attributes of the alternatives (or enough information to create them).
@@ -14,7 +16,7 @@ estimate_mode_choice_model = function (nhts) {
             choice = dplyr::case_match(TRPTRANS,
                 1 ~ "Walk",
                 2 ~ "Bike",
-                c(3, 4, 5, 6, 18) ~ "Car",
+                NHTS_CAR_MODES ~ "Car",
                 c(10, 11, 12, 13, 14, 15, 16) ~ "Transit",
                 .default=NA
             ) %>% factor(levels=c("Car", "Transit", "Walk", "Bike")),
