@@ -22,7 +22,7 @@ map_trip_generation = function (model, trip_counts, end, timeperiod, triptype) {
             geom_sf(data=model$network_geo, fill="black", linewidth=0.35) +
             label_cities(model) +
             theme_minimal() +
-            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
 }
 
 #' @export
@@ -52,7 +52,7 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
             geom_sf(data=model$network_geo, fill="black", size=0.35) +
             label_cities(model) +
             theme_minimal() +
-            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
 }
 
 #' @export
@@ -76,7 +76,7 @@ map_congestion = function (model, flows) {
             ggplot2::labs(color="Percent of free-flow speed") +
             label_cities(model) +
             theme_minimal() +
-            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank()) +
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank()) +
             ggplot2::guides(linewidth="none")
 
 }
