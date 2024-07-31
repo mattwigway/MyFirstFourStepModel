@@ -74,10 +74,10 @@ map_congestion = function (model, flows) {
             ggplot2::scale_linewidth_continuous(range=c(0.5, 0.75)) +
             ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1, breaks=c(0, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
             ggplot2::labs(color="Percent of free-flow speed") +
+            ggplot2::guides(linewidth="none") +
             label_cities(model) +
             theme_minimal() +
-            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank()) +
-            ggplot2::guides(linewidth="none")
+            theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
 
 }
 
@@ -85,7 +85,7 @@ map_congestion = function (model, flows) {
 NE_CITIES = ne_download(scale=10, type="populated_places_simple", returnclass = "sf")
 
 #' Add city labels from Natural Earth
-label_cities = function (model, buffer = 300) { # buffer in meters for web mercator
+label_cities = function (model, buffer = 500) { # buffer in meters for web mercator
     # find relevant cities
     cities = st_join(st_transform(NE_CITIES, st_crs(model$tazs_geo)), model$tazs_geo, left=F) %>%
         st_transform(3857)
@@ -106,7 +106,7 @@ label_cities = function (model, buffer = 300) { # buffer in meters for web merca
         }
     }
 
-    r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL), color="black"))
+    r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="black"))
 
     return(r)
 }
