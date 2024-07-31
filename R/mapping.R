@@ -101,7 +101,7 @@ label_cities = function (model, buffer = 300) { # buffer in meters for web merca
                 xoff = xquad * cos(angle * pi / 180) * buffer
                 yoff = yquad * sin(angle * pi / 180) * buffer
 
-                r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL), color="white", position=position_nudge(xoff, yoff)))
+                r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="white", position=position_nudge(xoff, yoff)))
             }
         }
     }
