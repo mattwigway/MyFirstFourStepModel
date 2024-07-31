@@ -35,9 +35,11 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
         mutate(n_trips=replace_na(n_trips, 0))
 
     # use quantile breaks so that there is some variation on the map and it's not dominated by nearby destinations
-    breaks = round(quantile(plot_data$n_trips, c(0, 0.2, 0.4, 0.6, 0.8, 1)), digits=0)
+    # Quantiles are weighted by the number of trips, so that tracts above the 80th percentile (for example) represent
+    # 20% of the trips, not 20% of the tracts
+    breaks = round(signif(wtd.quantile(plot_data$n_trips, plot_data$n_trips, c(0, 0.2, 0.4, 0.6, 0.8, 1)), digits=1), digits=0)
     names(breaks) = NULL
-    breaks = pmax(breaks, 0:5)
+    breaks = pmax(breaks, c(0:4, ceiling(max(plot_data$n_trips))))
     
     plot_data %>%
         ggplot(aes(fill=n_trips)) +
