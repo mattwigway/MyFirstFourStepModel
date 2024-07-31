@@ -1,1 +1,4 @@
-/.quarto/
+*.pdf
+*_files
+*.html
+.quarto

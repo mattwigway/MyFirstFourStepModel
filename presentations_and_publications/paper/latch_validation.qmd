@@ -1,0 +1,18 @@
+---
+title: LATCH validation
+---
+
+Validate model total VMT using LATCH statistics.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data = read_csv(here::here("data", "latch_2017-b.csv"), col_types=cols(geocode=col_character())) %>%
+    filter(str_detect(geocode, "^37063|^37183|^37135"))
+```
+
+```{r}
+sum(data$est_vmiles * data$hh_cnt, na.rm=T)
+```

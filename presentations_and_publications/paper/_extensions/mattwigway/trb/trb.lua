@@ -13,6 +13,8 @@ local body_words = 0
 local ref_words = 0
 local note_words = 0
 local appendix_words = 0
+-- start at 2 to account for Abstract and Keywords
+local abstract_words = 2
 local total_words = 0
 local ntables = 0
 
@@ -307,6 +309,19 @@ note_count = {
     end
 }
 
+abstract_count = {
+    Str = function(el)
+        if is_word(el.text) then
+            abstract_words = abstract_words + 1
+        end
+    end,
+    
+    Code = function(el)
+        _, n = el.text:gsub("%S+", "")
+        abstract_words = abstract_words + n
+    end
+}
+
 
 count_tables = {
     Table = function (el)
@@ -327,6 +342,9 @@ function Pandoc(el)
     else
         count_code_blocks = true
     end
+
+    -- Count words in abstract and keywords (+2 for the text ABSTRACT and Keywords:)
+
     
     -- Add these functions to the respective section counting functions
     if count_code_blocks then
@@ -376,8 +394,21 @@ function Pandoc(el)
     -- count tables
     pandoc.walk_block(pandoc.Div(el.blocks), count_tables)
 
+    -- count abstract and keywords (+1 for heading ABSTRACT, Keywords)
+    abs_keyword_count = 2
+    if el.meta['abstract'] ~= nil then
+        pandoc.walk_block(pandoc.Div(el.meta['abstract']), abstract_count)
+    end
+
+    -- if el.meta['keywords'] ~= nil then
+    --     for kw in el.meta['keywords'] do
+    --         _, n = kw:gsub("%S+", "")
+    --         abs_keyword_count = abs_keyword_count + n
+    --     end
+    -- end
+
     -- Calculate total
-    total_words = body_words + note_words + ref_words + appendix_words
+    total_words = body_words + note_words + ref_words + appendix_words + abstract_words
     
     -- Show counts in terminal
     print_word_counts()
