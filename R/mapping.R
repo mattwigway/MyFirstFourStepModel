@@ -20,6 +20,7 @@ map_trip_generation = function (model, trip_counts, end, timeperiod, triptype) {
             labs(fill="Trips per\nsquare kilometer") +
             ggtitle(paste0(triptype, " ", str_to_lower(end), ", ", timeperiod)) +
             geom_sf(data=model$network_geo, fill="black", linewidth=0.35) +
+            label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
 }
@@ -49,9 +50,9 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
             ggtitle(paste(triptype, "trips,", timeperiod, "from tract", origin_tract)) +
             geom_sf(data=filter(model$tazs_geo, GEOID==origin_tract), fill="blue") +
             geom_sf(data=model$network_geo, fill="black", size=0.35) +
+            label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank())
-
 }
 
 #' @export
@@ -73,8 +74,38 @@ map_congestion = function (model, flows) {
             ggplot2::scale_linewidth_continuous(range=c(0.5, 0.75)) +
             ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1, breaks=c(0, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
             ggplot2::labs(color="Percent of free-flow speed") +
+            label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank()) +
             ggplot2::guides(linewidth="none")
 
+}
+
+# burn NE cities into compiled R package (this is evaluated at compile time)
+NE_CITIES = ne_download(scale=10, type="populated_places_simple", returnclass = "sf")
+
+#' Add city labels from Natural Earth
+label_cities = function (model, buffer = 300) { # buffer in meters for web mercator
+    # find relevant cities
+    cities = st_join(st_transform(NE_CITIES, st_crs(model$tazs_geo)), model$tazs_geo, left=F)
+
+    r = list()
+
+    # draw buffer around text by repeated offsets -
+    # inspired by https://github.com/GuangchuangYu/shadowtext/blob/master/R/shadowtext-grob.R
+    # but for sf objects
+    for (xquad in c(-1, 1)) {
+        for (yquad in c(-1, 1)) {
+            for (angle in c(0, 22.5, 45, 67.5)) {
+                xoff = xquad * cos(angle * pi / 180) * buffer
+                yoff = yquad * sin(angle * pi / 180) * buffer
+
+                r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL), color="white", position=position_nudge(xoff, yoff)))
+            }
+        }
+    }
+
+    r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL), color="black"))
+
+    return(r)
 }
