@@ -133,9 +133,9 @@ julia_call("Pkg.activate", path_package("MyFirstFourStepModel", "julia"))
 library(MyFirstFourStepModel)
 library(tidyverse)
 
-# Load NHTS and filter to North Carolina
+# Load NHTS and filter to North Carolina, weekday travel
 nhts = load_nhts(NHTS_PATH)
-nhts$households = filter(nhts$households, HHSTATE == "NC")
+nhts$households = filter(nhts$households, HHSTATE == "NC" & TRAVDAY %in% c(2, 3, 4, 5, 6))
 
 # Estimate the model using 2021 Census/LODES data for the Triangle
 model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake"), 2021)
@@ -152,7 +152,7 @@ save_model(model, "rdu.model")
 ```{r}
 #| eval: false
 install.packages("devtools")
-devtools::install_github("mattwigway/BabysFirstFourStepModel")
+devtools::install_github("mattwigway/MyFirstFourStepModel")
 ```
 
 ## Loading the model
