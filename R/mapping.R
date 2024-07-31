@@ -87,7 +87,8 @@ NE_CITIES = ne_download(scale=10, type="populated_places_simple", returnclass = 
 #' Add city labels from Natural Earth
 label_cities = function (model, buffer = 300) { # buffer in meters for web mercator
     # find relevant cities
-    cities = st_join(st_transform(NE_CITIES, st_crs(model$tazs_geo)), model$tazs_geo, left=F)
+    cities = st_join(st_transform(NE_CITIES, st_crs(model$tazs_geo)), model$tazs_geo, left=F) %>%
+        st_transform(3857)
 
     r = list()
 
