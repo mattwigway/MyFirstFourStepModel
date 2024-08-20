@@ -5,3 +5,7 @@
 presentations_and_publications
 .quarto
 docs
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
