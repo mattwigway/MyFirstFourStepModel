@@ -67,8 +67,12 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
         mode_choice_models=mode_choice_models,
         direction_factors=direction_factors,
         occupancy_factors=occupancy_factors,
-        network=network$network,
-        network_geo=network$network_geo,
+        networks=list(
+            baseline=list(
+                network=network$network,
+                network_geo=network$network_geo
+            )
+        ),
         tazs_geo=tazs_geo,
         scenarios=list(baseline=base_marginals)
     ))
@@ -136,16 +140,16 @@ mode_choice = function (model, marginals, flows) {
 #' @param period Time period to assign, can be "AM Peak", "Midday", "PM Peak", or "Overnight".
 #' 
 #' @export 
-network_assignment = function (model, marginals, mode_flows, period) {
+network_assignment = function (model, marginals, network, mode_flows, period) {
     hourly_flows = mode_flows %>%
         filter(time_period == period) %>%
         mutate(across(c("Car", "Transit", "Walk", "Bike"), \(x) x * PEAKING_FACTORS[[period]])) %>%
         left_join(filter(model$occupancy_factors, time_period == period), by="trip_type") %>%
         mutate(Car = Car / average_occupancy)
 
-    marginals = link_tracts(model$network, marginals)
+    marginals = link_tracts(network$network, marginals)
 
-    return(frank_wolfe(hourly_flows, marginals, model$network))
+    return(frank_wolfe(hourly_flows, marginals, network$network))
 }
 
 #' Calculates VMT based on flows.
@@ -157,8 +161,8 @@ network_assignment = function (model, marginals, mode_flows, period) {
 #' @param link_flows Estimated link flows from the network assignment function
 #' 
 #' @export
-estimate_vmt = function (model, link_flows, period) {
-    total_vmt_peak_hour = sum(link_flows * edge_attr(model$network, "length_m") / MILES_TO_METERS)
+estimate_vmt = function (model, network, link_flows, period) {
+    total_vmt_peak_hour = sum(link_flows * edge_attr(network$network, "length_m") / MILES_TO_METERS)
     # expand out based on the factor we used to get peak hour demand
     # this isn't perfect, as off-peak people may take more direct/uncongested routes, but hey it works
     return(total_vmt_peak_hour / PEAKING_FACTORS[[period]])

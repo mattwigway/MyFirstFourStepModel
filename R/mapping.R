@@ -19,7 +19,7 @@ map_trip_generation = function (model, trip_counts, end, timeperiod, triptype) {
             scale_fill_fermenter(palette="Blues", direction=1) +
             labs(fill="Trips per\nsquare kilometer") +
             ggtitle(paste0(triptype, " ", str_to_lower(end), ", ", timeperiod)) +
-            geom_sf(data=model$network_geo, fill="black", linewidth=0.35) +
+            geom_sf(data=model$networks$baseline$network_geo, fill="black", linewidth=0.35) +
             label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
@@ -49,24 +49,24 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
             labs(fill=paste0("Number of trips\ndestined for tract\n", "(total: ",  format(round(sum(from_tract$n_trips)), scientific=F), ")")) +
             ggtitle(paste(triptype, "trips,", timeperiod, "from tract", origin_tract)) +
             geom_sf(data=filter(model$tazs_geo, GEOID==origin_tract), fill="blue") +
-            geom_sf(data=model$network_geo, fill="black", size=0.35) +
+            geom_sf(data=model$networks$baseline$network_geo, fill="black", size=0.35) +
             label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
 }
 
 #' @export
-map_congestion = function (model, flows) {
-    ff_tt = get_freeflow_weights(model$network)
-    con_tt = get_congested_tt(model$network, flows)
+map_congestion = function (model, network, flows) {
+    ff_tt = get_freeflow_weights(network$network)
+    con_tt = get_congested_tt(network$network, flows)
     ff_to_con_ratio = ff_tt / con_tt
 
     flow_tibble = tibble(
-        eid = as.integer(edge_attr(model$network, "id")),
+        eid = as.integer(edge_attr(network$network, "id")),
         ff_to_con_ratio = ff_to_con_ratio
     )
     
-    model$network_geo %>%
+    network$network_geo %>%
         st_transform(3857) %>%
         left_join(flow_tibble, by="eid") %>%
         ggplot(aes(color=ff_to_con_ratio, linewidth=as.numeric(highway_type == "motorway"))) +
