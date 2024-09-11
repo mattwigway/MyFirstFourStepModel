@@ -3,124 +3,22 @@ title: Model estimation
 ---
 
 ```{r}
+#| output: false
+#| eval: false
 devtools::load_all()
-# needed to prevent incomes turning into scientific notation in R
-options(scipen=10)
-library(readr)
-library(ggplot2)
-```
 
-```{r}
-nhts = load_nhts(here::here("data/nhts/"))
-nhts$households = filter(nhts$households, HHSTATE == "NC")
-```
+# Need to set manually julia location, it wasn't able to find it
+options(JULIA_HOME="/Users/mwbc/.julia/juliaup/julia-1.10.5+0.aarch64.apple.darwin14/bin")
+NHTS_PATH = here::here("data/nhts")
+OSM_PATH = here::here("data/osm/triangle.osm.pbf")
 
-## Estimate trip generation models
+# Load NHTS and filter to North Carolina, weekday travel
+nhts = load_nhts(NHTS_PATH)
+nhts$households = dplyr::filter(nhts$households, HHSTATE == "NC" & TRAVDAY %in% c(2, 3, 4, 5, 6))
 
-```{r}
-production_models = estimate_production_functions(nhts)
-```
+# Estimate the model using 2021 Census/LODES data for the Triangle
+model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake", "Chatham"), 2021)
 
-
-## Get marginals
-
-```{r}
-m = get_base_marginals(state="NC", county="Durham", year=2021)
-```
-
-## Get trip counts
-
-```{r}
-productions = get_production_counts(m$marginals, m$areas, production_models)
-```
-
-## Attractions
-
-```{r}
-lodes = read_csv(here::here("data/lodes/wa_wac_S000_JT00_2019.csv.gz"))
-trips = read_csv(here::here("data/psrc_trips.csv"), col_types=cols(o_tract10=col_character(), d_tract10=col_character()))
-att_models = estimate_attraction_functions(trips, lodes)
-```
-
-## Get trip attractions
-
-```{r}
-nc_lodes = read_csv(here::here("data/lodes/nc_wac_S000_JT00_2021.csv.gz"))
-attractions = get_attraction_counts(att_models, m, nc_lodes)
-```
-
-## Balance
-
-```{r}
-balanced = balance_production_attraction(productions, attractions)
-```
-
-```{r}
-ggplot(balanced$balance_factors, aes(x=balance_factor)) +
-    geom_boxplot()
-```
-
-## Trip distribution model
-
-```{r}
-median_distances = estimate_median_crow_flies_distance(nhts)
-betas = calibrate_trip_distance_betas(balanced, m, median_distances)
-```
-
-```{r}
-odmat = get_flows(balanced, m, betas)
-```
-
-## Mode choice
-
-```{r}
-mode_choice_model = estimate_mode_choice_model(nhts)
-summary(mode_choice_model$HB)
-summary(mode_choice_model$NHB)
-```
-
-```{r}
-flows = flow_by_mode(odmat, m, mode_choice_model)
-```
-
-## Distribute directionally
-
-Right now, the HBO and HBW trips always "originate" at the home end. Now, we swap a percentage of these based on the directional factors from the NHTS.
-
-```{r}
-direction_factors = calculate_direction_factors(nhts)
-flows = apply_direction_factors(flows, direction_factors)
-```
-
-## Traffic assignment
-
-Now, we assign the AM peak. The AM peak is 6 AM to 10 AM, we assume that 35% of that traffic occurs during the peak hour. 
-
-```{r}
-am_hourly = flows %>%
-    mutate(across(c("Car", "Bike", "Walk", "Transit"), \(x) x * 0.35)) %>%
-    filter(time_period == "AM Peak")
-
-network = igraph::read_graph("data/osm/triangle.graphml", format="graphml")
-
-network_geo = sf::read_sf("data/osm/triangle.gpkg")
-
-m = link_tracts(network, m)
-```
-
-```{r}
-link_flows = network_assignment(am_hourly, m, network)
-```
-
-```{r}
-map_congestion(link_flows, network, network_geo)
-```
-
-
-```{r}
-pm_hourly = flows %>%
-    mutate(across(c("Car", "Bike", "Walk", "Transit"), \(x) x * 0.45)) %>%
-    filter(time_period == "PM Peak")
-
-pm_flows = network_assignment(pm_hourly, m, network)
+# Save the model for sharing with students
+save_model(model, "rdu_big.model")
 ```
