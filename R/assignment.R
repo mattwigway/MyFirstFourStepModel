@@ -134,7 +134,7 @@ get_lane_capacity = function (highway_types) {
         case_match(
             highway_types,
             "motorway" ~ 2350, # 65 mph freeway
-            .default ~ 1200 # 1900 veh/lane/hr on 45 mph multilane segments, assumed average 63% green time
+            .default=1200 # 1900 veh/lane/hr on 45 mph multilane segments, assumed average 63% green time
         )
     )
 }
