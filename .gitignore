@@ -55,3 +55,7 @@ data/
 
 .vscode
 docs
+
+*.html
+*_files
+*.rmarkdown
