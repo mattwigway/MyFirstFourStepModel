@@ -142,6 +142,7 @@ mode_choice = function (model, marginals, flows) {
 #' @export 
 network_assignment = function (model, marginals, network, mode_flows, period) {
     hourly_flows = mode_flows %>%
+        apply_direction_factors(model$direction_factors) %>%
         filter(time_period == period) %>%
         mutate(across(c("Car", "Transit", "Walk", "Bike"), \(x) x * PEAKING_FACTORS[[period]])) %>%
         left_join(filter(model$occupancy_factors, time_period == period), by="trip_type") %>%
