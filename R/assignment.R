@@ -127,10 +127,23 @@ get_freeflow_weights = function (network) {
     return(edge_attr(network, "length_m") / 1000 / edge_attr(network, "maxspeed_kph") * 60)
 }
 
+#' Gets lane capacity based on OSM highway type
+#' Capacities come from Mannering and Washburn, Principles of Highway Engineering and Traffic Analysis, 7th ed.
+get_lane_capacity = function (highway_types) {
+    return(
+        case_match(
+            highway_types,
+            "motorway" ~ 2350, # 65 mph freeway
+            .default ~ 1200 # 1900 veh/lane/hr on 45 mph multilane segments, assumed average 63% green time
+        )
+    )
+}
+
 get_congested_tt = function (network, flows) {
     ff_time = get_freeflow_weights(network)
-    # simple, assume 1900 veh/lane/hr on all facility types
-    capacity = 1900 * edge_attr(network, "lanes_per_direction")
+    
+    capacity_per_lane = get_lane_capacity(edge_attr(network, "highway_type"))
+    capacity = capacity_per_lane * edge_attr(network, "lanes_per_direction")
     # Simple BPR function
     return(ff_time * (1 + BPR_ALPHA * (flows / capacity) ^ BPR_BETA))
 }
