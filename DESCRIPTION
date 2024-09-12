@@ -13,6 +13,7 @@ Imports:
     dplyr,
     fs,
     ggplot2,
+    glue,
     Hmisc,
     igraph,
     JuliaCall,
@@ -29,5 +30,6 @@ Imports:
     tidyr,
     tidyselect,
     tigris,
+    usethis,
     writexl
 URL: http://projects.indicatrix.org/MyFirstFourStepModel/

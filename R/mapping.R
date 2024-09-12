@@ -69,12 +69,12 @@ map_congestion = function (model, network, flows) {
     network$network_geo %>%
         st_transform(3857) %>%
         left_join(flow_tibble, by="eid") %>%
-        ggplot(aes(color=ff_to_con_ratio, linewidth=as.numeric(highway_type == "motorway"))) +
-            ggplot2::geom_sf() +
-            ggplot2::scale_linewidth_continuous(range=c(0.5, 0.75)) +
-            ggplot2::scale_color_fermenter(palette="RdBu", labels=scales::percent, direction=1, breaks=c(0, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
-            ggplot2::labs(color="Percent of free-flow speed") +
-            ggplot2::guides(linewidth="none") +
+        # single sided buffer to separate dual carriageways. TODO reverse geometries on back edges of two way streets at network build time.
+        st_buffer(ifelse(.$highway_type == "motorway", -500, -300), singleSide=T) %>%
+        ggplot(aes(fill=ff_to_con_ratio)) +
+            ggplot2::geom_sf(color="transparent") +
+            ggplot2::scale_fill_fermenter(palette="RdBu", labels=scales::percent, direction=1, breaks=c(0, 0.5, 0.6, 0.7, 0.8, 0.9, 1)) +
+            ggplot2::labs(fill="Percent of free-flow speed") +
             label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
@@ -109,4 +109,10 @@ label_cities = function (model, buffer = 500) { # buffer in meters for web merca
     r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="black"))
 
     return(r)
+}
+
+#' Convenience function to export a network scenario to a GIS file
+#' @export
+network_to_gis = function(network, file) {
+    write_sf(network$network_geo, file)
 }

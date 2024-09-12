@@ -13,6 +13,8 @@
 #'   - n: Number of households like this to add
 #' 
 #' If there are multiple tracts specified, the households will be evenly split among them
+#' 
+#' @export
 add_households = function (scenario, tract, hhs) {
     if (is.vector(tract)) {
         hhs = hhs %>%
