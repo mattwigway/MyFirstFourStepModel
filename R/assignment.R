@@ -158,7 +158,9 @@ find_optimal_lambda = function (network, old_flows, aon_flows) {
     opt_res = optim(c(0.5), function (par) {
         lambda = par[[1]]
         combined_flows = aon_flows * lambda + old_flows * (1 - lambda)
-        return(get_aggregate_cost(network, combined_flows))
+        congested_tt = get_congested_tt(network, combined_flows)
+        # square it because optim minimizes rather than root-finding
+        return(sum(congested_tt * (aon_flows - old_flows)) ^ 2)
     }, method="Brent", upper=1, lower=0)
 
     return(opt_res$par[[1]])
