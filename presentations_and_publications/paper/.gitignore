@@ -2,3 +2,5 @@
 *_files
 *.html
 .quarto
+
+/.quarto/
