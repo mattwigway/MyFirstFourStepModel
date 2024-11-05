@@ -74,6 +74,7 @@
 #' @importFrom stringr str_to_lower
 #' @importFrom tibble as_tibble
 #' @importFrom tibble tibble
+#' @importFrom tibble tribble
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyr replace_na
@@ -81,3 +82,6 @@
 #' @importFrom writexl write_xlsx
 ## usethis namespace: end
 NULL
+
+#' @export
+tibble::tribble
