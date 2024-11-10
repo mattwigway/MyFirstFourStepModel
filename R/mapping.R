@@ -19,7 +19,7 @@ map_trip_generation = function (model, trip_counts, end, timeperiod, triptype) {
             scale_fill_fermenter(palette="Blues", direction=1) +
             labs(fill="Trips per\nsquare kilometer") +
             ggtitle(paste0(triptype, " ", str_to_lower(end), ", ", timeperiod)) +
-            geom_sf(data=model$networks$baseline$network_geo, fill="black", linewidth=0.35) +
+            geom_sf(data=model$networks$baseline$network_geo, fill="black", linewidth=0.15) +
             label_cities(model) +
             theme_minimal() +
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
@@ -101,12 +101,12 @@ label_cities = function (model, buffer = 500) { # buffer in meters for web merca
                 xoff = xquad * cos(angle * pi / 180) * buffer
                 yoff = yquad * sin(angle * pi / 180) * buffer
 
-                r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="white", position=position_nudge(xoff, yoff)))
+                r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="white", position=position_nudge(xoff, yoff - 5000)))
             }
         }
     }
 
-    r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="black"))
+    r = append(r, geom_sf_text(data=cities, aes(label=name, fill=NULL, linewidth=NULL), color="black", position=position_nudge(0, -5000)))
 
     return(r)
 }
