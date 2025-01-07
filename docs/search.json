@@ -1,9 +1,135 @@
 [
   {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#what-is-a-travel-demand-model",
+    "href": "presentations_and_publications/academic_accelerator/index.html#what-is-a-travel-demand-model",
+    "title": "My First Four-Step Model",
+    "section": "What is a travel demand model?",
+    "text": "What is a travel demand model?\n\nLarge collection of econometric models that predict how people will use the transportation system, based on forecasted demographics and changes to the transportation network\nAll US regions have one\nUsed to prioritize billions in transportation funding\nThe most common model is the four-step model"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#why-introduce-modeling-to-planners",
+    "href": "presentations_and_publications/academic_accelerator/index.html#why-introduce-modeling-to-planners",
+    "title": "My First Four-Step Model",
+    "section": "Why introduce modeling to planners?",
+    "text": "Why introduce modeling to planners?\n\nMost planners will never use a model directly\nHowever, most planners will be consumers of model output\nGiving planners more experience with modeling will improve communication with modelers\n\nProvide a “healthy skepticism” of model results, but also\nUnderstand what the model can and can’t do\nUnderstand how the model can fit into planning processes\nThink of novel ways to use models"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#typical-experience-of-planners-with-models",
+    "href": "presentations_and_publications/academic_accelerator/index.html#typical-experience-of-planners-with-models",
+    "title": "My First Four-Step Model",
+    "section": "Typical experience of planners with models",
+    "text": "Typical experience of planners with models\n\n© xkcd"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#how-we-usually-teach-modeling",
+    "href": "presentations_and_publications/academic_accelerator/index.html#how-we-usually-teach-modeling",
+    "title": "My First Four-Step Model",
+    "section": "How we usually teach modeling",
+    "text": "How we usually teach modeling\n\nTake transportation planning\nTake statistics\nTake econometrics\nTake choice modeling\nTake GIS\nWork with component models (mode choice, destination choice, etc.)\nActually run a model (optional)"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#an-alternate-approach",
+    "href": "presentations_and_publications/academic_accelerator/index.html#an-alternate-approach",
+    "title": "My First Four-Step Model",
+    "section": "An alternate approach",
+    "text": "An alternate approach\n\nActually run a model\nTake transportation planning\nTake statistics\nTake econometrics (optional)\nTake choice modeling (optional)\nTake GIS (optional)\nWork with component models (mode choice, destination choice, etc.) (optional)"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#how-do-you-run-a-model-first",
+    "href": "presentations_and_publications/academic_accelerator/index.html#how-do-you-run-a-model-first",
+    "title": "My First Four-Step Model",
+    "section": "How do you run a model first?",
+    "text": "How do you run a model first?\n\nIn 720, I do one lecture on modeling\nThen, every student runs a very simple model and interprets the inputs and outputs"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#my-first-four-step-model",
+    "href": "presentations_and_publications/academic_accelerator/index.html#my-first-four-step-model",
+    "title": "My First Four-Step Model",
+    "section": "My First Four Step Model",
+    "text": "My First Four Step Model\n\nI implement this model using My First Four Step Model, an R package I developed for implementing very simple models\nRunning the model only requires R and minimal computing power, so students can run it on their laptops\n\nEven Chromebooks!\n\nThe four steps of the model map directly onto four functions in the package"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#the-four-steps",
+    "href": "presentations_and_publications/academic_accelerator/index.html#the-four-steps",
+    "title": "My First Four-Step Model",
+    "section": "The four steps",
+    "text": "The four steps\n\nTrip generation: how many trips originate or terminate in each zone\nTrip distribution: how many of those trips travel between each pair of zones\nMode choice: what modes do they use (bus/drive/walk etc)\nNetwork assignment: what routes do they take, and what congestion levels result"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#running-the-model-trip-generation",
+    "href": "presentations_and_publications/academic_accelerator/index.html#running-the-model-trip-generation",
+    "title": "My First Four-Step Model",
+    "section": "Running the model: trip generation",
+    "text": "Running the model: trip generation\n\nThe entire trip generation process happens with one function, trip_generation\nI have students interpret\n\ncoefficients in the regression models\nmaps of model output\n\n\n\n# Run trip generation\ntrip_ends = trip_generation(model, model$scenarios$baseline)"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#trip-generation-results",
+    "href": "presentations_and_publications/academic_accelerator/index.html#trip-generation-results",
+    "title": "My First Four-Step Model",
+    "section": "Trip generation results",
+    "text": "Trip generation results"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#running-the-model-trip-distribution",
+    "href": "presentations_and_publications/academic_accelerator/index.html#running-the-model-trip-distribution",
+    "title": "My First Four-Step Model",
+    "section": "Running the model: trip distribution",
+    "text": "Running the model: trip distribution\n\nTrip distribution is likewise a single function\nI have students interpret\n\ncoefficients in the model\nmaps of trip destinations from a tract of their choice\n\n\n\nflows = trip_distribution(model, model$scenarios$baseline, trip_ends)"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#understanding-mode-choice",
+    "href": "presentations_and_publications/academic_accelerator/index.html#understanding-mode-choice",
+    "title": "My First Four-Step Model",
+    "section": "Understanding mode choice",
+    "text": "Understanding mode choice\n\nMode choice uses a multinomial logit model, which I explain very briefly, but do have students interpret\nI have students interpret the mode shares as well\n\n\nflows_by_mode = mode_choice(model, model$scenarios$baseline, flows)\n\n\n\n\n\n\n\n\n\nCar\nBike\nWalk\nTransit\n\n\n\n\n0.92\n0.01\n0.05\n0.03"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#assignment",
+    "href": "presentations_and_publications/academic_accelerator/index.html#assignment",
+    "title": "My First Four-Step Model",
+    "section": "Assignment",
+    "text": "Assignment\n\nTraffic assignment is also a single function, and we map the results\n\n\npm_network_flows = network_assignment(\n    model,\n    model$scenarios$baseline,\n    model$networks$baseline,\n    flows_by_mode,\n    \"PM Peak\"\n)"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#scenarios",
+    "href": "presentations_and_publications/academic_accelerator/index.html#scenarios",
+    "title": "My First Four-Step Model",
+    "section": "Scenarios",
+    "text": "Scenarios\n\nModels are most useful to evaluate scenarios\nI have students evaluate a scenario based on Chatham Park, adding 20,000 households to Pittsboro\n\n\nmodel$scenarios$future = model$scenarios$baseline |&gt;\n  add_households(\n    \"37037020801\",\n    tribble(\n      ~hhsize, ~workers, ~vehicles, ~income, ~n,\n      4,       2,        3,         150000,  10000,\n      4,       2,        2,         75000,   10000\n    )\n  )"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#chatham-park-network-assignment-output",
+    "href": "presentations_and_publications/academic_accelerator/index.html#chatham-park-network-assignment-output",
+    "title": "My First Four-Step Model",
+    "section": "Chatham Park: network assignment output",
+    "text": "Chatham Park: network assignment output\n\nForecast congestion levels after adding 20,000 households, PM Peak"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#network-scenarios",
+    "href": "presentations_and_publications/academic_accelerator/index.html#network-scenarios",
+    "title": "My First Four-Step Model",
+    "section": "Network scenarios",
+    "text": "Network scenarios\n\nI also have students evaluate the impacts of widening 15-501, and use this to discuss induced demand\n\n\nmodel$networks$widen = model$networks$baseline |&gt;\n  modify_ways(\n    # US 15-501 between Pittsboro and Chapel Hill\n    c(\n      \"16468788\", \"133051274\", \"16471803\", \"285898984\",\n      . . .\n      \"712336821\", \"712336826\", \"712336827\", \"998595932\"\n    ),\n    lanes_per_direction=3,\n    highway_type=\"motorway\"\n  )"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#conclusion",
+    "href": "presentations_and_publications/academic_accelerator/index.html#conclusion",
+    "title": "My First Four-Step Model",
+    "section": "Conclusion",
+    "text": "Conclusion\nAll models are wrong, but some are useful.\n—George Box\n\n \n\n\nThis one is very wrong, but that makes it more useful.\n— George Box, from beyond the grave"
+  },
+  {
+    "objectID": "presentations_and_publications/academic_accelerator/index.html#things-to-ponder",
+    "href": "presentations_and_publications/academic_accelerator/index.html#things-to-ponder",
+    "title": "My First Four-Step Model",
+    "section": "Things to ponder",
+    "text": "Things to ponder\n\nIs the balance of simplicity and accuracy appropriate?\nIs more background needed before assigning this?\nHow do I transition from this into more advanced modeling?\nWhere do I publish this?"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "My First Four-Step Model",
     "section": "",
-    "text": "My First Four Step Model resources (formerly known as Baby’s First Four Step Model)\n\nPreprint\nGithub repository"
+    "text": "My First Four Step Model resources (formerly known as Baby’s First Four Step Model)\n\nPreprint\nPresentation slides\nLecture slides\nGithub repository"
   }
 ]
