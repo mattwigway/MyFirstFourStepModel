@@ -1,5 +1,6 @@
 ---
 title: "My First Four-Step Model: a Simple and Accessible Tool to Teach Travel Demand Modeling"
+subtitle: "{{< words-sum body-note >}}"
 abstract: |
   Travel demand modeling is often taught using a 'bottom-up' approach—students first learn the statistical and theoretical foundations of modeling, and then work with individual steps of the model. Only after many courses do students run a complete travel demand model. In this article, I demonstrate a 'top-down' approach that I use in my introductory Planning Methods course. After a brief introduction to demand modeling, students run a simplified model and interpret outputs. While most of my students will not become modelers, this provides them valuable experience to communicate with modelers, understand the applications of modeling, and critically evaluate model outputs.
 keywords: [travel demand modeling, teaching, education, open-source]
@@ -12,7 +13,18 @@ authors:
     affiliations:
       - name: University of North Carolina at Chapel Hill
         department: Department of City and Regional Planning
-format: docx
+format:
+  wordcount-pdf:
+    count-code-blocks: true
+    documentclass: report
+    geometry:
+      - margin=1in
+    mainfont: Times New Roman
+    colorlinks: true
+    template-partials:
+      - before-body.tex
+    include-in-header:
+      text: \usepackage{lineno}
 date: 2024-11-09
 ntables: 3
 execute:
