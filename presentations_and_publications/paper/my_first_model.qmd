@@ -1,8 +1,10 @@
 ---
 title: "My First Four-Step Model: a Simple and Accessible Tool to Teach Travel Demand Modeling"
-subtitle: "{{< words-sum body-note >}}"
 abstract: |
-  Travel demand modeling is often taught using a 'bottom-up' approach—students first learn the statistical and theoretical foundations of modeling, and then work with individual steps of the model. Only after many courses do students run a complete travel demand model. In this article, I demonstrate a 'top-down' approach that I use in my introductory Planning Methods course. After a brief introduction to demand modeling, students run a simplified model and interpret outputs. This allows me to focus on model applications, rather than theory. Since most of my students will not become modelers, this provides them valuable experience to communicate and critically engage with modelers and model outputs.
+  Travel demand modeling is taught in most transportation engineering and planning programs. It is generally taught using a 'bottom-up' approach where students first learn about the theory and mathematics, and then work with individual model components. They may never run a complete travel demand model. I propose a 'top-down' approach where students first run a full demand model, focusing on outputs and the "big picture" of how the model works. This introduction provides students the tools to be critically engaged consumers of model output. Most students in planning and engineering will not become modelers, but many will work with model output.
+
+  After a single lecture on demand modeling, I introduce a simple R package for running a four-step model on student's computers, and provide instructions for how to use it. Students have a homework assignment where they apply the model and interpret the outputs.   Students do well on the assignment, demonstrating an understanding of the basic structure of travel demand modeling. Most students take no additional modeling courses, but those that do have a strong foundation to build upon. Having students run a travel demand model soon after being introduced to the topic can help students focus on the big picture of modeling, and be informed consumers of model outputs, even if they take no further modeling classes.
+
 keywords: [travel demand modeling, teaching, education, open-source]
 bibliography: bibliography.bib
 csl: apa.csl
@@ -14,8 +16,7 @@ authors:
       - name: University of North Carolina at Chapel Hill
         department: Department of City and Regional Planning
 format:
-  wordcount-pdf:
-    count-code-blocks: true
+  pdf:
     documentclass: report
     geometry:
       - margin=1in
@@ -24,9 +25,11 @@ format:
     template-partials:
       - before-body.tex
     include-in-header:
-      text: \usepackage{lineno}
-date: 2024-11-09
-ntables: 3
+      text: |
+        \usepackage{lineno}
+        \usepackage{setspace}
+date: 2025-08-06
+#ntables: 3
 execute:
     eval: true
     echo: true
@@ -36,6 +39,7 @@ fig-dpi: 300
 ---
 
 \linenumbers
+\doublespacing
 
 ```{r}
 #| include: false
@@ -44,6 +48,10 @@ library(sf)
 library(gridExtra)
 library(gt)
 ```
+
+## Practical applications
+
+This article introduces a very simple travel demand modeling package, designed for use in educational settings. It runs on any modern consumer-grade computer, uses only free software, and provides forecasts for any region of the US. The goal of the tool is to give planners and engineers who do not work professionally with models enough experience to collaborate effectively with those who do. I describe how I use the tool in an introductory planning class, to give future planning practitioners experience with travel forecasting.
 
 ## Introduction
 
@@ -83,7 +91,18 @@ I focus on the ubiquitous four-step model in my introductory courses. The four-s
 
 ## Pedagogical goals
 
-My First Four-Step Model is a software package designed to allow students with minimal experience and consumer-grade computer hardware to run a simple four-step travel demand model. It is implemented as an R package [@r_2024], which has several advantages. R is a free, open-source, and cross-platform statistical programming language, allowing students to run it on their own computers regardless of configuration. Furthermore, R is becoming the _lingua franca_ of quantitative urban planning. Using the My First Four-Step Model package in an assignment gives students a gentle introduction to the language and potentially piques their interest in learning more. The package has several key design goals:
+My First Four-Step Model is a software package that allows students with minimal experience and consumer-grade computer hardware to run a simple four-step travel demand model. Specifically, it is designed to address these student learning outcomes:
+
+\quad
+
+1. Have a basic understanding of the structure and mathematics of travel demand model,
+1. Understand the types of scenarios travel demand models are appropriate for,
+1. Understand the limitations and uncertainty of travel demand modeling, and
+1. Be able to have constructive conversations with travel modelers.
+
+\quad
+
+It is implemented as an R package [@r_2024], which has several advantages. R is a free, open-source, and cross-platform statistical programming language, allowing students to run it on their own computers regardless of configuration. Furthermore, R is becoming the _lingua franca_ of quantitative urban planning. Using the My First Four-Step Model package in an assignment gives students a gentle introduction to the language and potentially piques their interest in learning more. The package has several key design goals:
 
 \quad
 
@@ -92,7 +111,7 @@ My First Four-Step Model is a software package designed to allow students with m
 1. It can be estimated for any location in the United States using only publicly-available data;
 1. There are intuitive tools to visualize model inputs, outputs, and parameters, so students can interpret and understand the model;
 1. Preparing land-use and transportation scenarios is simple;
-1. It runs on any computer a student is likely to have; and
+1. It runs on any computer a student is likely to have (including Windows, Macs, and Chromebooks); and
 1. It depends only on R itself and common R packages that are easily installed from the Comprehensive R Archive Network (CRAN).
 
 \quad
@@ -105,11 +124,13 @@ The open-source package is available on Github at <https://github.com/mattwigway
 
 I use the package in my Planning Methods course in the Department of City and Regional Planning at the University of North Carolina at Chapel Hill. This is an introductory master's level course which all planning students (not only those in transportation) take, generally during their first semester. In the course, I spend a week discussing transportation planning and engineering. I give a single hour-and-fifteen-minute lecture on transportation modeling, covering primarily the four-step model, but with a nod to activity-based models. We discuss the general structure of the model. We cover some basic mathematical underpinnings of discrete-choice models. We discuss travel surveys and how they are used in model development.
 
-I then have an assignment where all students run and interpret the output of a four-step model. I provide the students with an R file, all of the code of which is included inline in this section to run the model (slightly modified from the last time I taught this assignment due to changes in the package).
+I then have an assignment where all students run and interpret the output of a four-step model. Specifically, students first run a baseline model. They then change land use inputs to reflect Chatham Park, a large proposed housing development in Pittsboro, NC. Pittsboro is a town that is quickly becoming an exurb of the Research Triangle. I give students guidance on the number of households to add based on development plans, but give them discretion in determining the demographics of those households. They then run the model again. This portion of the assignment is worth five points plus 0.5 extra credit points for calculating statistical significance from a coefficient and standard error. For each step of the model, I have 1–2 homework questions. These questions cover interpretation the coefficients of the constituent models, and what the outputs indicate about the transportation system and differences between scenarios.
 
-For each step of the model, I have 1–2 homework questions. These questions cover interpretation the coefficients of the constituent models, and what the outputs indicate about the transportation system. The full homework assignment is in the supplemental materials. In future years, I will place more emphasis on comparisons between scenarios.
+There is also an extra credit section worth two points where students run their scenario again with a network where 15-501, the main highway between Pittsboro and Chapel Hill, is widened from two to three lanes. I have them interpret how congestion changes in this scenario. Modeled results of widening projects are often overstated due to induced demand, the phenomenon where building more roadway capacity induces more people to take trips on that road. Like many four-step models, My First Four-Step Model does not account for induced demand. I have students discuss how this biases the results.
 
-Students do well on this assignment. In Fall 2023, the mean score was 4.9/5 (n=33, s.d.=0.9, median=4.75, 25th percentile=2.5, 75th percentile=5). The assignment includes 3.5 extra credit points; however, only 6 students attempted more than 0.5 points of extra credit. Unfortunately, this class did not cover travel demand modeling prior to the introduction of My First Four-Step Model, so it is not possible to evaluate how the tool has changed learning outcomes.^[This use of student grade data was reviewed and approved by the University of North Carolina at Chapel Hill Registrar and Institutional Review Board (approval 24-2069). The requirement for consent was waived due to the aggregate nature of the data.]
+I provide the students with an R file, all of the code of which is included inline in this section to run the model. The full homework assignment is in the appendix.
+
+Students do well on this assignment. In Spring 2025, the mean score was 5.96 (n=42, s.d.=1.51, median=5.5, 25th percentile=5, 75th percentile=7.45). 20 students (48%) attempted the two-point extra credit section looking at highway widening. Unfortunately, this class did not cover travel demand modeling prior to the introduction of My First Four-Step Model, so it is not possible to evaluate how the tool has changed learning outcomes.^[This use of student grade data was reviewed and approved by the University of North Carolina at Chapel Hill Registrar and Institutional Review Board (approval 24-2069). The requirement for consent was waived due to the aggregate nature of the data.]
 
 The goal is to enable students in all specializations, not just transportation, to understand basic demand model structure and have productive conversations with modelers. For students who want to work more closely with models in their careers, I also teach a semester-long travel demand modeling course using a more complex model developed in TransCAD. Most transportation specialization students take this course later in their program.
 
@@ -516,7 +537,7 @@ map_congestion(model, model$networks$widen, cpw_pm_network_flows) +
 
 ## Methods: estimation of a new model
 
-Estimating a new model requires only a few lines of code, however it does require the 2017 National Household Travel Survey [NHTS, @NHTS_2017] and an OpenStreetMap PBF file for the region modeled.^[OpenStreetMap PBF files for any region are easily obtained from [https://app.protomaps.com/](https://app.protomaps.com/).] The code to estimate a model for the Research Triangle region is below. First, it loads the relevant libraries, and then the NHTS (`NHTS_PATH` should be replaced with a directory containing the NHTS CSV files). I filter the NHTS to only North Carolina households with a weekday travel day ($n=7,146$). The final line estimates the model. It requires the (possibly filtered) NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below but should be replaced with the actual path), the state and a vector of counties to define the region under study, and a year. Currently 2021 is most recent year available, as this is based on American Community Survey and Longitudinal Employer-Household Dynamics data availability.
+Estimating a new model requires only a few lines of code, however it does require the 2017 National Household Travel Survey [NHTS, @NHTS_2017] and an OpenStreetMap PBF file for the region modeled.^[OpenStreetMap PBF files for any region are easily obtained from <https://slice.openstreetmap.us>] The code to estimate a model for the Research Triangle region is below. First, it loads the relevant libraries, and then the NHTS (`NHTS_PATH` should be replaced with a directory containing the NHTS CSV files). I filter the NHTS to only North Carolina households with a weekday travel day ($n=7,146$). The final line estimates the model. It requires the (possibly filtered) NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below but should be replaced with the actual path), the state and a vector of counties to define the region under study, and a year. Currently 2021 is most recent year available, as this is based on American Community Survey and Longitudinal Employer-Household Dynamics data availability.
 
 Parsing the OpenStreetMap data uses Julia [@bezanson_julia_2017] for performance, which can be installed if it is not already by running `JuliaCall::install_julia()` from within R. Julia is only required for estimation; students do not need to install Julia.
 
@@ -561,7 +582,7 @@ To extrapolate this data to tracts outside the region, I build linear regression
 
 ### Trip distribution
 
-The trip distribution step uses a singly-constrained (at the production end) gravity model [@travelforecastingresource_destination_2020]. The exponent for the gravity model is calibrated for each trip type using the method introduced by Merlin [-@merlin_new_2020] based on median trip length. The method observes that half of the weighted destinations should be closer to the origin than the median trip, and half should be further away. I make two slight changes to the function presented in Merlin [-@merlin_new_2020]; see supplemental materials.
+The trip distribution step uses a singly-constrained (at the production end) gravity model [@travelforecastingresource_destination_2020]. The exponent for the gravity model is calibrated for each trip type using the method introduced by Merlin [-@merlin_new_2020] based on median trip length. The method observes that half of the weighted destinations should be closer to the origin than the median trip, and half should be further away. I make two slight changes to the function presented in Merlin [-@merlin_new_2020]; see appendix.
 
 The median trip distance comes from the NHTS. I approximate the crow-flies distance for each NHTS trip by dividing the network distance by 1.3, a factor determined by @wang_how_2024.
 
@@ -592,9 +613,27 @@ Insufficient accounting for induced demand—the phenomenon of roadway expansion
 
 My First Four-Step Model will never be appropriate for production travel demand modeling. It is also not appropriate as a sole teaching tool for students who will ultimately become modelers. However, it is useful as a first exercise even in courses that focus only on demand modeling, where students can have a chance to work with a simple model before diving into the more complex theories and software that are necessary for a detailed education in this area.
 
+## Data availaility statement
+
+Some or all data, models, or code generated or used during the study are available in a repository online.
+
+- Models and code are available on Github: <https://github.com/mattwigway/MyFirstFourStepModel>
+- Street network data are available from OpenStreetMap: <https://slice.openstreetmap.us>
+- Demographic data are available from the US Census Bureau, at several locations:
+  - Residential locations: through the `tidycensus` package [@tidycensus]
+  - Job locations: LEHD LODES program [@LODES]
+  - Seed matrix: Integrated Public Use Microdata Sample [@ruggles_ipums_2024]
+- NHTS survey data [@NHTS_2017]
+- Puget Sound Survey Data [@PSRC_Household_Travel_Survey]
+- Student grade data are not publicly available to protect privacy
+
 ## Acknowledgements
 
-Road network data in @fig-generation–@fig-widen © OpenStreetMap contributors.
+Road network data in @fig-generation–@fig-widen © OpenStreetMap contributors. An earlier version of this work was presented at the Transportation Research Board Annual Meeting [@bhagat-conway_my_2025].
+
+## Statement on artificial intelligence
+
+No generative AI tools were used in this research.
 
 ## References
 
