@@ -83,40 +83,52 @@ link_tracts = function (network, marginals) {
 #' The all-or-nothing assignment step, where all vehicles traveling from A to B are assigned to the
 #' same route. This is done repeatedly with new weights and averaged to distribute vehicles across
 #' the network.
-all_or_nothing = function (odflow_hourly, marginals, network, weights) {
+all_or_nothing = function (nodeflow_hourly, marginals, network, weights) {
     flows = rep(0.0, ecount(network))
 
-    origin_dest_nodes = unique(marginals$areas$node_idx)
+    all_to = unique(nodeflow_hourly$dest_node)
 
-    for (fr in origin_dest_nodes) {
+    for (fr in unique(nodeflow_hourly$orig_node)) {
+        print(glue::glue("processing node {fr}"))
         paths = shortest_paths(
             network,
             fr,
-            # we assume intrazone trips have no effect on congestion
-            to=origin_dest_nodes[origin_dest_nodes != fr],
+            to = all_to,
             mode="out",
-            weights=weights
+            weights=weights,
+            predecessors = TRUE
         )
 
-        fr_tracts = unique(marginals$areas$geoid[marginals$areas$node_idx == fr])
-        frflow_hourly = odflow_hourly[odflow_hourly$orig_geoid %in% fr_tracts, c("dest_geoid", "Car")]
+        print("routing complete")
 
-        for (path in paths$vpath) {
-            nodes = as.integer(path)
-            to = last(nodes)
+        frflows = filter(nodeflow_hourly, orig_node == fr) |> select(flow = Car, node = dest_node)
 
-            # assume within-tract trips don't use the primary/congested network
-            # NB there may be multiple tracts associated with a given vertex
-            to_tracts = unique(marginals$areas$geoid[marginals$areas$node_idx == to])
-            flow = sum(frflow_hourly[frflow_hourly$dest_geoid %in% to_tracts, "Car"])
+        # the algorithm works like this, to take advantage of R vectorized operations
+        # we calculate the flows to each node at the end of the process, which are just
+        # the flows flows from the origin to each dest node (many may be zero).
+        # we increment the edges from the predecessor node.
+        # then we recalculate flows_to_node as all of the flows that left that node,
+        # which must be all of the flows into that node b/c of the tree structure.
 
-            # for each edge in the path, add the flow
-            # get_edge_ids assumes the vertex list will be pairwise, i.e. vertices
-            # 1 and 2 identify an edge, 3 and 4, and so on. So every vertex except the first
-            # and the last must be repeated twice. That is what we do here.
-            edgelist = rep(nodes, each=2)[2:(length(nodes) * 2 - 1)]
-            edges = get.edge.ids(network, edgelist)
-            flows[edges] = flows[edges] + flow
+        # sum up all flows into each node on the last edge traversed
+        flows_to_node = stats::aggregate(flow ~ node, frflows, sum)
+        flows_to_node = subset(flows_to_node, node != fr)
+
+        while (nrow(flows_to_node) > 0) {
+            # drop flows for paths that have gotten back to the origin
+
+            pred = paths$predecessors[flows_to_node$node]
+
+            # interveave edge ids
+            edgelist = as.vector(rbind(pred, flows_to_node$node))
+            eids = get_edge_ids(network, edgelist)
+
+            # increment flows with flows from this "round"
+            flows[eids] <- flows[eids] + flows_to_node$flow
+
+            flows_to_node$node = pred
+            flows_to_node = stats::aggregate(flow ~ node, flows_to_node, sum)
+            flows_to_node = subset(flows_to_node, node != fr)
         }
     }
 
@@ -170,14 +182,22 @@ find_optimal_lambda = function (network, old_flows, aon_flows) {
 #' The default relgap_tol is 1% instead of the recommended 0.01% to speed convergence in the
 #' teaching environment.
 frank_wolfe = function(odflow_hourly, marginals, network, maxiter=100, relgap_tol=1e-2) {
+    # convert odflow_hourly to be node-to-node rather than zone-to-zone
+    nodeflow_hourly = odflow_hourly |>
+        left_join(select(marginals$areas, orig_geoid=geoid, orig_node=node_idx), by="orig_geoid") |>
+        left_join(select(marginals$areas, dest_geoid=geoid, dest_node=node_idx), by="dest_geoid") |>
+        group_by(orig_node, dest_node) |>
+        summarize(Car=sum(Car)) |>
+        ungroup()
+
     # start with all-or-nothing flows
-    current_flows = all_or_nothing(odflow_hourly, marginals, network, get_freeflow_weights(network))
+    current_flows = all_or_nothing(nodeflow_hourly, marginals, network, get_freeflow_weights(network))
     converged = F
     relgap = 0
     for (iteration in 1:maxiter) {
         # in each iteration, we create new all-or-nothing flows with the congested weights, and
         # average them into the flows. We iterate until the result is stable.
-        aon_flows = all_or_nothing(odflow_hourly, marginals, network, get_congested_tt(network, current_flows))
+        aon_flows = all_or_nothing(nodeflow_hourly, marginals, network, get_congested_tt(network, current_flows))
         lambda = find_optimal_lambda(network, current_flows, aon_flows)
         new_flows = aon_flows * lambda + current_flows * (1 - lambda)
         relgap = get_relative_gap(network, current_flows, new_flows)
