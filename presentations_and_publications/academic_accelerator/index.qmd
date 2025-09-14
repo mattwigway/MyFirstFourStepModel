@@ -1,0 +1,369 @@
+---
+title: "My First Four-Step Model"
+subtitle: A simple and accessible introduction to travel demand modeling
+author:
+    - name: Matt Bhagat-Conway
+      affiliations:
+        - name: University of North Carolina at Chapel Hill
+          department: Department of City and Regional Planning
+format:
+    revealjs:
+        theme: [default, unc.scss]
+        width: 1920
+        height: 1080
+        logo: UNC_logo_RGB.png
+        slide-number: true
+        html-math-method: katex
+execute:
+    eval: true
+    echo: true
+    output: true
+    cache: true
+fig-dpi: 300
+---
+
+```{r}
+#| echo: false
+#| include: false
+library(tidyverse)
+library(gridExtra)
+library(gt)
+library(sf)
+```
+
+
+## What is a travel demand model?
+
+- Large collection of econometric models that predict how people will use the transportation system, based on forecasted demographics and changes to the transportation network
+- All US regions have one
+- Used to prioritize billions in transportation funding
+- The most common model is the _four-step model_
+
+## Why introduce modeling to planners?
+
+- Most planners will never use a model directly
+- However, most planners will be _consumers_ of model output
+- Giving planners more experience with modeling will improve communication with modelers
+    - Provide a "healthy skepticism" of model results, but also
+    - Understand what the model can and can't do
+    - Understand how the model can fit into planning processes
+    - Think of novel ways to use models
+
+## Typical experience of planners with models
+
+![&copy; xkcd](img/xkcd_machine_learning.png){fig-alt="An image of a 'pile of linear algebra' with an input and an output, and text 'This is your machine learning system? Yup! You pour the data into this big pile of linear algebra, then collect the answers on the other side. What if the answers are wrong? Just stir the pile until they start looking right.'"}
+
+## How we usually teach modeling
+
+1. Take transportation planning
+1. Take statistics
+1. Take econometrics
+1. Take choice modeling
+1. Take GIS
+1. Work with component models (mode choice, destination choice, etc.)
+1. **Actually run a model** [_(optional)_]{.fragment .smaller}
+
+## An alternate approach
+
+1. **Actually run a model** 
+1. Take transportation planning
+1. Take statistics
+1. Take econometrics _(optional)_
+1. Take choice modeling _(optional)_
+1. Take GIS _(optional)_
+1. Work with component models (mode choice, destination choice, etc.) _(optional)_
+
+## How do you run a model first?
+
+- In 720, I do _one lecture_ on modeling
+- Then, every student runs a _very_ simple model and interprets the inputs and outputs
+
+## My First Four Step Model
+
+- I implement this model using My First Four Step Model, an R package I developed for implementing _very_ simple models
+- Running the model only requires R and minimal computing power, so students can run it on their laptops
+    - Even Chromebooks!
+- The four steps of the model map directly onto four functions in the package
+
+```{r}
+#| include: false
+#| echo: false
+library(MyFirstFourStepModel)
+model = load_model("https://files.indicatrix.org/rdu_chatham.model")
+```
+
+## The four steps
+
+- Trip generation: how many trips originate or terminate in each zone
+- Trip distribution: how many of those trips travel between each pair of zones
+- Mode choice: what modes do they use (bus/drive/walk etc)
+- Network assignment: what routes do they take, and what congestion levels result
+
+
+## Running the model: trip generation
+
+- The entire trip generation process happens with one function, `trip_generation`
+- I have students interpret
+    - coefficients in the regression models
+    - maps of model output
+
+```{r}
+#| eval: false
+# Run trip generation
+trip_ends = trip_generation(model, model$scenarios$baseline)
+```
+
+## Trip generation results
+
+```{r}
+#| echo: false
+#| fig-alt: AM Peak home-based work trip productions and attractions. Productions are spread across the region, whereas attractions are more concentrated.
+# Run trip generation
+trip_ends = trip_generation(model, model$scenarios$baseline)
+
+# Map results
+grid.arrange(
+    map_trip_generation(model, trip_ends, "Productions", "AM Peak", "HBW") +
+        theme(legend.position="bottom", legend.text=element_text(angle=-45, hjust=0)),
+    map_trip_generation(model, trip_ends, "Attractions", "AM Peak", "HBW") +
+        theme(legend.position="bottom", legend.text=element_text(angle=-45, hjust=0)),
+    nrow=1,
+    ncol=2
+)
+```
+
+## Running the model: trip distribution
+
+- Trip distribution is likewise a single function
+- I have students interpret
+    - coefficients in the model
+    - maps of trip destinations from a tract of their choice
+
+```{r}
+flows = trip_distribution(model, model$scenarios$baseline, trip_ends)
+```
+
+---
+
+```{r}
+#| echo: false
+#| fig-alt: AM Peak trip distribution from a census tract Carrboro, NC (near the UNC campus); most trips go to nearby destinations, but some go to further-flung large employment centers in Durham, Raleigh, and Research Triangle Park
+map_trip_distribution(model, flows, "AM Peak", "HBW", origin_tract="37135010705")
+```
+
+## Understanding mode choice
+
+- Mode choice uses a multinomial logit model, which I explain _very_ briefly, but do have students interpret
+- I have students interpret the mode shares as well
+
+```{r}
+#| eval: false
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
+```
+
+```{r}
+#| echo: false
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
+get_mode_shares(flows_by_mode) %>%
+    gt() %>%
+        fmt_number() %>%
+        tab_options(table.font.size=48)
+```
+
+## Assignment
+
+- Traffic assignment is also a single function, and we map the results
+
+```{r}
+#| eval: false
+pm_network_flows = network_assignment(
+    model,
+    model$scenarios$baseline,
+    model$networks$baseline,
+    flows_by_mode,
+    "PM Peak"
+)
+```
+
+---
+
+```{r}
+#| echo: false
+#| output: false
+pm_network_flows = network_assignment(model, model$scenarios$baseline, model$networks$baseline, flows_by_mode, "PM Peak")
+```
+
+```{r}
+#| echo: false
+#| fig-alt: Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere.
+#| fig-cap: Forecast congestion, PM Peak
+map_congestion(model, model$networks$baseline, pm_network_flows)
+```
+
+## Scenarios
+
+- Models are most useful to evaluate scenarios
+- I have students evaluate a scenario based on Chatham Park, adding 20,000 households to Pittsboro
+
+```{r}
+model$scenarios$future = model$scenarios$baseline |>
+  add_households(
+    "37037020801",
+    tribble(
+      ~hhsize, ~workers, ~vehicles, ~income, ~n,
+      4,       2,        3,         150000,  10000,
+      4,       2,        2,         75000,   10000
+    )
+  )
+```
+
+## Chatham Park: network assignment output
+
+```{r}
+#| echo: false
+#| output: false
+#| include: false
+cp_trips = trip_generation(model, model$scenarios$future)
+cp_flows = trip_distribution(model, model$scenarios$future, cp_trips)
+cp_modeflows = mode_choice(model, model$scenarios$future, cp_flows)
+cp_pm_network_flows = network_assignment(model, model$scenarios$future, model$networks$baseline, cp_modeflows, "PM Peak")
+```
+
+```{r}
+#| fig-cap: Forecast congestion levels after adding 20,000 households, PM Peak
+#| echo: false
+map_congestion(model, model$networks$baseline, cp_pm_network_flows) +
+  geom_sf(data=st_as_sf(
+    tribble(
+      ~lat, ~lon,
+      35.7302, -79.1582
+    ),
+    coords=c("lon", "lat"),
+    crs=4326
+  ) |> st_transform(3857), aes(fill=NULL), color="red", size=4)
+```
+
+```{r}
+#| echo: false
+#| eval: false
+
+map_congestion(model, model$networks$baseline, pm_network_flows) +
+  theme(legend.position="bottom", legend.text=element_text(angle=90))
+
+ggsave("base.png", width=6, height=6, dpi=1200)
+
+p2 = map_congestion(model, model$networks$baseline, cp_pm_network_flows) +
+  geom_sf(data=st_as_sf(
+    tribble(
+      ~lat, ~lon,
+      35.7302, -79.1582
+    ),
+    coords=c("lon", "lat"),
+    crs=4326
+  ) |> st_transform(3857), aes(fill=NULL), color="red", size=4) +
+  theme(legend.position="none")
+
+grid.arrange(p1, p2, ncol=2)
+
+ggsave("scenario.png", width=6, height=4.5, dpi=1200)
+```
+
+## Network scenarios
+
+- I also have students evaluate the impacts of widening 15-501, and use this to discuss induced demand
+
+```{r}
+#| eval: false
+model$networks$widen = model$networks$baseline |>
+  modify_ways(
+    # US 15-501 between Pittsboro and Chapel Hill
+    c(
+      "16468788", "133051274", "16471803", "285898984",
+      . . .
+      "712336821", "712336826", "712336827", "998595932"
+    ),
+    lanes_per_direction=3,
+    highway_type="motorway"
+  )
+```
+
+```{r}
+#| include: false
+model$networks$widen = model$networks$baseline |>
+  modify_ways(
+    # US 15-501 between Pittsboro and Chapel Hill
+    c(
+      "16468788", "133051274", "16471803", "285898984",
+       "16476716", "822063218", "29335841", "709833467",
+      "29335943", "29335943", "654023608", "654023604",
+       "29336020", "29336065", "29336043",
+      "29336065", "29336065", "1119560022", "29336065",
+       "29336065", "690900371", "133051279", "29336072",
+      "690900390", "29336325", "29336326", "29336327", 
+      "29336328", "29336338", "29336335", "29336336",
+      "116792787", "138138864", "29336430", "138138830",
+       "116792819", "50370797", "50370799", "50370826",
+      "50370836", "133051276", "133051275", "133051277",
+       "133051276", "133051276", "133051278", "133051278",
+      "1119560050", "690900383", "1028209511", "138138830",
+       "138138830", "1064169631", "138138830", "138138830",
+      "1064169646", "138138830", "285898976", "625793296",
+       "285898977", "712336832", "654023612", "285898984",
+      "285898984", "285898992", "694843964", "1064169630",
+       "1064169647", "398223958", "712336806", "398223959",
+      "712336808", "518951244", "709833464", "713044971", 
+      "1265931335", "574612704", "614242454", "713044971",
+      "614242450", "614242450", "614242453", "614242454", 
+      "614242453", "690900386", "690900353", "690900357",
+      "690900390", "694843965", "709833465", "709833466", 
+      "998595933", "712336807", "712336820", "712336809",
+      "712336821", "712336826", "712336827", "998595932"
+    ),
+    lanes_per_direction=3,
+    highway_type="motorway"
+  )
+```
+
+```{r}
+#| output: false
+#| echo: false
+#| include: false
+cpw_pm_network_flows = network_assignment(model, model$scenarios$future, model$networks$widen, cp_modeflows, "PM Peak")
+```
+
+---
+
+```{r}
+#| fig-cap: Forecast congestion, PM Peak, with widened 15-501.
+#| echo: false
+map_congestion(model, model$networks$widen, cpw_pm_network_flows) +
+  geom_sf(data=st_as_sf(
+    tribble(
+      ~lat, ~lon,
+      35.7302, -79.1582
+    ),
+    coords=c("lon", "lat"),
+    crs=4326
+  ) |> st_transform(3857), aes(fill=NULL), color="red", size=4)
+```
+
+## Conclusion
+
+All models are wrong, but some are useful. 
+
+---George Box
+
+<div style="height: 100px">&nbsp;</div>
+
+. . .
+
+This one is very wrong, but that makes it more useful.
+
+--- George Box, from beyond the grave
+
+## Things to ponder
+
+- Is the balance of simplicity and accuracy appropriate?
+- Is more background needed before assigning this?
+- How do I transition from this into more advanced modeling?
+- Where do I publish this?
