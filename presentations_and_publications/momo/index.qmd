@@ -75,15 +75,19 @@ library(sf)
 
 ## How do you run a model first?
 
-- In 720, I do _one lecture_ on modeling
-- Then, every student runs a _very_ simple model and interprets the inputs and outputs
+- In my introductory Planning Methods class, I do _one lecture_ on modeling
+- Then, every student uses a _very_ simple model to evaluate a proposed housing development near UNC
+  - Answer questions about the model, but more importantly about the context
+  - Mean score 5.96 / 7, including 2 points extra credit
 
 ## My First Four Step Model
 
-- I implement this model using My First Four Step Model, an R package I developed for implementing _very_ simple models
+- I implement this model using My First Four Step Model, an R package I developed
 - Running the model only requires R and minimal computing power, so students can run it on their laptops
     - Even Chromebooks!
 - The four steps of the model map directly onto four functions in the package
+
+## Running the model: setup
 
 ```{r}
 #| include: false
@@ -92,17 +96,23 @@ library(MyFirstFourStepModel)
 model = load_model("https://files.indicatrix.org/rdu_chatham.model")
 ```
 
-## The four steps
+```{r}
+#| include: true
+#| eval: false
 
-- Trip generation: how many trips originate or terminate in each zone
-- Trip distribution: how many of those trips travel between each pair of zones
-- Mode choice: what modes do they use (bus/drive/walk etc)
-- Network assignment: what routes do they take, and what congestion levels result
+# installation steps, only needed first time
+install.packages('MyFirstFourStepModel',
+  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 
+# model loading
+library(MyFirstFourStepModel)
+model = load_model("https://files.indicatrix.org/rdu_chatham.model")
+```
 
 ## Running the model: trip generation
 
 - The entire trip generation process happens with one function, `trip_generation`
+- Trip generation uses a series of linear regression models, since my students are already familiar with them
 - I have students interpret
     - coefficients in the regression models
     - maps of model output
@@ -203,7 +213,8 @@ map_congestion(model, model$networks$baseline, pm_network_flows)
 ## Scenarios
 
 - Models are most useful to evaluate scenarios
-- I have students evaluate a scenario based on Chatham Park, adding 20,000 households to Pittsboro
+- I have students evaluate a scenario based on the proposed Chatham Park developmend
+  - Adding 20,000 households to Pittsboro, a bedroom community west of Raleigh
 
 ```{r}
 model$scenarios$future = model$scenarios$baseline |>
@@ -270,7 +281,7 @@ ggsave("scenario.png", width=6, height=4.5, dpi=1200)
 
 ## Network scenarios
 
-- I also have students evaluate the impacts of widening 15-501, and use this to discuss induced demand
+- I also have students evaluate the impacts of widening US 15-501, and use this to discuss induced demand
 
 ```{r}
 #| eval: false
@@ -347,23 +358,33 @@ map_congestion(model, model$networks$widen, cpw_pm_network_flows) +
   ) |> st_transform(3857), aes(fill=NULL), color="red", size=4)
 ```
 
+## Colophon: Estimation
+
+- The model can be estimated anywhere in the US
+- Relies on NHTS, Census
+
 ## Conclusion
 
-All models are wrong, but some are useful. 
+::: {.columns}
+:::: {.column width="60%"}
+All models are wrong, but some are useful.
 
----George Box
-
-<div style="height: 100px">&nbsp;</div>
-
-. . .
-
+::::: {.fragment}
 This one is very wrong, but that makes it more useful.
 
---- George Box, from beyond the grave
+--- George Box, probably
+:::::
 
-## Things to ponder
+::::: {.fragment}
+- It is possible to get folks hands-on with a model within a few days
+- This leads to more excitement and understanding about modeling
+:::::
+::::
+:::: {.column width="39%"}
+More information, preprint, and instructions:
 
-- Is the balance of simplicity and accuracy appropriate?
-- Is more background needed before assigning this?
-- How do I transition from this into more advanced modeling?
-- Where do I publish this?
+![](qr.png){width="500px"}
+
+<https://projects.indicatrix.org/MyFirstFourStepModel>
+::::
+:::
