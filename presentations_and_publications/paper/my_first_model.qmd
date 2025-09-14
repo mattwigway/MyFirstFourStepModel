@@ -37,10 +37,6 @@ execute:
     cache: true
 fig-dpi: 300
 ---
-
-\linenumbers
-\doublespacing
-
 ```{r}
 #| include: false
 library(tidyverse)
@@ -52,6 +48,8 @@ library(gt)
 ## Practical applications
 
 This article introduces a very simple travel demand modeling package, designed for use in educational settings. It runs on any modern consumer-grade computer, uses only free software, and provides forecasts for any region of the US. The goal of the tool is to give planners and engineers who do not work professionally with models enough experience to collaborate effectively with those who do. I describe how I use the tool in an introductory planning class, to give future planning practitioners experience with travel forecasting.
+
+\newpage
 
 ## Introduction
 
@@ -140,11 +138,11 @@ All my students already have R and RStudio installed on their machines from a pr
 
 ```{r}
 #| eval: false
-install.packages("devtools")
-devtools::install_github("mattwigway/MyFirstFourStepModel")
+install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+
 ```
 
-This installs the `devtools` package [@devtools_2022], which is used to install `MyFirstFourStepModel` directly from Github. It also automatically installs the R packages `MyFirstFourStepModel` depends on—notably `tidyverse` [@tidyverse], `sf` [@sf], `igraph` [@igraph], `readxl` and `writexl` [@readxl;@writexl], `tidycensus` [@tidycensus], `tigris` [@tigris], and `nnet` [@nnet].
+This installs a pre-compiled R package containing the model. It also automatically installs the R packages `MyFirstFourStepModel` depends on—notably `tidyverse` [@tidyverse], `sf` [@sf], `igraph` [@igraph], `readxl` and `writexl` [@readxl;@writexl], `tidycensus` [@tidycensus], `tigris` [@tigris], and `nnet` [@nnet].
 
 ### Loading the package and the model
 
@@ -159,7 +157,7 @@ model = load_model("https://files.indicatrix.org/rdu_chatham.model")
 ```{r}
 #| include: false
 library(MyFirstFourStepModel)
-model = load_model("~/Dropbox (Personal)/files.indicatrix.org/rdu_chatham.model")
+model = load_model("https://files.indicatrix.org/rdu_chatham.model")
 ```
 
 ### Trip generation
@@ -330,7 +328,7 @@ get_mode_shares(flows_by_mode)
 
 ### Network assignment
 
-The final step of the model is network assignment. A simple Frank-Wolfe static traffic assignment algorithm is used to assign trips to the network. The algorithm is written in pure R for ease of installation, at the expense of some performance; for this reason a relatively simple network is used. The network used in the Research Triangle example model has 7529 nodes and 10497 edges. The code below performs assignment for the PM Peak and displays congestion (@fig-congestion).
+The final step of the model is network assignment. A simple Frank-Wolfe static traffic assignment algorithm is used to assign trips to the network. Since network assignment is time consuming, a relatively simple network is used. The network used in the Research Triangle example model has 7529 nodes and 10497 edges. The code below performs assignment for the PM Peak and displays congestion (@fig-congestion). To maximize network assignment performance, a small amount of code written in the Rust language [@klabnickRustProgrammingLanguage2025] is used to efficiently process routing results; this code is pre-compiled and will be installed automatically when `MyFirstFourStepModel` is installed.
 
 ```{r}
 #| eval: false
