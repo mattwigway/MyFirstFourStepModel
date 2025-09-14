@@ -48,6 +48,7 @@
 #' @importFrom igraph shortest_paths
 #' @importFrom igraph subgraph
 #' @importFrom igraph V
+#' @importFrom igraph vcount
 #' @importFrom igraph vertex_attr
 #' @importFrom JuliaCall julia_setup
 #' @importFrom magrittr %>%

@@ -89,7 +89,7 @@ all_or_nothing = function (nodeflow_hourly, marginals, network, weights) {
     all_to = unique(nodeflow_hourly$dest_node)
 
     for (fr in unique(nodeflow_hourly$orig_node)) {
-        print(glue::glue("processing node {fr}"))
+        #print(glue::glue("processing node {fr}"))
         paths = shortest_paths(
             network,
             fr,
@@ -99,7 +99,7 @@ all_or_nothing = function (nodeflow_hourly, marginals, network, weights) {
             predecessors = TRUE
         )
 
-        print("routing complete")
+        #print("routing complete")
 
         frflows = filter(nodeflow_hourly, orig_node == fr)
 
@@ -111,45 +111,17 @@ all_or_nothing = function (nodeflow_hourly, marginals, network, weights) {
         # which must be all of the flows into that node b/c of the tree structure.
 
         # sum up all flows into each node on the last edge traversed
-        pred_flows = rep(0, vcount(network))
         flows_to_node = rep(0, vcount(network))
         flows_to_node[frflows$dest_node] = frflows$Car
-        flows_to_node[fr] = 0
 
-        # unreached nodes are NA so make them loop edges to avoid indexing problems
-        # unreached nodes should not have destinations linked to them.
-        # the graph should have a single component, so unreached is just nodes not needed
-        # to reach the nodes where things are linked.
-        predecessors = as.numeric(paths$predecessors)
+        predecessors = as.integer(paths$predecessors)
         nas = which(is.na(predecessors))
         predecessors[nas] = nas
 
-        while (sum(flows_to_node) > 0) {
-            #print("getting nodes")
-            nodes = which(flows_to_node > 0)
-            #print("getting predecessors")
-            pred = predecessors[nodes]
+        # incoming edge for each vertex in this SPT (0 if not in SPT)
+        incoming_edge = as.integer(get_edge_ids(network, as.vector(rbind(predecessors, 1:vcount(network)))))
 
-            # interleave edge ids
-            #print("getting edge ids")
-            edgelist = as.vector(rbind(pred, nodes))
-            eids = get_edge_ids(network, edgelist)
-
-            #print("incrementing flows")
-
-            # increment flows with flows from this "round"
-            flows[eids] <- flows[eids] + flows_to_node[nodes]
-
-            #print("moving to previous round")
-
-            flows_to_node = ave(flows_to_node, predecessors, FUN = sum)
-            # flows_to_node now holds the total flow coming out of each nodes' predecessor
-            # adjust so that each predecessor contains the flows
-            pred_flows[] <- 0
-            pred_flows[predecessors] <- flows_to_node
-            flows_to_node[] = pred_flows
-            flows_to_node[fr] = 0
-        }
+        update_flows(flows, flows_to_node, predecessors, incoming_edge, as.integer(fr))
     }
 
     return(flows)
