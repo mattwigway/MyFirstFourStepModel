@@ -59,3 +59,6 @@ docs
 *.html
 *_files
 *.rmarkdown
+src/rust/vendor
+src/Makevars
+src/Makevars.win

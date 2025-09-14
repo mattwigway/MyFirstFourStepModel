@@ -43,6 +43,7 @@
 #' @importFrom igraph E<-
 #' @importFrom igraph ecount
 #' @importFrom igraph edge_attr
+#' @importFrom igraph get_edge_ids
 #' @importFrom igraph get.edge.ids
 #' @importFrom igraph read_graph
 #' @importFrom igraph shortest_paths
