@@ -14,6 +14,7 @@ format:
         logo: UNC_logo_RGB.png
         slide-number: true
         html-math-method: katex
+        footer: projects.indicatrix.org/MyFirstFourStepModel
 execute:
     eval: true
     echo: true
@@ -31,13 +32,6 @@ library(gt)
 library(sf)
 ```
 
-
-## What is a travel demand model?
-
-- Large collection of econometric models that predict how people will use the transportation system, based on forecasted demographics and changes to the transportation network
-- All US regions have one
-- Used to prioritize billions in transportation funding
-- The most common model is the _four-step model_
 
 ## Why introduce modeling to planners?
 
@@ -385,6 +379,5 @@ More information, preprint, and instructions:
 
 ![](qr.png){width="500px"}
 
-<https://projects.indicatrix.org/MyFirstFourStepModel>
 ::::
 :::
