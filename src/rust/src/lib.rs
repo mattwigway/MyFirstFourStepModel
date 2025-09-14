@@ -7,7 +7,7 @@ use extendr_api::prelude::*;
 #[extendr]
 fn update_flows(edge_flows: &mut[f64], flows_to_node: &[f64], predecessor: &[i32], incoming_edge: &[i32], origin: i32) -> () {
     for (index, flow) in flows_to_node.iter().enumerate() {
-        if (*flow > 0.0) {
+        if *flow > 0.0 {
             // index is zero based, everything else is one-based
             let mut current_node = index + 1;
             // follow back to origin
