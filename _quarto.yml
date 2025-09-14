@@ -2,7 +2,10 @@ project:
   type: website
   render:
     - index.qmd
-    - presentations_and_publications/ite2024/index.qmd
+    - presentations_and_publications/momo/index.qmd
+    - presentations_and_publications/homework/homework.qmd
+    - presentations_and_publications/paper/my_first_model.qmd
+    - presentations_and_publications/paper/supplemental_materials.qmd
   # render for gh-pages
   output-dir: docs
 

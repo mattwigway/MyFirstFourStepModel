@@ -1,4 +1,9 @@
 My First Four Step Model resources (formerly known as Baby's First Four Step Model)
 
-- [Full paper](https://doi.org/10.17615/qzhd-n063)
-- [Github repository](https://github.com/mattwigway/BabysFirstFourStepModel)
+- [Preprint](https://doi.org/10.17615/qzhd-n063)
+    - [HTML version](presentations_and_publications/paper/my_first_model.qmd)
+    - [Supplemental materials](presentations_and_publications/paper/supplemental_materials.qmd)
+- [Github repository](https://github.com/mattwigway/MyFirstFourStepModel)
+- [Example homework assignment](presentations_and_publications/homework/homework.qmd)
+- [Example R script](https://github.com/mattwigway/MyFirstFourStepModel/blob/main/examples/chatham_park_model.R)
+- [Modeling Mobility slides](presentations_and_publications/momo/index.qmd)
