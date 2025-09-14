@@ -9,13 +9,13 @@
 
 # Before running this script, you first need to install the MyFirstFourStepModel package, which you
 # can do by running this code in the console (this only needs to be done once per computer you run this on).
-# Remove the # signs from the start of the lines before running this code:
+# Remove the # signs from the start of the line before running this code:
 #
-#    install.packages("devtools")
-#    devtools::install_github("mattwigway/MyFirstFourStepModel")
+#    install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 
 # First, we load the modeling package into R
-library(MyFirstFourStepModel)
+#library(MyFirstFourStepModel)
+devtools::load_all()
 library(ggplot2)
 
 # Next, we load the model itself
