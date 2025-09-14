@@ -138,7 +138,8 @@ All my students already have R and RStudio installed on their machines from a pr
 
 ```{r}
 #| eval: false
-install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('MyFirstFourStepModel',
+  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 
 ```
 
