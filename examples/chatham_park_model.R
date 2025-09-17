@@ -14,8 +14,7 @@
 #    install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 
 # First, we load the modeling package into R
-#library(MyFirstFourStepModel)
-devtools::load_all()
+library(MyFirstFourStepModel)
 library(ggplot2)
 
 # Next, we load the model itself
