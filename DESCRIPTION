@@ -22,7 +22,7 @@ Imports:
     purrr,
     readr,
     readxl,
-    rnaturalearth,
+    scales,
     sf,
     stringr,
     tibble,

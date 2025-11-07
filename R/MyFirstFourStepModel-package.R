@@ -63,7 +63,6 @@
 #' @importFrom readr cols_only
 #' @importFrom readr read_csv
 #' @importFrom readxl read_excel
-#' @importFrom rnaturalearth ne_download
 #' @importFrom sf read_sf
 #' @importFrom sf st_as_sf
 #' @importFrom sf st_buffer
