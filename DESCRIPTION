@@ -1,6 +1,6 @@
 Package: MyFirstFourStepModel
 Title: Highly Simplified Four-Step Travel Demand Models for Teaching
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Matt", "Bhagat-Conway", , "mwbc@unc.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1210-2982"))
