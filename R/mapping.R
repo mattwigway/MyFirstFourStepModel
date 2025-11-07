@@ -55,6 +55,7 @@ map_trip_distribution = function (model, flows, timeperiod, triptype, origin_tra
             theme(axis.text = ggplot2::element_blank(), panel.grid = ggplot2::element_blank(), axis.title = ggplot2::element_blank())
 }
 
+#' Given a model,
 #' @export
 map_congestion = function (model, network, flows) {
     ff_tt = get_freeflow_weights(network$network)
@@ -82,7 +83,7 @@ map_congestion = function (model, network, flows) {
 }
 
 # burn NE cities into compiled R package (this is evaluated at compile time)
-NE_CITIES = ne_download(scale=10, type="populated_places_simple", returnclass = "sf")
+NE_CITIES = read_sf(system.file("extdata/naturalearth/ne_10m_populated_places_simple.shp", package="MyFirstFourStepModel"))
 
 #' Add city labels from Natural Earth
 label_cities = function (model, buffer = 500) { # buffer in meters for web mercator

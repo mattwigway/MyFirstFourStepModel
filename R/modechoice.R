@@ -81,6 +81,9 @@ flow_by_mode = function (odmat, marginals, mode_choice_models) {
     return(bind_rows(hb_data, nhb_data))
 }
 
+#' This function uses the output of [flow_by_mode()] to calculate mode shares, returning a data frame with
+#' rows for car, bike, walk, and transit.
+#' 
 #' @export
 get_mode_shares = function (flows_by_mode) {
     flows_by_mode %>%
