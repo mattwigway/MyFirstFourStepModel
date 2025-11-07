@@ -74,9 +74,7 @@ flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
 get_mode_shares(flows_by_mode)
 
 # Lastly, we can assign all PM peak trips to the network.
-# NOTE: This step may take quite some time, possibly as much as an hour
-# depending on your computer.
-# Every few minutes it will print a status update, something like
+# Every so often it will print a status update, something like
 # Iteration 1 relative gap: 0.40825352014596
 # When that number falls below 0.01, the algorithm will finish.
 link_flows = network_assignment(
