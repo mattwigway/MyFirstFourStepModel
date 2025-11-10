@@ -11,13 +11,13 @@
 # can do by running this code in the console (this only needs to be done once per computer you run this on).
 # Remove the # signs from the start of the line before running this code:
 #
-#    install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+#    install.packages("MyFirstFourStepModel", repos=c("https://mattwigway.r-universe.dev", getOption("repos")))
 
 # First, we load the modeling package into R
 library(MyFirstFourStepModel)
-library(ggplot2)
 
-# Next, we load the model itself
+# Next, we load the model itself - depending on the speed of your internet connection
+# this may take a few minutes.
 model = load_model("https://files.indicatrix.org/chatham_park.model")
 
 ############
@@ -30,6 +30,13 @@ model = load_model("https://files.indicatrix.org/chatham_park.model")
 
 # The first step of the four step model is trip generation. First, we will print out a summary of the trip generation model
 # for AM Peak home-based work trips. Use this to answer question 1.
+
+# The dependent variable in this model is the number of home-based work trips members of a household
+# make in the AM Peak. The indepenent variables in this model are:
+# - vehicles: number of vehicles
+# - hhsize: household size (number of people)
+# - income: income in bins 0-35000 (left out), 35000-75000 (factor(income) 35000), 75000-10000 (factor(income) 75000),
+#.     and over 100000 (factor(income) 100000)
 summary(model$production_functions$`AM Peak`$HBW)
 
 # Next, we run the actual trip generation step
@@ -77,6 +84,7 @@ get_mode_shares(flows_by_mode)
 # Every so often it will print a status update, something like
 # Iteration 1 relative gap: 0.40825352014596
 # When that number falls below 0.01, the algorithm will finish.
+# This may 10 minutes or more depending on the speed of your computer.
 link_flows = network_assignment(
     model,
     model$scenarios$baseline,
@@ -111,7 +119,7 @@ cp_flows_by_mode = mode_choice(
     cp_flows
 )
 
-# This step may again take 30 minutes or more
+# This step may again take a few minutes
 cp_link_flows = network_assignment(
     model,
     model$scenarios$chatham_park,
@@ -150,14 +158,13 @@ widen_flows_by_mode = mode_choice(
     widen_flows
 )
 
-# This step may again take 30 minutes or more
-widen_link_flows = network_assignment(
+system.time(widen_link_flows <- network_assignment(
     model,
     model$scenarios$chatham_park,
     model$networks$widen_15_501,
     widen_flows_by_mode,
     "PM Peak"
-)
+))
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
