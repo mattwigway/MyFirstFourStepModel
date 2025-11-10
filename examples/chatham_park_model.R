@@ -158,13 +158,13 @@ widen_flows_by_mode = mode_choice(
     widen_flows
 )
 
-system.time(widen_link_flows <- network_assignment(
+widen_link_flows = network_assignment(
     model,
     model$scenarios$chatham_park,
     model$networks$widen_15_501,
     widen_flows_by_mode,
     "PM Peak"
-))
+)
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
