@@ -78,22 +78,6 @@ estimate = function (nhts, osm, state, county, year, highway_types=c("motorway",
     ))
 }
 
-#' Save a model as an RData file
-#' @export
-save_model = function (model, filename) {
-    saveRDS(model, filename)
-}
-
-#' Load a model from an RData file
-#' @export
-load_model = function (filename) {
-    if (str_starts(filename, "https://")) {
-        return(readRDS(gzcon(url(filename))))
-    } else {
-        return(readRDS(filename))
-    }
-}
-
 #' This runs the trip generation step of the model.
 #' 
 #' Trip production is based on the marginal distributions for vehicles, workers, household size, and 

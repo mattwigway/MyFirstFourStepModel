@@ -11,6 +11,8 @@ name = 'myfirstfourstepmodel'
 
 [dependencies]
 extendr-api = '0.8.1'
+ureq = "3.1.4"
+zip = "7.2.0"
 
 [profile.release]
 lto = true
