@@ -86,11 +86,11 @@ get_mode_shares(flows_by_mode)
 # When that number falls below 0.01, the algorithm will finish.
 # This may 10 minutes or more depending on the speed of your computer.
 link_flows = network_assignment(
-    model,
-    model$scenarios$baseline,
-    model$networks$baseline,
-    flows_by_mode,
-    "PM Peak"
+  model,
+  model$scenarios$baseline,
+  model$networks$baseline,
+  flows_by_mode,
+  "PM Peak"
 )
 
 # We can then map the congestion resulting from these trips (Question 7).
@@ -103,35 +103,34 @@ map_congestion(model, model$networks$baseline, link_flows)
 # Next, we will run the model for the Chatham Park scenario,
 # by repeating the steps above.
 cp_productions_attractions = trip_generation(
-    model,
-    model$scenarios$chatham_park
+  model,
+  model$scenarios$chatham_park
 )
 
 cp_flows = trip_distribution(
-    model,
-    model$scenarios$chatham_park,
-    cp_productions_attractions
+  model,
+  model$scenarios$chatham_park,
+  cp_productions_attractions
 )
 
 cp_flows_by_mode = mode_choice(
-    model,
-    model$scenarios$chatham_park,
-    cp_flows
+  model,
+  model$scenarios$chatham_park,
+  cp_flows
 )
 
 # This step may again take a few minutes
 cp_link_flows = network_assignment(
-    model,
-    model$scenarios$chatham_park,
-    model$networks$baseline,
-    cp_flows_by_mode,
-    "PM Peak"
+  model,
+  model$scenarios$chatham_park,
+  model$networks$baseline,
+  cp_flows_by_mode,
+  "PM Peak"
 )
 
 # This maps the congestion under the scenario, and also labels the location of Chatham Park (Question 7)
 map_congestion(model, model$networks$baseline, cp_link_flows) +
-    ggplot2::annotate("text", -8809915, 4267605, label="Chatham Park")
-
+  ggplot2::annotate("text", -8809915, 4267605, label = "Chatham Park")
 
 
 ################
@@ -142,30 +141,30 @@ map_congestion(model, model$networks$baseline, cp_link_flows) +
 # but with 15-501 widened to a three-lane freeway.
 
 widen_productions_attractions = trip_generation(
-    model,
-    model$scenarios$chatham_park
+  model,
+  model$scenarios$chatham_park
 )
 
 widen_flows = trip_distribution(
-    model,
-    model$scenarios$chatham_park,
-    widen_productions_attractions
+  model,
+  model$scenarios$chatham_park,
+  widen_productions_attractions
 )
 
 widen_flows_by_mode = mode_choice(
-    model,
-    model$scenarios$chatham_park,
-    widen_flows
+  model,
+  model$scenarios$chatham_park,
+  widen_flows
 )
 
 widen_link_flows = network_assignment(
-    model,
-    model$scenarios$chatham_park,
-    model$networks$widen_15_501,
-    widen_flows_by_mode,
-    "PM Peak"
+  model,
+  model$scenarios$chatham_park,
+  model$networks$widen_15_501,
+  widen_flows_by_mode,
+  "PM Peak"
 )
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
-    ggplot2::annotate("text", -8809915, 4267605, label="Chatham Park")
+  ggplot2::annotate("text", -8809915, 4267605, label = "Chatham Park")
