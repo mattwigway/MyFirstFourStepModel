@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom cli cli_abort
 #' @importFrom dplyr across
 #' @importFrom dplyr arrange
 #' @importFrom dplyr bind_cols

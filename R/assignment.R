@@ -121,7 +121,7 @@ all_or_nothing = function(nodeflow_hourly, marginals, network, weights) {
     # incoming edge for each vertex in this SPT (0 if not in SPT)
     incoming_edge = as.integer(get_edge_ids(network, as.vector(rbind(predecessors, 1:vcount(network)))))
 
-    update_flows(flows, flows_to_node, predecessors, incoming_edge, as.integer(fr))
+    abort_on_error(update_flows(flows, flows_to_node, predecessors, incoming_edge, as.integer(fr)))
   }
 
   return(flows)

@@ -13,45 +13,55 @@ pub struct ArchiveWriter {
 
 #[extendr]
 impl ArchiveWriter {
-    pub fn new(filename: String) -> std::result::Result<Self, Box<dyn std::error::Error>> {
-        let file = File::create(filename)?;
+    pub fn new(filename: String) -> Result<Self> {
+        let file = File::create(filename)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
         let writer = ZipWriter::new(file);
         Ok(Self { writer: Some(writer) })
     }
 
-    pub fn write_entry(&mut self, name: String, body: String) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    pub fn write_entry(&mut self, name: String, body: String) -> Result<()> {
         match self.writer.as_mut() {
             Some(writer) => {
                 let opts = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
-                writer.start_file(name, opts)?;
-                writer.write_all(body.as_bytes())?;
+                writer.start_file(name, opts)
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+
+                writer.write_all(body.as_bytes())
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+
                 Ok(())
             },
-            None => Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotConnected, "File closed")))
+            None => Err(Error::Other("File closed".to_string()))
         }
     }
 
-    pub fn write_file(&mut self, name: String, file: String) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    pub fn write_file(&mut self, name: String, file: String) -> Result<()> {
         match self.writer.as_mut() {
             Some(writer) => {
-                let mut fh = File::open(file)?;
+                let mut fh = File::open(file)
+                    .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+
                 let opts = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
-                writer.start_file(name, opts)?;
-                std::io::copy(&mut fh, writer)?;
+                writer.start_file(name, opts)
+                    .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+                std::io::copy(&mut fh, writer)
+                    .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
                 Ok(())
             },
-            None => Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotConnected, "File closed")))
+            None => Err(Error::Other("File closed".to_string()))
         }
     }
 
     // self rather than &self to take ownership and prevent future use
-    pub fn finish(&mut self) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    pub fn finish(&mut self) -> Result<()> {
         match self.writer {
             Some(_) => {
-                self.writer.take().unwrap().finish()?;
+                self.writer.take().unwrap().finish()
+                    .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
                 Ok(())
             },
-            None => Err(Box::new(std::io::Error::new(std::io::ErrorKind::NotConnected, "File closed")))
+            None => Err(Error::Other("File closed".to_string()))
         }
     }
 }
@@ -61,26 +71,33 @@ pub struct ArchiveReader {
     reader: ZipArchive<Cursor<Vec<u8>>>
 }
 
+
+
 #[extendr]
 impl ArchiveReader {
-    pub fn new(path: String) -> std::result::Result<ArchiveReader, Box<dyn std::error::Error>> {
+    pub fn new(path: String) -> extendr_api::Result<ArchiveReader> {
         let mut buf = Vec::new();
 
         if path.starts_with("https://") || path.starts_with("http://") {
             ureq::get(path)
                 .header("User-Agent", "MyFirstFourStepModel")
-                .call()?
+                .call()
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?
                 .body_mut()
                 .as_reader()
-                .read_to_end(&mut buf)?;
+                .read_to_end(&mut buf)
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
         } else {
             // treat as local file
-            File::open(path)?
-                .read_to_end(&mut buf)?;
+            File::open(path)
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?
+                .read_to_end(&mut buf)
+                .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
         }
 
         let cursor = std::io::Cursor::new(buf);
-        let reader = ZipArchive::new(cursor)?;
+        let reader = ZipArchive::new(cursor)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
 
         Ok(ArchiveReader { reader: reader })
     }
@@ -89,18 +106,25 @@ impl ArchiveReader {
         Ok(Strings::from_iter(self.reader.file_names()))
     }
 
-    pub fn get_entry_as_string(&mut self, name: String) -> std::result::Result<String, Box<dyn std::error::Error>> {
-        let mut file = self.reader.by_name(&name)?;
+    pub fn get_entry_as_string(&mut self, name: String) -> Result<String> {
+        let mut file = self.reader.by_name(&name)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+
         let mut buf = Vec::new();
-        file.read_to_end(&mut buf)?;
-        let result = String::from_utf8(buf)?;
+        file.read_to_end(&mut buf)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+        let result = String::from_utf8(buf)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
         Ok(result)
     }
 
-    pub fn extract_entry(&mut self, name: String, target: String) -> std::result::Result<(), Box<dyn std::error::Error>> {
-        let mut inf = self.reader.by_name(&name)?;
-        let mut outf = File::create(target)?;
-        std::io::copy(&mut inf, &mut outf)?;
+    pub fn extract_entry(&mut self, name: String, target: String) -> Result<()> {
+        let mut inf = self.reader.by_name(&name)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+        let mut outf = File::create(target)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
+        std::io::copy(&mut inf, &mut outf)
+            .or_else(|err| Err(extendr_api::error::Error::Other(err.to_string())))?;
         Ok(())
     }
 }

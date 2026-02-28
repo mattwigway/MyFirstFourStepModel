@@ -1,8 +1,8 @@
 #' Write the minimal information to be able to reconstruct enough of an
 #' lm to be able to do estimation.
 write_lm = function(model, archive, name) {
-  archive$write_entry(paste0(name, ".json"), toJSON(as.list(coefficients(model))))
-  archive$write_entry(paste0(name, ".txt"), capture_output(print(summary(model))))
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(as.list(coefficients(model)))))
+  abort_on_error(archive$write_entry(paste0(name, ".txt"), capture_output(print(summary(model)))))
 }
 
 write_lm_list = function(models, archive, prefix) {
@@ -18,8 +18,8 @@ write_lm_list = function(models, archive, prefix) {
 
 read_lm = function(archive, name) {
   result = list(
-    coefficients = fromJSON(archive$get_entry_as_string(paste0(name, ".json"))),
-    summary = archive$get_entry_as_string(paste0(name, ".txt"))
+    coefficients = fromJSON(abort_on_error(archive$get_entry_as_string(paste0(name, ".json")))),
+    summary = abort_on_error(archive$get_entry_as_string(paste0(name, ".txt")))
   )
 
   class(result) = "lm_simple"
@@ -84,11 +84,11 @@ write_mnl = function(model, archive, name) {
     lev = model$lev
   )
 
-  archive$write_entry(paste0(name, ".json"), toJSON(simple))
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(simple)))
 }
 
 read_mnl = function(archive, name) {
-  mod = fromJSON(archive$get_entry_as_string(paste0(name, ".json")))
+  mod = fromJSON(abort_on_error(archive$get_entry_as_string(paste0(name, ".json"))))
   mod$coef = as.matrix(mod$coef)
   class(mod) = "mnl_simple"
   return(mod)
@@ -148,13 +148,13 @@ predict.mnl_simple = function(model, data, type, ...) {
 write_sf_to_model = function(layer, archive, name) {
   tf = tempfile(fileext = ".gpkg")
   st_write(layer, tf)
-  archive$write_file(paste0(name, ".gpkg"), tf)
+  abort_on_error(archive$write_file(paste0(name, ".gpkg"), tf))
   file.remove(tf)
 }
 
 read_sf_from_model = function(archive, name) {
   tf = tempfile(fileext = ".gpkg")
-  archive$extract_entry(paste0(name, ".gpkg"), tf)
+  abort_on_error(archive$extract_entry(paste0(name, ".gpkg"), tf))
   val = st_read(tf)
   file.remove(tf)
   return(val)
@@ -166,7 +166,7 @@ write_network = function(network, archive, name) {
 
   tf = tempfile(fileext = ".graphml")
   write_graph(network$network, tf, format = "graphml")
-  archive$write_file(paste0("networks/", name, ".graphml"), tf)
+  abort_on_error(archive$write_file(paste0("networks/", name, ".graphml"), tf))
   file.remove(tf)
 }
 
@@ -174,7 +174,7 @@ read_network = function(archive, name) {
   # okay to use same name for both, extensions differ
   geo = read_sf_from_model(archive, paste0("networks/", name))
   tf = tempfile(fileext = ".graphml")
-  graphml = archive$extract_entry(paste0("networks/", name, ".graphml"), tf)
+  graphml = abort_on_error(archive$extract_entry(paste0("networks/", name, ".graphml"), tf))
   net = read_graph(tf, format = "graphml")
   file.remove(tf)
 
@@ -188,12 +188,12 @@ read_network = function(archive, name) {
 #' Save a model
 #' @export
 save_model = function(model, filename) {
-  out = ArchiveWriter$new(filename)
+  out = abort_on_error(ArchiveWriter$new(filename))
 
-  out$write_entry("seed_matrix.csv", format_csv(model$seed_matrix))
-  out$write_entry("distribution_betas.json", toJSON(model$distribution_betas))
-  out$write_entry("direction_factors.csv", format_csv(model$direction_factors))
-  out$write_entry("occupancy_factors.csv", format_csv(model$occupancy_factors))
+  abort_on_error(out$write_entry("seed_matrix.csv", format_csv(model$seed_matrix)))
+  abort_on_error(out$write_entry("distribution_betas.json", toJSON(model$distribution_betas)))
+  abort_on_error(out$write_entry("direction_factors.csv", format_csv(model$direction_factors)))
+  abort_on_error(out$write_entry("occupancy_factors.csv", format_csv(model$occupancy_factors)))
 
   write_lm_list(model$production_functions, out, "production_functions")
   write_lm_list(model$attraction_functions, out, "attraction_functions")
@@ -203,7 +203,7 @@ save_model = function(model, filename) {
   write_mnl(model$mode_choice_models$NHB, out, "mode_choice_models/NHB")
   write_mnl(model$mode_choice_models$HB, out, "mode_choice_models/HB")
 
-  out$write_entry("scenarios.json", toJSON(model$scenarios))
+  abort_on_error(out$write_entry("scenarios.json", toJSON(model$scenarios)))
 
   for (netname in names(model$networks)) {
     if (!str_detect(netname, "^[a-zA-Z0-9_\\.]+$")) {
@@ -212,20 +212,20 @@ save_model = function(model, filename) {
     write_network(model$networks[[netname]], out, netname)
   }
 
-  out$finish()
+  abort_on_error(out$finish())
 }
 
 #' Load a model
 #' @export
 load_model = function(filename) {
   # http/https handled on Rust side
-  inp = ArchiveReader$new(filename)
+  inp = abort_on_error(ArchiveReader$new(filename))
   res = list()
 
-  res$seed_matrix = read_csv(inp$get_entry_as_string("seed_matrix.csv"))
-  res$distribution_betas = fromJSON(inp$get_entry_as_string("distribution_betas.json"))
-  res$direction_factors = read_csv(inp$get_entry_as_string("direction_factors.csv"))
-  res$occupancy_factors = read_csv(inp$get_entry_as_string("occupancy_factors.csv"))
+  res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")))
+  res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
+  res$direction_factors = read_csv(abort_on_error(inp$get_entry_as_string("direction_factors.csv")))
+  res$occupancy_factors = read_csv(abort_on_error(inp$get_entry_as_string("occupancy_factors.csv")))
 
   res$tazs_geo = read_sf_from_model(inp, "tazs")
 
@@ -247,9 +247,9 @@ load_model = function(filename) {
     NHB = read_mnl(inp, "mode_choice_models/NHB")
   )
 
-  res$scenarios = fromJSON(inp$get_entry_as_string("scenarios.json"))
+  res$scenarios = fromJSON(abort_on_error(inp$get_entry_as_string("scenarios.json")))
 
-  networks = inp$entries()
+  networks = abort_on_error(inp$entries())
   networks = str_extract(networks, "networks/([a-zA-Z0-9_\\.]+).gpkg", 1)
   networks = networks[!is.na(networks)]
 
