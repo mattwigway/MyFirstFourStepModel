@@ -1,7 +1,7 @@
 #' Write the minimal information to be able to reconstruct enough of an
 #' lm to be able to do estimation.
 write_lm = function(model, archive, name) {
-  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(as.list(coefficients(model)))))
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(as.list(coefficients(model)), digits = NA)))
   abort_on_error(archive$write_entry(paste0(name, ".txt"), capture_output(print(summary(model)))))
 }
 
@@ -84,7 +84,7 @@ write_mnl = function(model, archive, name) {
     lev = model$lev
   )
 
-  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(simple)))
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(simple, digits = NA)))
 }
 
 read_mnl = function(archive, name) {
@@ -188,76 +188,80 @@ read_network = function(archive, name) {
 #' Save a model
 #' @export
 save_model = function(model, filename) {
-  out = abort_on_error(ArchiveWriter$new(filename))
+  invisible(capture.output({
+    out = abort_on_error(ArchiveWriter$new(filename))
 
-  abort_on_error(out$write_entry("seed_matrix.csv", format_csv(model$seed_matrix)))
-  abort_on_error(out$write_entry("distribution_betas.json", toJSON(model$distribution_betas)))
-  abort_on_error(out$write_entry("direction_factors.csv", format_csv(model$direction_factors)))
-  abort_on_error(out$write_entry("occupancy_factors.csv", format_csv(model$occupancy_factors)))
+    abort_on_error(out$write_entry("seed_matrix.csv", format_csv(model$seed_matrix)))
+    abort_on_error(out$write_entry("distribution_betas.json", toJSON(model$distribution_betas, digits = NA)))
+    abort_on_error(out$write_entry("direction_factors.csv", format_csv(model$direction_factors)))
+    abort_on_error(out$write_entry("occupancy_factors.csv", format_csv(model$occupancy_factors)))
 
-  write_lm_list(model$production_functions, out, "production_functions")
-  write_lm_list(model$attraction_functions, out, "attraction_functions")
+    write_lm_list(model$production_functions, out, "production_functions")
+    write_lm_list(model$attraction_functions, out, "attraction_functions")
 
-  write_sf_to_model(model$tazs, out, "tazs")
+    write_sf_to_model(model$tazs, out, "tazs")
 
-  write_mnl(model$mode_choice_models$NHB, out, "mode_choice_models/NHB")
-  write_mnl(model$mode_choice_models$HB, out, "mode_choice_models/HB")
+    write_mnl(model$mode_choice_models$NHB, out, "mode_choice_models/NHB")
+    write_mnl(model$mode_choice_models$HB, out, "mode_choice_models/HB")
 
-  abort_on_error(out$write_entry("scenarios.json", toJSON(model$scenarios)))
+    abort_on_error(out$write_entry("scenarios.json", toJSON(model$scenarios, digits = NA)))
 
-  for (netname in names(model$networks)) {
-    if (!str_detect(netname, "^[a-zA-Z0-9_\\.]+$")) {
-      stop("network names must only contain a-z, A-Z, 0-9, _, and .")
+    for (netname in names(model$networks)) {
+      if (!str_detect(netname, "^[a-zA-Z0-9_\\.]+$")) {
+        stop("network names must only contain a-z, A-Z, 0-9, _, and .")
+      }
+      write_network(model$networks[[netname]], out, netname)
     }
-    write_network(model$networks[[netname]], out, netname)
-  }
 
-  abort_on_error(out$finish())
+    abort_on_error(out$finish())
+  }))
 }
 
 #' Load a model
 #' @export
 load_model = function(filename) {
-  # http/https handled on Rust side
-  inp = abort_on_error(ArchiveReader$new(filename))
-  res = list()
+  capture.output({
+    # http/https handled on Rust side
+    inp = abort_on_error(ArchiveReader$new(filename))
+    res = list()
 
-  res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")))
-  res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
-  res$direction_factors = read_csv(abort_on_error(inp$get_entry_as_string("direction_factors.csv")))
-  res$occupancy_factors = read_csv(abort_on_error(inp$get_entry_as_string("occupancy_factors.csv")))
+    res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")))
+    res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
+    res$direction_factors = read_csv(abort_on_error(inp$get_entry_as_string("direction_factors.csv")))
+    res$occupancy_factors = read_csv(abort_on_error(inp$get_entry_as_string("occupancy_factors.csv")))
 
-  res$tazs_geo = read_sf_from_model(inp, "tazs")
+    res$tazs_geo = read_sf_from_model(inp, "tazs")
 
-  res$production_functions = list()
-  res$attraction_functions = list()
+    res$production_functions = list()
+    res$attraction_functions = list()
 
-  for (time_period in c("AM Peak", "Midday", "PM Peak", "Overnight")) {
-    for (purpose in c("HBW", "HBO", "NHB")) {
-      res$production_functions[[time_period]][[purpose]] =
-        read_lm(inp, paste("production_functions", time_period, purpose, sep = "/"))
+    for (time_period in c("AM Peak", "Midday", "PM Peak", "Overnight")) {
+      for (purpose in c("HBW", "HBO", "NHB")) {
+        res$production_functions[[time_period]][[purpose]] =
+          read_lm(inp, paste("production_functions", time_period, purpose, sep = "/"))
 
-      res$attraction_functions[[time_period]][[purpose]] =
-        read_lm(inp, paste("attraction_functions", time_period, purpose, sep = "/"))
+        res$attraction_functions[[time_period]][[purpose]] =
+          read_lm(inp, paste("attraction_functions", time_period, purpose, sep = "/"))
+      }
     }
-  }
 
-  res$mode_choice_models = list(
-    HB = read_mnl(inp, "mode_choice_models/HB"),
-    NHB = read_mnl(inp, "mode_choice_models/NHB")
-  )
+    res$mode_choice_models = list(
+      HB = read_mnl(inp, "mode_choice_models/HB"),
+      NHB = read_mnl(inp, "mode_choice_models/NHB")
+    )
 
-  res$scenarios = fromJSON(abort_on_error(inp$get_entry_as_string("scenarios.json")))
+    res$scenarios = fromJSON(abort_on_error(inp$get_entry_as_string("scenarios.json")))
 
-  networks = abort_on_error(inp$entries())
-  networks = str_extract(networks, "networks/([a-zA-Z0-9_\\.]+).gpkg", 1)
-  networks = networks[!is.na(networks)]
+    networks = abort_on_error(inp$entries())
+    networks = str_extract(networks, "networks/([a-zA-Z0-9_\\.]+).gpkg", 1)
+    networks = networks[!is.na(networks)]
 
-  res$networks = list()
+    res$networks = list()
 
-  for (network in networks) {
-    res$networks[[network]] = read_network(inp, network)
-  }
+    for (network in networks) {
+      res$networks[[network]] = read_network(inp, network)
+    }
+  })
 
   return(res)
 }
