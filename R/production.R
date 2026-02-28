@@ -118,8 +118,6 @@ get_hh_counts = function (marginals, seed) {
     marginals$marginals %>%
         group_by(geoid) %>%
         group_modify(\(g, k) get_hh_counts_for_tract(g, k, seed)) %>%
-        # don't use scientific notation
-        mutate(income=format(income, scientific=F)) %>%
         return()
 }
 
@@ -163,11 +161,9 @@ get_production_counts = function (marginals, generation_functions, seed) {
                 # TODO: should we do the pmax here, or below when summarizing by tract? Could this be
                 # why congestion comes up worse in our model than it actually is?
                 n_trips = pmax(predict(model, hh_counts), 0) * hh_counts$count
-            ) %>%
-            return()
+            )
         }) %>%
-        list_rbind() %>%
-        return()
+        list_rbind()
     }) %>%
     list_rbind() %>%
     group_by(geoid, trip_type, time_period) %>%

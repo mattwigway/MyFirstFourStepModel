@@ -10,9 +10,43 @@
 #' @useDynLib MyFirstFourStepModel, .registration = TRUE
 NULL
 
-#' Return string `"Hello world!"` to R.
+#' This function takes the output from igraph and updates the flows using it. Doing this in R requires too many levels
+#' of indirection and is really slow, so we hand this little piece off to Rust (though this does require a complation step
+#' so may ultimately not be worth it).
 #' @export
 update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, origin) .Call(wrap__update_flows, edge_flows, flows_to_node, predecessor, incoming_edge, origin)
+
+ArchiveReader <- new.env(parent = emptyenv())
+
+ArchiveReader$new <- function(path) .Call(wrap__ArchiveReader__new, path)
+
+ArchiveReader$entries <- function() .Call(wrap__ArchiveReader__entries, self)
+
+ArchiveReader$get_entry_as_string <- function(name) .Call(wrap__ArchiveReader__get_entry_as_string, self, name)
+
+ArchiveReader$extract_entry <- function(name, target) .Call(wrap__ArchiveReader__extract_entry, self, name, target)
+
+#' @export
+`$.ArchiveReader` <- function (self, name) { func <- ArchiveReader[[name]]; environment(func) <- environment(); func }
+
+#' @export
+`[[.ArchiveReader` <- `$.ArchiveReader`
+
+ArchiveWriter <- new.env(parent = emptyenv())
+
+ArchiveWriter$new <- function(filename) .Call(wrap__ArchiveWriter__new, filename)
+
+ArchiveWriter$write_entry <- function(name, body) .Call(wrap__ArchiveWriter__write_entry, self, name, body)
+
+ArchiveWriter$write_file <- function(name, file) .Call(wrap__ArchiveWriter__write_file, self, name, file)
+
+ArchiveWriter$finish <- function() .Call(wrap__ArchiveWriter__finish, self)
+
+#' @export
+`$.ArchiveWriter` <- function (self, name) { func <- ArchiveWriter[[name]]; environment(func) <- environment(); func }
+
+#' @export
+`[[.ArchiveWriter` <- `$.ArchiveWriter`
 
 
 # nolint end

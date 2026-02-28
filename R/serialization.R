@@ -34,10 +34,51 @@ summary.lm_simple = function (model, ...) {
     cat(model$summary[[1]])
 }
 
+#' @method coefficients lm_simple
+#' @export 
+coefficients.lm_simple = function (model, ...) {
+    unlist(model$coefficients)
+}
+
+#' @method predict lm_simple
+#' @export
+predict.lm_simple = function (model, data, ...) {
+    pred = rep(0.0, nrow(data))
+
+    for (name in names(model$coefficients)) {
+        if (str_detect(name, "^factor")) {
+            var = str_extract(name, "factor\\(([^\\)]+)\\)", 1)
+            val = trimws(str_extract(name, "factor\\(.*\\)(.*)", 1))
+
+            if (is.numeric(data[[var]])) {
+                val = as.numeric(val)
+                col = data[,var]
+            } else {
+                col = trimws(data[,var])
+            }
+
+            if (!(var %in% names(data))) stop(paste("Column", var, "not found in data"))
+            if (!any(col == val)) {
+                warning(paste("Column", var, "has no value", val, "(used in regression)"))
+            }
+
+            pred = pred + (col == val) * model$coefficients[[name]]
+        } else if (name == "(Intercept)") {
+            pred = pred + model$coefficients[[name]]
+        } else {
+            if (!(name %in% names(data))) stop(paste("Column", name, "not found in data"))
+            pred = pred + model$coefficients[[name]] * data[[name]]
+        }
+    }
+
+    return(unname(pred))
+}
+
 write_mnl = function (model, archive, name) {
     simple = list(
         summary = capture_output(print(summary(model))),
-        coef = coefficients(model)
+        coef = as.data.frame(coefficients(model)),
+        lev = model$lev
     )
 
     archive$write_entry(paste0(name, ".json"), toJSON(simple))
@@ -45,6 +86,7 @@ write_mnl = function (model, archive, name) {
 
 read_mnl = function (archive, name) {
     mod = fromJSON(archive$get_entry_as_string(paste0(name, ".json")))
+    mod$coef = as.matrix(mod$coef)
     class(mod) = "mnl_simple"
     return(mod)
 }
@@ -53,6 +95,51 @@ read_mnl = function (archive, name) {
 #' @export 
 summary.mnl_simple = function (model, ...) {
     cat(model$summary[[1]])
+}
+
+#' @method coefficients mnl_simple
+#' @export 
+coefficients.mnl_simple = function (model, ...) {
+    model$coef
+}
+
+#' @method predict mnl_simple
+#' @export
+predict.mnl_simple = function (model, data, type, ...) {
+     if (type == "utils") {
+        result = matrix(0.0, nrow(data), length(model$lev))
+       colnames(result) = model$lev
+
+        for (name in colnames(model$coef)) {
+            if (str_detect(name, "^factor")) {
+                var = str_extract(name, "factor\\(([^\\)]+)\\)", 1)
+                val = trimws(str_extract(name, "factor\\(.*\\)(.*)", 1))
+
+                if (is.numeric(data[[var]])) {
+                    val = as.numeric(val)
+                }
+
+                # cannot set whole row at once because there is a level
+                # not in the coefficients (reference level)
+                for (outcome in rownames(model$coef)) {
+                  result[, outcome] = result[, outcome] + (data[[var]] == val) * model$coef[[outcome, name]]
+                }
+            } else if (name == "(Intercept)") {
+                for (outcome in rownames(model$coef)) {
+                    result[, outcome] = result[, outcome] + model$coef[[outcome, name]]
+                }
+            } else {
+                for (outcome in rownames(model$coef)) {
+                    result[, outcome] = result[, outcome] + model$coef[[outcome, name]] * data[[name]]
+                }
+            }
+        }
+       return(result)
+     } else if (type == "probs") {
+        util = predict.mnl_simple(model, data, "utils", ...)
+        exputil = exp(util)
+       exputil / rowSums(exputil)
+     }
 }
 
 write_sf_to_model = function (layer, archive, name) {
@@ -135,7 +222,7 @@ load_model = function (filename) {
     res$direction_factors = read_csv(inp$get_entry_as_string("direction_factors.csv"))
     res$occupancy_factors = read_csv(inp$get_entry_as_string("occupancy_factors.csv"))
 
-    res$tazs_ges = read_sf_from_model(inp, "tazs")
+    res$tazs_geo = read_sf_from_model(inp, "tazs")
 
     res$production_functions = list()
     res$attraction_functions = list()
@@ -152,7 +239,7 @@ load_model = function (filename) {
 
     res$mode_choice_models = list(
         HB = read_mnl(inp, "mode_choice_models/HB"),
-        HB = read_mnl(inp, "mode_choice_models/NHB")
+        NHB = read_mnl(inp, "mode_choice_models/NHB")
     )
 
     res$scenarios = fromJSON(inp$get_entry_as_string("scenarios.json"))
@@ -164,9 +251,17 @@ load_model = function (filename) {
     res$networks = list()
 
     for (network in networks) {
-        print(network)
         res$networks[[network]] = read_network(inp, network)
     }
 
     return(res)
+}
+
+#' Load a model in model format 1
+load_model_v1 = function (filename) {
+    if (str_starts(filename, "https://")) {
+        return(readRDS(gzcon(url(filename))))
+    } else {
+        return(readRDS(filename))
+    }
 }
