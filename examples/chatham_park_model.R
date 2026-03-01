@@ -18,7 +18,7 @@ library(MyFirstFourStepModel)
 
 # Next, we load the model itself - depending on the speed of your internet connection
 # this may take a few minutes.
-model = load_model("https://files.indicatrix.org/chatham_park.model")
+model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 
 ############
 # BASELINE #
