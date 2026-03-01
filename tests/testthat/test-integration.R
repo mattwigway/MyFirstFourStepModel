@@ -7,7 +7,7 @@ do_round = function(df) {
 # This runs the homework assignment baseline case, and ensures results are stable
 test_that("Integration test - homework is correct", {
   # TODO pulling this over HTTP is hacky
-  model = load_model("https://files.indicatrix.org/chatham_park.model")
+  model = load_model(system.file("examples/chatham_park.mf4sm", package = "MyFirstFourStepModel"))
 
   productions_attractions = trip_generation(model, model$scenarios$baseline)
   expect_snapshot_value(
