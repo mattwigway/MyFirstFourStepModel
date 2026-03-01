@@ -34,7 +34,8 @@ ipf = function(seed, marginals) {
         hh_marginal_values,
         marginals$marginal_number,
         marginals$marginal_value,
-        marginals$count
+        marginals$count,
+        0.01
       ))
     )
 

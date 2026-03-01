@@ -16,8 +16,7 @@
 # First, we load the modeling package into R
 library(MyFirstFourStepModel)
 
-# Next, we load the model itself - depending on the speed of your internet connection
-# this may take a few minutes.
+# Next, we load the model itself.
 model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 
 ############
@@ -84,7 +83,7 @@ get_mode_shares(flows_by_mode)
 # Every so often it will print a status update, something like
 # Iteration 1 relative gap: 0.40825352014596
 # When that number falls below 0.01, the algorithm will finish.
-# This may 10 minutes or more depending on the speed of your computer.
+# This may a few minutes, depending on the speed of your computer.
 link_flows = network_assignment(
   model,
   model$scenarios$baseline,

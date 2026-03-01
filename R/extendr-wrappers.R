@@ -16,7 +16,17 @@ NULL
 #' @export
 update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, origin) .Call(wrap__update_flows, edge_flows, flows_to_node, predecessor, incoming_edge, origin)
 
-do_ipf <- function(orig_counts, marginal_values, target_marginals, target_values, target_counts) .Call(wrap__do_ipf, orig_counts, marginal_values, target_marginals, target_values, target_counts)
+#' Internal IPF code, similar to what was previously done in R. For efficiency, marginal names and values
+#' are converted to integers before calling.
+#'
+#' @param orig_counts numeric vector with number of each household sampled in seed matrix
+#' @param marginal_values integer matrix with one row per household and one column per marginal, indicating which value that
+#'   household has for each marginal.
+#' @param target_marginals This along with target_values and target_counts indicate what the target values for each marginal should be.
+#' @param target_values The value of this marginal (e.g. for income, might be 2 to represent $25-50,000)
+#' @param target_counts The number of households expected with this value.
+#' @param convergence The largest error in absolute terms that can be tolerated, e.g. 0.01 -> errors of no more than 0.02 hhs on any marginal.
+do_ipf <- function(orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence) .Call(wrap__do_ipf, orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence)
 
 ArchiveReader <- new.env(parent = emptyenv())
 
