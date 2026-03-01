@@ -34,6 +34,8 @@ fn do_ipf(orig_counts: &[f64], marginal_values: ArrayView2<i32>, target_marginal
     let mut counts: Vec<f64> = orig_counts.into();
 
     loop {
+        let mut updated = 0;
+
         for marginalix in 0..target_marginals.len() {
             let marginal = target_marginals[marginalix] as usize;
             let value = target_values[marginalix];
@@ -45,10 +47,16 @@ fn do_ipf(orig_counts: &[f64], marginal_values: ArrayView2<i32>, target_marginal
                     current_sum += counts[hh];
                 }
             }
+
+            if current_sum < 1e-6 && count > 1e-5 {
+                return Err(Error::Other("Marginal totals to zero; IPF cannot recover".to_string()));
+            }
             
             // don't divide by zero
             // TODO will this cause an infinite loop if there are zero-valued rows
-            if current_sum > 1e-6 {
+            if current_sum > 1e-6 && (current_sum - count).abs() > convergence {
+                updated += 1;
+
                 let scale_factor = count / current_sum;
 
                 //println!("Current sum: {} Target: {} Scale factor: {}", current_sum, count, scale_factor);
@@ -60,32 +68,12 @@ fn do_ipf(orig_counts: &[f64], marginal_values: ArrayView2<i32>, target_marginal
             }
         }
 
-        // check convergence
-        // have to do this here after all adjustments have been made, or a converged dimension could become
-        // unconverged after the check.
-
-        let mut maxdiff: f64 = 0.0;
-
-        for marginalix in 0..target_marginals.len() {
-            let marginal = target_marginals[marginalix] as usize;
-            let value = target_values[marginalix];
-            let count = target_counts[marginalix];
-            let mut current_sum = 0.0;
-
-            for hh in 0..counts.len() {
-                if marginal_values[[hh, marginal - 1]] == value {
-                    current_sum += counts[hh];
-                }
-            }
-            
-            maxdiff = maxdiff.max((count - current_sum).abs());
-        }
-
-        if maxdiff < convergence {
+        // We can get away without a separate check for convergence because updated == 0 implies we didn't
+        // change anything this time through, so all of the checks for convergence of individual
+        // marginals are still accurate - the weights have not changed since any were checked.
+        if updated == 0 {
             break;
         }
-
-        //println!("{} updated", updated);
     }
 
     Ok(counts)
