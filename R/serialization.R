@@ -220,7 +220,7 @@ save_model = function(model, filename) {
 #' Load a model
 #' @export
 load_model = function(filename) {
-  capture.output({
+  capture.output(suppressWarnings({
     # http/https handled on Rust side
     inp = abort_on_error(ArchiveReader$new(filename))
     res = list()
@@ -261,7 +261,7 @@ load_model = function(filename) {
     for (network in networks) {
       res$networks[[network]] = read_network(inp, network)
     }
-  })
+  }))
 
   return(res)
 }
