@@ -16,6 +16,8 @@ NULL
 #' @export
 update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, origin) .Call(wrap__update_flows, edge_flows, flows_to_node, predecessor, incoming_edge, origin)
 
+do_ipf <- function(orig_counts, marginal_values, target_marginals, target_values, target_counts) .Call(wrap__do_ipf, orig_counts, marginal_values, target_marginals, target_values, target_counts)
+
 ArchiveReader <- new.env(parent = emptyenv())
 
 ArchiveReader$new <- function(path) .Call(wrap__ArchiveReader__new, path)

@@ -10,7 +10,8 @@ crate-type = [ 'staticlib' ]
 name = 'myfirstfourstepmodel'
 
 [dependencies]
-extendr-api = {version = '0.8.1', features = ["result_list"]}
+extendr-api = {version = '0.8.1', features = ["result_list", "ndarray"]}
+ndarray = "0.16.0"
 ureq = "3.1.4"
 zip = "7.2.0"
 

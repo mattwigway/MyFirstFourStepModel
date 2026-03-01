@@ -1,47 +1,36 @@
-use core::slice;
-use std::iter::zip;
-
 use extendr_api::prelude::*;
-use ndarray::{Array, Array1, ArrayView, ArrayView1, Axis, Dimension, RemoveAxis};
+use ndarray::ArrayView2;
 
 #[extendr]
-fn ipf(mtx: Robj, shape: Robj, marginals:Robj) -> Result<Array1<f64>> {
+fn do_ipf(orig_counts: &[f64], marginal_values: ArrayView2<i32>, target_marginals: &[i32], target_values: &[i32], target_counts: &[f64]) -> Result<Vec<f64>> {
+    let mut counts: Vec<f64> = orig_counts.into();
 
-    
-    let marginallist = match marginals.as_list() {
-        Some(l) => Ok(l),
-        None => Err(Error::Other("{.arg marginals} must be a list".to_string()))
-    }?;
-
-    let marginalvec  = marginallist
-        .iter()
-        .map(|m| match m.1.as_real_vector() {
-            Some(v) => Ok(v),
-            None => {return Err(Error::Other("{.arg marginals} must contain numeric vectors".to_string()))}
-        })
-        .collect::<Result<Vec<Vec<f64>>>>()?;
-
-    if marginalvec.len() != mtx.ndim() {
-        return Err(Error::Other("{.arg marginals} must have the same length as the number of dimensions in {.mtx}".to_string()));
-    }
-
-    let mut result = mtx.clone();
-
-    // core algorithm
     loop {
         let mut updated = 0;
 
-        for ax in 1..marginalvec.len() {
-            let current = result.sum_axis(Axis(ax));
-            let scale_factors: Vec<f64> = zip(&marginalvec[ax], &current).map(|(x, y)| x / y).collect();
+        for marginalix in 0..target_marginals.len() {
+            let marginal = target_marginals[marginalix] as usize;
+            let value = target_values[marginalix];
+            let count = target_counts[marginalix];
+            let mut current_sum = 0.0;
 
-            if !scale_factors.iter().all(|x| *x > 0.999 && *x < 1.001) {
-                // not converged in this axis
+            for hh in 0..counts.len() {
+                if marginal_values[[hh, marginal - 1]] == value {
+                    current_sum += counts[hh];
+                }
+            }
+
+            let scale_factor = count / current_sum;
+
+            //println!("Current sum: {} Target: {} Scale factor: {}", current_sum, count, scale_factor);
+
+            if scale_factor < 0.999 || scale_factor > 1.001 {
+                // not converged in this dimension
                 updated += 1;
-
-                for i in 1..scale_factors.len() {
-                    let mut sl = result.slice_axis_mut(Axis(ax), (i..=i).into());
-                    sl *= scale_factors[i];
+                for hh in 0..counts.len() {
+                    if marginal_values[[hh, marginal - 1]] == value {
+                        counts[hh] = counts[hh] * scale_factor;
+                    }
                 }
             }
         }
@@ -49,7 +38,14 @@ fn ipf(mtx: Robj, shape: Robj, marginals:Robj) -> Result<Array1<f64>> {
         if updated == 0 {
             break;
         }
+
+        //println!("{} updated", updated);
     }
 
-    Ok(result)
+    Ok(counts)
+}
+
+extendr_module! {
+    mod ipf;
+    fn do_ipf;
 }
