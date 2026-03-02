@@ -1,4 +1,13 @@
-# We implement IPF on our own in base R, because it's too slow in ipfr/tidyverse
+#' We implement IPF on our own in base R, because it's too slow in ipfr/tidyverse
+#'
+#' @param seed should be a data frame with a row for each household, and a column for each marginal
+#' indicating what value that household takes on (e.g. age, race, etc columns). It should also have a weight column indicating
+#' the seed weight for that household (or type of household).
+#'
+#' @param marginals should be a data frame with a row for each marginal/value combination, and
+#' a column `marginal` indicating which marginal this is (should match column names in `seed`),
+#' a column `value` indicating what value of the marginal this is (should match column values in `seed`),
+#' and a column `count` indicating the target households in this marginal/value combination.
 ipf = function(seed, marginals) {
   # all of this just converts from text marginals to each marginal and value having a number
   margin_names = unique(marginals$marginal)
