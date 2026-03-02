@@ -49,3 +49,7 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          # We get a warning about downloading crates, which is not allowed on CRAN,
+          # but I have no plans to submit to CRAN. Unfortunately there's no granular
+          # way to turn off just that warning that I can find.
+          error-on: '"error"'
