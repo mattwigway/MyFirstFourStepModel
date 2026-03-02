@@ -26,6 +26,7 @@ Imports:
     readxl,
     scales,
     sf,
+    stats,
     stringr,
     tibble,
     tidycensus,
