@@ -78,10 +78,16 @@ load_model = function(filename) {
     inp = abort_on_error(ArchiveReader$new(filename))
     res = list()
 
-    res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")))
+    res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")), show_col_types = FALSE)
     res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
-    res$direction_factors = read_csv(abort_on_error(inp$get_entry_as_string("direction_factors.csv")))
-    res$occupancy_factors = read_csv(abort_on_error(inp$get_entry_as_string("occupancy_factors.csv")))
+    res$direction_factors = read_csv(
+      abort_on_error(inp$get_entry_as_string("direction_factors.csv")),
+      show_col_types = FALSE
+    )
+    res$occupancy_factors = read_csv(
+      abort_on_error(inp$get_entry_as_string("occupancy_factors.csv")),
+      show_col_types = FALSE
+    )
 
     res$tazs_geo = read_sf_from_model(inp, "tazs")
 
