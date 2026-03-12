@@ -10,9 +10,55 @@
 #' @useDynLib MyFirstFourStepModel, .registration = TRUE
 NULL
 
-#' Return string `"Hello world!"` to R.
+#' This function takes the output from igraph and updates the flows using it. Doing this in R requires too many levels
+#' of indirection and is really slow, so we hand this little piece off to Rust (though this does require a complation step
+#' so may ultimately not be worth it).
 #' @export
 update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, origin) .Call(wrap__update_flows, edge_flows, flows_to_node, predecessor, incoming_edge, origin)
+
+#' Internal IPF code, similar to what was previously done in R. For efficiency, marginal names and values
+#' are converted to integers before calling.
+#'
+#' @param orig_counts numeric vector with number of each household sampled in seed matrix
+#' @param marginal_values integer matrix with one row per household and one column per marginal, indicating which value that
+#'   household has for each marginal.
+#' @param target_marginals This along with target_values and target_counts indicate what the target values for each marginal should be.
+#' @param target_values The value of this marginal (e.g. for income, might be 2 to represent $25-50,000)
+#' @param target_counts The number of households expected with this value.
+#' @param convergence The largest error in absolute terms that can be tolerated, e.g. 0.01 -> errors of no more than 0.02 hhs on any marginal.
+do_ipf <- function(orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence) .Call(wrap__do_ipf, orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence)
+
+ArchiveReader <- new.env(parent = emptyenv())
+
+ArchiveReader$new <- function(path) .Call(wrap__ArchiveReader__new, path)
+
+ArchiveReader$entries <- function() .Call(wrap__ArchiveReader__entries, self)
+
+ArchiveReader$get_entry_as_string <- function(name) .Call(wrap__ArchiveReader__get_entry_as_string, self, name)
+
+ArchiveReader$extract_entry <- function(name, target) .Call(wrap__ArchiveReader__extract_entry, self, name, target)
+
+#' @export
+`$.ArchiveReader` <- function (self, name) { func <- ArchiveReader[[name]]; environment(func) <- environment(); func }
+
+#' @export
+`[[.ArchiveReader` <- `$.ArchiveReader`
+
+ArchiveWriter <- new.env(parent = emptyenv())
+
+ArchiveWriter$new <- function(filename) .Call(wrap__ArchiveWriter__new, filename)
+
+ArchiveWriter$write_entry <- function(name, body) .Call(wrap__ArchiveWriter__write_entry, self, name, body)
+
+ArchiveWriter$write_file <- function(name, file) .Call(wrap__ArchiveWriter__write_file, self, name, file)
+
+ArchiveWriter$finish <- function() .Call(wrap__ArchiveWriter__finish, self)
+
+#' @export
+`$.ArchiveWriter` <- function (self, name) { func <- ArchiveWriter[[name]]; environment(func) <- environment(); func }
+
+#' @export
+`[[.ArchiveWriter` <- `$.ArchiveWriter`
 
 
 # nolint end

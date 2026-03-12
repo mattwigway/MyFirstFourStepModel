@@ -8,8 +8,8 @@ MILES_TO_METERS = 1609
 
 # How much of a time period's traffic occurs during the busiest hour?
 PEAKING_FACTORS = list(
-    `AM Peak`=0.35,
-    `PM Peak`=0.45,
-    Midday=0.2,
-    Overnight=0.12
+  `AM Peak` = 0.35,
+  `PM Peak` = 0.45,
+  Midday = 0.2,
+  Overnight = 0.12
 )

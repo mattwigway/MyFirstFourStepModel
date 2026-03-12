@@ -4,10 +4,19 @@
 \alias{network_assignment}
 \title{This runs the network assignment step of the model.}
 \usage{
-network_assignment(model, marginals, mode_flows, period)
+network_assignment(model, marginals, network, mode_flows, period)
+}
+\arguments{
+\item{model}{The estimated model}
+
+\item{marginals}{The scenario to use}
+
+\item{mode_flows}{Flows by mode and time of day, output of mode_choice function}
+
+\item{period}{Time period to assign, can be "AM Peak", "Midday", "PM Peak", or "Overnight".}
 }
 \description{
 Network assignment is based on a Frank-Wolfe static traffic assignment algorithm.
-This returns a list of link-level flows.
-Period can be "AM Peak", "Midday", "PM Peak", "Overnight".
+This returns a list of link-level flows. It applies peaking factors and average occupancy
+before doing assignment to convert period person-trips to hourly vehicle-trips.
 }

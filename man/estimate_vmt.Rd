@@ -2,12 +2,16 @@
 % Please edit documentation in R/interface.R
 \name{estimate_vmt}
 \alias{estimate_vmt}
-\title{This function calculates VMT based on flows. Note that this is total VMT for the period the flows are for;
-you would have to do this for each period to get total daily VMT.}
+\title{Calculates VMT based on flows.}
 \usage{
-estimate_vmt(model, marginals, link_flows, period)
+estimate_vmt(model, network, link_flows, period)
+}
+\arguments{
+\item{model}{The estimated model object}
+
+\item{link_flows}{Estimated link flows from the network assignment function}
 }
 \description{
-This function calculates VMT based on flows. Note that this is total VMT for the period the flows are for;
+Note that this is total VMT for the period the flows are for;
 you would have to do this for each period to get total daily VMT.
 }
