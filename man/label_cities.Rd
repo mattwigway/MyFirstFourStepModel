@@ -9,3 +9,4 @@ label_cities(model, buffer = 500)
 \description{
 Add city labels from Natural Earth
 }
+\keyword{internal}

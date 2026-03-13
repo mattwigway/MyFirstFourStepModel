@@ -1,0 +1,31 @@
+---
+title: "Prior work"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Prior work}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: bibliography.bib
+---
+
+There is little literature on pedagogical practices surrounding travel demand modeling. Most transportation planning and engineering programs cover the topic [@zhou_transportation_2009], but it was not even included on a semi-regular survey of transportation faculty regarding what they consider the most important topics in introductory courses [@turochy_structuring_2013].
+
+There is, however, a long history of pedagogy around teaching through simulating real-world activities undertaken by practitioners, rather than through one-to-many classroom instruction. This is most well established in the medical field, with positive outcomes for student learning [@mcgaghie_critical_2010]. Simulation activities are widely used in transportation engineering instruction [@hurwitz_transportation_2015], and research on active learning techniques in transportation engineering goes back decades [@weir_active_2004]. Simulation activities in planning have a similarly long history [e.g., @meier_gaming_1966].
+
+Effective simulations as an educational tool often take the form of a game. Solving transportation challenges is one of the recurrent examples in the foundational book on gamification in education, Clark Abt's _Serious Games_ [@abt_serious_1970]. More recently, physical board games have been used to teach transportation planning using both popular-press games [@huang_game_2012] and purpose-built educational games [@paget-seekins_transform_2021].
+
+Computer-based simulations have rapidly become ubiquitous in transportation engineering education [@hurwitz_transportation_2015]. Liao, Liu, and Levinson [-@liao_simulating_2009] built a web-based traffic simulation tool to help students experiment with signal timing practices. The interactive A/B Street traffic-simulation software has likewise been used in undergraduate courses at Arizona State University [@carlino_street_2024]. An economic simulation of airline operations has also been applied to help budding engineers understand airline operations [@luken_case_2011].
+
+Computer-based simulations have also been applied in planning, although perhaps less frequently. Simulations in planning classrooms often take the form of commercial planning games, such as SimCity or Cities: Skylines [@gaber_simulating_2007;@khan_perceptions_2021], likely due to less funding for purpose-built simulations in planning as opposed to engineering. A significant challenge with commercial games is that they are intended primarily for entertainment, and thus may oversimplify or even modify system dynamics to support enjoyable gameplay rather than educational outcomes [@gaber_simulating_2007;@walker_did_2009]. The advantage is that commercial games are more likely to receive significant upfront investment as well as continued support, a significant problem with games developed for educational purposes [@sobke_two_2018].
+
+Public education and communication are another arena of planning where gamification and simulation have been deployed. The _Future Energy Chicago_ exhibit at Chicago's Museum of Science and Industry engaged participants in a several-hour, facilitated game to improve energy outcomes. Survey data suggests that the game improved some aspects of willingness to conserve energy [@applebaum_collaboration_2021]. The CityScope platform provides a hands-on physical environment wherein members of the public can make land-use changes to a Lego model of a neighborhood and see computer simulation output regarding transport and energy consumption in real time [@alonso_cityscope_2018]. The CoAXs platform allows meeting participants to see how proposed Bus Rapid Transit routes would affect their ability and the ability of other citizens to reach key destinations, and was found to support improved learning and discussion outcomes among participants [@stewart_coaxs_2016;@stewart_mapping_2017]. All of these simulations are perforce somewhat simpler than might be used in a classroom environment, since they target the general public rather than future practitioners.
+
+Teaching travel demand modeling differs from other places where simulations have been deployed in transportation education. Travel demand models are themselves simulations of complex urban systems. Applying them in a classroom environment does not demand developing a new simulation. Rather, it means simplifying the existing structure of demand models to create one suitable for students with only a rudimentary understanding of the theory and mathematics involved.
+
+The only travel demand modeling software designed specifically for education I am aware of is the now-defunct Agent-Based Demand and Assignment Model (ADAM) software [@zhu_enhancing_2011]. ADAM implemented a simple agent-based model for transportation education. This model focused on a network assignment for simple networks; it started with production (workers) and attractions (jobs), and students modified the network to reduce congestion. Likely due to computational limits in place at the time, it worked with a very simple network of only 24 nodes and 68 links.
+
+I focus on the ubiquitous four-step model in my introductory courses. The four-step model was one of the earliest travel demand models developed [@weiner_urban_2013;@federalhighwayadministration_planpac_1977]. While it has come under significant criticism lately [@mladenovic_shortcomings_2014], it remains in common use. Many large regions have transitioned to more modern activity-based models, but many smaller regions and even some large ones continue to use the four-step model.
+
+<a href="https://projects.indicatrix.org/MyFirstFourStepModel">This work</a> © 2026 by <a href="https://indicatrix.org">Matt Bhagat-Conway</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+
+## References

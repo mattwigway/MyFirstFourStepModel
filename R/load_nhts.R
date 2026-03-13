@@ -1,4 +1,7 @@
 #' Load 2017 NHTS data, handling types appropriately
+#'
+#' @param base_path path to folder containing 2017 NHTS CSV files
+#'
 #' @export
 load_nhts <- function(base_path) {
   list(

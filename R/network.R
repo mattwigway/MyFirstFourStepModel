@@ -3,6 +3,7 @@
 #' @param highway_types Character vector of highway=* tags to retain
 #' @param installJulia Whether to install Julia if it is not found (default TRUE)
 #' @return A list with members $network (igraph network) and $network_geo (sf DataFrame with geographic outline of network)
+#' @keywords internal
 build_network = function(osm, highway_types, installJulia = T) {
   # set up Julia
   Sys.setenv(JULIA_PROJECT = path_package("MyFirstFourStepModel", "julia"))

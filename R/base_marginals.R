@@ -1,4 +1,5 @@
 #' Aggregate LODES data to tracts
+#' @keywords internal
 aggregate_lodes_to_tracts = function(lodes) {
   lodes %>%
     mutate(
@@ -11,7 +12,7 @@ aggregate_lodes_to_tracts = function(lodes) {
 }
 
 #' This gets baseline marginals for a region, from the 5-year ACS
-#' @export
+#' @keywords internal
 get_base_marginals = function(state, county = NULL, year = NULL) {
   vehicles = tidycensus::get_acs(
     geography = "tract",
@@ -181,19 +182,26 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
 }
 
 #' Save a land use scenario in Excel format
+#'
+#' @param scenario scenario to save (often `model$scenarios$baseline`)
+#' @param filename file to save in
+#'
 #' @export
-save_landuse_scenario = function(marginals, filename) {
+save_landuse_scenario = function(scenario, filename) {
   write_xlsx(
     list(
-      Residences = marginals$marginals,
-      Jobs = marginals$jobs,
-      `Tract Areas` = marginals$areas
+      Residences = scenario$marginals,
+      Jobs = scenario$jobs,
+      `Tract Areas` = scenario$areas
     ),
     filename
   )
 }
 
 #' Load a land use scenario in Excel format
+#'
+#' @param filename file to read from
+#'
 #' @export
 load_landuse_scenario = function(filename) {
   return(list(

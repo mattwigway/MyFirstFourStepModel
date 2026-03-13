@@ -4,12 +4,12 @@
 \alias{network_assignment}
 \title{This runs the network assignment step of the model.}
 \usage{
-network_assignment(model, marginals, network, mode_flows, period)
+network_assignment(model, scenario, network, mode_flows, period)
 }
 \arguments{
 \item{model}{The estimated model}
 
-\item{marginals}{The scenario to use}
+\item{scenario}{The scenario to use}
 
 \item{mode_flows}{Flows by mode and time of day, output of mode_choice function}
 

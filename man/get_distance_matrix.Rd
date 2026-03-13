@@ -13,3 +13,4 @@ We use a singly-constrained (at origin) gravity model. For simplicity, we use st
 (great circle) distance between points.
 This function estimates that distance matrix.
 }
+\keyword{internal}

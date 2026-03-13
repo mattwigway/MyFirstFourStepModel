@@ -1,47 +1,22 @@
----
-title: My First Four-Step Model
-bibliography: docs/bibliography.bib
----
+# My First Four Step Model
 
-My First Four-Step Model is an R package and associated scripts that support a minimal [four-step travel demand model](https://transportgeography.org/contents/methods/spatial-interactions-gravity-model/transportation-land-use-four-stages-model/) intended for use in teaching. Simplicity is the primary goal; it is probably not advisable to use this for production travel forecasting, though I have tried to make the model as accurate as possible without compromising simplicity. Some of the simplifying assumptions that limit applicability are explained in the [limitations](#limitations) section.
+"My First Four Step Model" is a simple four-step model that can install easily and run quickly on consumer-grade computers. It can be estimated for any US metropolitan area using publicly-available data.
 
-The overarching goal is to produce a four-step model based primarily on nationwide open datasources (the [National Household Travel Survey](https://nhts.ornl.gov), the American Community Survey, the [LODES dataset](https://lehd.ces.census.gov), and [OpenStreetMap data](https://openstreetmap.org)). It is possible to estimate a model for a new region of the country in just a few lines of code (see [Estimation](#estimation)), and run it in an R script usable by people with minimal coding experience.
+Most transportation planning and engineering programs [teach travel demand modeling to some extent](https://doi.org/10.3141/2109-01). In my experience, it is almost invariably taught with a 'bottom-up' approach. Students take classes on transportation planning, econometrics, and choice modeling. Students then work with individual components of demand models, such as trip generation or mode choice. Often, students never "put it all together" to run a regional model from start to finish. The vast majority of learning time is spent on theory and mathematics, rather than applications. My First Four Step Model facilitates a 'top-down' approach where running a complete model is one of the first steps. I use this approach in my introductory Planning Methods course, where we spend only a week discussing transportation modeling and engineering, and at the conclusion the students run a simple demand model for the Research Triangle region of North Carolina. Full details of this learning module [are available here](https://projects.indicatrix.org/MyFirstFourStepModel/articles/classroom_implementation.html).
 
-## Getting started
+Theory and mathematics are paramount for those who will build and run travel demand models themselves. This is a very small group of students, however. At most metropolitan planning organizations and DOT's, demand models are estimated and run by consultants or a small in-house team. Consumers of model output are a larger group: transportation planners and engineers, land use planners, developers, advocates, and so on. For this larger group, only a cursory understanding of the mathematics is required;  the general mechanisms and assumptions the model relies on are far more important. 
 
-The reference implementation, which I use in teaching, is [a model for the Research Triangle region of North Carolina](examples/chatham_park_model.R). That file contains code to install the model and complete a full model run.
+Most students in transportation planning and engineering programs will fall into the latter group. A better understanding of modeling among this group will help promote better communications between modelers and model consumers. Consumers will be more aware of what the model can and can't do, and more able to come up with situations where the model may be helpful. Understanding will also promote a "healthy skepticism" of the model, enabling feedback from users on the model and ultimately leading to better models and decision support.
 
-## Estimation
+Students interested in modeling may take further classes, but all students will have some first-hand experience with demand models---something many students do not get at all today, even after taking many classes on modeling.
 
+My First Four-Step Model will never be appropriate for production travel demand modeling. It is also not appropriate as a sole teaching tool for students who will ultimately become modelers. However, it is useful as a first exercise even in courses that focus only on demand modeling, where students can have a chance to work with a simple model before diving into the more complex theories and software that are necessary for a detailed education in this area.
 
-Estimating a new model requires only a few lines of code, however it does require the 2017 National Household Travel Survey and an OpenStreetMap PBF file for the region modeled. OpenStreetMap PBF files for any region are easily obtained from <https://slice.openstreetmap.us>. The code to estimate a model for the Research Triangle region is below. First, it loads the relevant libraries, and then the NHTS (`NHTS_PATH` should be replaced with a directory containing the NHTS CSV files). I filter the NHTS to only North Carolina households with a weekday travel day. The final line estimates the model. It requires the (possibly filtered) NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below but should be replaced with the actual path), the state and a vector of counties to define the region under study, and a year. Currently 2021 is most recent year available, as this is based on American Community Survey and Longitudinal Employer-Household Dynamics data availability.
+## Documentation
 
-Parsing the OpenStreetMap data uses Julia [@bezanson_julia_2017] for performance, which can be installed if it is not already by running `JuliaCall::install_julia()` from within R. Julia is only required for estimation; students do not need to install Julia.
-
-```r
-#| output: false
-#| eval: false
-library(MyFirstFourStepModel)
-library(tidyverse)
-
-# Load NHTS and filter to North Carolina weekday data
-nhts = load_nhts(NHTS_PATH)
-nhts$households = filter(
-  nhts$households,
-  HHSTATE == "NC" & TRAVDAY %in% c(2, 3, 4, 5, 6)
-)
-
-# Estimate the model using 2021 Census/LODES data for the Triangle
-model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake", "Chatham"), 2021)
-```
-
-Lastly, the model can be saved to a file for distribution to students. 
-```r
-save_model(model, "my_city.model")
-```
-
-This can be loaded by the `load_model` function described above, either from a file or a URL. If any land-use or network scenarios are created or loaded prior to saving the model, they will be included in the saved file.
-
-## More details
-
-Many more details on both usage and architecture are [available in the paper](https://doi.org/10.17615/qzhd-n063) and the [homework assignment](examples/homework.md).
+- [Learning module](https://projects.indicatrix.org/MyFirstFourStepModel/articles/classroom_implementation.html)
+- [Example homework assignment](https://projects.indicatrix.org/MyFirstFourStepModel/articles/homework_assignment.html)
+- [Scenario creation](https://projects.indicatrix.org/MyFirstFourStepModel/articles/scenarios.html)
+- [Estimating the model for a new region](https://projects.indicatrix.org/MyFirstFourStepModel/articles/estimation.html)
+- [Prior work on simulations in education](https://projects.indicatrix.org/MyFirstFourStepModel/articles/prior_work.html)
+- [Methods and data sources](https://projects.indicatrix.org/MyFirstFourStepModel/articles/methods.html)

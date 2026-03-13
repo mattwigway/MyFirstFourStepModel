@@ -9,3 +9,4 @@ get_base_marginals(state, county = NULL, year = NULL)
 \description{
 This gets baseline marginals for a region, from the 5-year ACS
 }
+\keyword{internal}

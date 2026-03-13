@@ -15,3 +15,4 @@ This is much simplified from the traditional mode choice models used in demand m
 because we don't have attributes of the alternatives (or enough information to create them).
 So we just use demographics and mode-invariant trip characteristics to estimate mode choice.
 }
+\keyword{internal}

@@ -9,3 +9,4 @@ abort_on_error(result)
 \description{
 Abort with a nice error message if there is an error in Rust.
 }
+\keyword{internal}

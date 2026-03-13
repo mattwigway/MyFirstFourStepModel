@@ -4,7 +4,14 @@
 \alias{trip_distribution}
 \title{This runs the trip distribution step of the model}
 \usage{
-trip_distribution(model, marginals, balanced)
+trip_distribution(model, scenario, balanced)
+}
+\arguments{
+\item{model}{the model object, loaded via \code{\link[=load_model]{load_model()}}}
+
+\item{scenario}{the scenario to use, often \code{model$scenarios$baseline} or a scenario created with \code{\link[=add_households]{add_households()}}}
+
+\item{balanced}{the balanced productions and attractions, returned by \code{\link[=trip_generation]{trip_generation()}}}
 }
 \description{
 Trip distribution is based on the relative locations of the tracts (in \code{marginals}),

@@ -9,3 +9,4 @@ get_nhts_trip_counts(trips)
 \description{
 Get the trip counts in each category and time period for each household
 }
+\keyword{internal}

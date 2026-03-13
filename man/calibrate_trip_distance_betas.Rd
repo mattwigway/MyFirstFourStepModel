@@ -13,3 +13,4 @@ Calibrate betas for all trip types
 median_distances should be a list with element HBW, HBO, and NHB with median crow-flies
 trip distances in each.
 }
+\keyword{internal}

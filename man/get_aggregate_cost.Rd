@@ -9,3 +9,4 @@ get_aggregate_cost(network, flows)
 \description{
 Get the aggregate cost to all travelers of the current assignment
 }
+\keyword{internal}

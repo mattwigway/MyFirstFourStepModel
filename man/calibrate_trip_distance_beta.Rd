@@ -17,3 +17,4 @@ The basic idea is that we adjust the beta for the decay function until half the 
 accessibility occurs in the median travel distance.
 For NHB, productions and attractions will be the same
 }
+\keyword{internal}

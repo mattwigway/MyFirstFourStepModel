@@ -13,3 +13,4 @@ The all-or-nothing assignment step, where all vehicles traveling from A to B are
 same route. This is done repeatedly with new weights and averaged to distribute vehicles across
 the network.
 }
+\keyword{internal}

@@ -1,3 +1,12 @@
+#' Map trip generation.
+#'
+#' Produces a map showing where trips are produced or attracted.
+#'
+#' @param model the model to use
+#' @param trip_count [trip_generation()] results
+#' @param end "productions" or "attractions"
+#' @param timeperiod Time period to map (AM Peak, Midday, PM Peak, Overnight)
+#' @param triptype Trip type to map (HBO, HBW, NHB)
 #' @export
 map_trip_generation = function(model, trip_counts, end, timeperiod, triptype) {
   if (str_to_lower(end) == "productions") {
@@ -29,6 +38,15 @@ map_trip_generation = function(model, trip_counts, end, timeperiod, triptype) {
     )
 }
 
+#' Map trip distribution from a single trip.
+#'
+#' Produces a map showing where trips produced in `origin_tract` are attracted.
+#'
+#' @param model the model to use
+#' @param trip_count [trip_generation()] results
+#' @param timeperiod Time period to map (AM Peak, Midday, PM Peak, Overnight)
+#' @param triptype Trip type to map (HBO, HBW, NHB)
+#' @param origin_tract Tract to map productions of
 #' @export
 map_trip_distribution = function(model, flows, timeperiod, triptype, origin_tract) {
   from_tract = flows %>%
@@ -73,7 +91,12 @@ map_trip_distribution = function(model, flows, timeperiod, triptype, origin_trac
     )
 }
 
-#' Given a model,
+#' Produce a congestion map
+#'
+#' @param model the model in use
+#' @param network the network scenario in use (e.g. model$networks$baseline)
+#' @param flow output of [network_assignment()]
+#'
 #' @export
 map_congestion = function(model, network, flows) {
   ff_tt = get_freeflow_weights(network$network)
@@ -115,6 +138,7 @@ NE_CITIES = read_sf(system.file(
 ))
 
 #' Add city labels from Natural Earth
+#' @keywords internal
 label_cities = function(model, buffer = 500) {
   # buffer in meters for web mercator
   # find relevant cities

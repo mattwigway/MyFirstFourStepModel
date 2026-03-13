@@ -5,12 +5,12 @@
 \title{This runs the mode choice step of the model, and returns flows differentiated
 by mode for each trip type and time of day.}
 \usage{
-mode_choice(model, marginals, flows)
+mode_choice(model, scenario, flows)
 }
 \arguments{
 \item{model}{The estimated model object}
 
-\item{marginals}{The scenario to use}
+\item{scenario}{The scenario to use}
 
 \item{flows}{The output of trip_distribution}
 }

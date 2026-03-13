@@ -16,6 +16,17 @@ estimate(
   installJulia = T
 )
 }
+\arguments{
+\item{nhts}{Path to 2017 NHTS CSV files}
+
+\item{osm}{Path to OSM .pbf file}
+
+\item{state}{State to estimate model for}
+
+\item{county}{County (or vector of counties) to estimate model for}
+
+\item{year}{Year of ACS and LODES data to use (if you get 404 errors, you are probably trying to use a year that LODES is not available for)}
+}
 \description{
 Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
 you want to use in estimation.

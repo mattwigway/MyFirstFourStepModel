@@ -1,7 +1,12 @@
 ---
-execute:
-    eval: false
+title: "Example homework assignment"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example homework assignment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 
 ## Homework assignment
 
@@ -15,14 +20,13 @@ For this project, you will use the [My First Four Step Model](https://doi.org/10
 
 Before you can run the model, you will need to install the package. To do this, run the following R code in RStudio:
 
-```{r}
-install.packages('MyFirstFourStepModel',
-  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+```{r, eval=FALSE}
+install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 All of the code you will need to run the model is available in <a href="https://raw.githubusercontent.com/mattwigway/MyFirstFourStepModel/refs/heads/main/examples/chatham_park_model.R" download>this R file</a>, which you should download and save somewhere you can find it again.
 
-If you plan to leave this assignment until the last minute (I get it, we've all been there), **I highly suggest you at least open the R file and make sure you can run the entire model as soon as possible, to give us time to troubleshoot in case you run into software issues.** Feel free to reach out to me if you have any issues running the model. If you do run into issues, make sure you're using R 4.3 or later. Several of the steps may take thirty minutes to an hour to run on your machine, so be sure to leave enough time to run them.
+If you plan to leave this assignment until the last minute (I get it, we've all been there), **I highly suggest you at least open the R file and make sure you can run the entire model as soon as possible, to give us time to troubleshoot in case you run into software issues.** Feel free to reach out to me if you have any issues running the model. If you do run into issues, make sure you're using the latest version of R.
 
 Work through the `chatham_park_model.R` file you downloaded, running the code one section at a time (like we did with regression) and answer the following questions in a separate document that you upload to Canvas. You should not need to make any modifications to the code.
 
@@ -42,3 +46,5 @@ The scenario we tested above added a lot of households to Pittsboro/Chatham Park
 9. Include your map of forecast congestion after 15-501 has been widened. How does the widening affect the changes in congestion you observed in the previous question? [1 point]
 
 10. What significant effect of roadway widening does the model not account for, and do you think this undermines the results? [1 point]
+
+<a href="https://projects.indicatrix.org/MyFirstFourStepModel">This work</a> © 2026 by <a href="https://indicatrix.org">Matt Bhagat-Conway</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">

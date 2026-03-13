@@ -9,3 +9,4 @@ find_optimal_lambda(network, old_flows, aon_flows)
 \description{
 Find the optimal lambda value
 }
+\keyword{internal}

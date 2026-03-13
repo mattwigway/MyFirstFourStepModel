@@ -11,3 +11,4 @@ estimate_attraction_functions(trips, lodes)
 This estimates the distribution models on the Seattle data
 It expects LODES data already aggregated to tracts
 }
+\keyword{internal}

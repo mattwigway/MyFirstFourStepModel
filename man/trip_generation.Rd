@@ -4,7 +4,12 @@
 \alias{trip_generation}
 \title{This runs the trip generation step of the model.}
 \usage{
-trip_generation(model, marginals)
+trip_generation(model, scenario)
+}
+\arguments{
+\item{model}{the model object, loaded via \code{\link[=load_model]{load_model()}}}
+
+\item{scenario}{the scenario to use, often \code{model$scenarios$baseline} or a scenario created with \code{\link[=add_households]{add_households()}}}
 }
 \description{
 Trip production is based on the marginal distributions for vehicles, workers, household size, and

@@ -15,3 +15,4 @@ trip regressions. It expects marginals in the format described in the docs for
 get_hh_counts, and areas with a geoid and area_sqmi column with the area of each
 geographic unit
 }
+\keyword{internal}

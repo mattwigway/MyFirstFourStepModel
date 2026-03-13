@@ -4,6 +4,8 @@
 #' For assignment, we need origins and destinations.
 #' This calculates factors to figure out how many trips of each home-based type travel in each direction
 #' during a particular time period
+#'
+#' @keywords internal
 calculate_direction_factors = function(nhts) {
   nhts$trips %>%
     mutate(
@@ -20,6 +22,7 @@ calculate_direction_factors = function(nhts) {
 }
 
 #' This calculates vehicle occupancy factors by trip type and time period
+#' @keywords internal
 calculate_occupancy_factors = function(nhts) {
   nhts$trips %>%
     mutate(
@@ -36,6 +39,7 @@ calculate_occupancy_factors = function(nhts) {
 }
 
 #' This applies direction factors to an origin-destination matrix
+#' @keywords internal
 apply_direction_factors = function(matrix, direction_factors) {
   mat_with_directions = matrix %>%
     filter(trip_type != "NHB") %>%
@@ -65,6 +69,7 @@ BPR_BETA = 5.0
 #' This links all tracts in the marginals to the nearest node in the network. We only link to
 #' a single node for simplicity. We assume zero centroid-connector travel time. It sets the
 #' node index as node_idx in marginals$areas, and returns the updated marginals.
+#' @keywords internal
 link_tracts = function(network, marginals) {
   all_nodes = tibble(lat = vertex_attr(network, "lat"), lon = vertex_attr(network, "lon")) %>%
     st_as_sf(coords = c("lon", "lat"), crs = 4326)
@@ -83,6 +88,7 @@ link_tracts = function(network, marginals) {
 #' The all-or-nothing assignment step, where all vehicles traveling from A to B are assigned to the
 #' same route. This is done repeatedly with new weights and averaged to distribute vehicles across
 #' the network.
+#' @keywords internal
 all_or_nothing = function(nodeflow_hourly, marginals, network, weights) {
   flows = rep(0.0, ecount(network))
 
@@ -133,6 +139,7 @@ get_freeflow_weights = function(network) {
 
 #' Gets lane capacity based on OSM highway type
 #' Capacities come from Mannering and Washburn, Principles of Highway Engineering and Traffic Analysis, 7th ed.
+#' @keywords internal
 get_lane_capacity = function(highway_types) {
   return(
     case_match(
@@ -153,11 +160,13 @@ get_congested_tt = function(network, flows) {
 }
 
 #' Get the aggregate cost to all travelers of the current assignment
+#' @keywords internal
 get_aggregate_cost = function(network, flows) {
   return(sum(flows * get_congested_tt(network, flows)))
 }
 
 #' Find the optimal lambda value
+#' @keywords internal
 find_optimal_lambda = function(network, old_flows, aon_flows) {
   opt_res = optim(
     c(0.5),
@@ -179,6 +188,7 @@ find_optimal_lambda = function(network, old_flows, aon_flows) {
 #' This does the network assignment
 #' The default relgap_tol is 1% instead of the recommended 0.01% to speed convergence in the
 #' teaching environment.
+#' @keywords internal
 frank_wolfe = function(odflow_hourly, marginals, network, maxiter = 100, relgap_tol = 1e-2) {
   # convert odflow_hourly to be node-to-node rather than zone-to-zone
   nodeflow_hourly = odflow_hourly |>

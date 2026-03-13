@@ -13,3 +13,4 @@ This adjusts the total attraction numbers to match total production. It returns 
 with members attractions containing the balanced attractions, production containing the
 original productions, and factors containing the adjustment factors
 }
+\keyword{internal}

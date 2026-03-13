@@ -22,3 +22,4 @@ where geoid is a tract ID, marginal is the name of one of the marginals (above),
 value is the value for that marginal (e.g. vehicles = 2 for two-vehicle households),
 and count is the expected count in that category
 }
+\keyword{internal}

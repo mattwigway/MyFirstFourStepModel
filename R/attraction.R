@@ -1,4 +1,5 @@
 #' Is a tract ID in the PSRC region?
+#' @keywords internal
 is_psrc_tract = function(tract_id) {
   return(
     stringr::str_starts(tract_id, "53033") | # King
@@ -10,6 +11,7 @@ is_psrc_tract = function(tract_id) {
 
 #' This estimates the distribution models on the Seattle data
 #' It expects LODES data already aggregated to tracts
+#' @keywords internal
 estimate_attraction_functions = function(trips, lodes) {
   jobs = lodes %>%
     aggregate_lodes_to_tracts()
@@ -95,6 +97,7 @@ estimate_attraction_functions = function(trips, lodes) {
 #' This generates attraction estimates from LODES data
 #' Marginals are only used to get the list of tracts, since
 #' LODES does not contain all tracts
+#' @keywords internal
 get_attraction_counts = function(marginals, attraction_functions) {
   tract_lodes = marginals$marginals %>%
     group_by(geoid) %>%
@@ -121,6 +124,7 @@ get_attraction_counts = function(marginals, attraction_functions) {
 #' This adjusts the total attraction numbers to match total production. It returns a list
 #' with members attractions containing the balanced attractions, production containing the
 #' original productions, and factors containing the adjustment factors
+#' @keywords internal
 balance_production_attraction = function(production, attraction) {
   total_produced = production %>%
     group_by(trip_type, time_period) %>%
