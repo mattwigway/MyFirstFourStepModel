@@ -2,18 +2,21 @@
 
 Estimating a new model requires only a few lines of code, however it
 does require the 2017 National Household Travel Survey (NHTS, Federal
-Highway Administration 2017) and an OpenStreetMap PBF file for the
-region modeled.[¹](#fn1) The code to estimate a model for the Research
-Triangle region is below. First, it loads the relevant libraries, and
-then the NHTS (`NHTS_PATH` should be replaced with a directory
-containing the NHTS CSV files). I filter the NHTS to only North Carolina
-households with a weekday travel day ($n = 7,146$). The final line
-estimates the model. It requires the (possibly filtered) NHTS, the path
-to the OpenStreetMap data (written as `OSM_PATH` below but should be
-replaced with the actual path), the state and a vector of counties to
-define the region under study, and a year. Currently 2021 is most recent
-year available, as this is based on American Community Survey and
-Longitudinal Employer-Household Dynamics data availability.
+Highway Administration 2017) in CSV format and unzipped ([which can be
+obtained here](https://nhts.ornl.gov/downloads)), and an OpenStreetMap
+PBF file for the region modeled. There are many sources for
+OpenStreetMap PBF files, but one easy source is
+<https://slice.openstreetmap.us>. The code to estimate a model for the
+Research Triangle region is below. First, it loads the relevant
+libraries, and then the NHTS (`NHTS_PATH` should be replaced with a
+directory containing the NHTS CSV files). I filter the NHTS to only
+North Carolina households with a weekday travel day ($n = 7,146$). The
+final line estimates the model. It requires the (possibly filtered)
+NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below
+but should be replaced with the actual path), the state and a vector of
+counties to define the region under study, and a year. Currently 2021 is
+most recent year available, as this is based on American Community
+Survey and Longitudinal Employer-Household Dynamics data availability.
 
 Parsing the OpenStreetMap data uses Julia (Bezanson et al. 2017) for
 performance, which can be installed if it is not already by running
@@ -60,8 +63,3 @@ Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B. Shah. 2017.
 
 Federal Highway Administration. 2017. “2017 National Household Travel
 Survey.” <https://nhts.ornl.gov/downloads>.
-
-------------------------------------------------------------------------
-
-1.  OpenStreetMap PBF files for any region are easily obtained from
-    <https://slice.openstreetmap.us>

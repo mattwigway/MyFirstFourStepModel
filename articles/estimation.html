@@ -69,9 +69,11 @@
     
     
 <p>Estimating a new model requires only a few lines of code, however it
-does require the 2017 National Household Travel Survey <span class="citation">(NHTS, Federal Highway Administration 2017)</span> and
-an OpenStreetMap PBF file for the region modeled.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;OpenStreetMap PBF files for any region are easily
-obtained from &lt;a href="https://slice.openstreetmap.us" class="external-link uri"&gt;https://slice.openstreetmap.us&lt;/a&gt;&lt;/p&gt;'><sup>1</sup></a> The code to estimate a
+does require the 2017 National Household Travel Survey <span class="citation">(NHTS, Federal Highway Administration 2017)</span> in
+CSV format and unzipped (<a href="https://nhts.ornl.gov/downloads" class="external-link">which
+can be obtained here</a>), and an OpenStreetMap PBF file for the region
+modeled. There are many sources for OpenStreetMap PBF files, but one
+easy source is <a href="https://slice.openstreetmap.us" class="external-link uri">https://slice.openstreetmap.us</a>. The code to estimate a
 model for the Research Triangle region is below. First, it loads the
 relevant libraries, and then the NHTS (<code>NHTS_PATH</code> should be
 replaced with a directory containing the NHTS CSV files). I filter the
@@ -129,7 +131,6 @@ Travel Survey.”</span> <a href="https://nhts.ornl.gov/downloads" class="extern
 </div>
 </div>
 </div>
-
   </main>
 </div>
 
