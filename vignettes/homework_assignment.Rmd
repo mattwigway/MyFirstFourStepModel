@@ -7,6 +7,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include=FALSE}
+# fmt: skip file
+```
 
 ## Homework assignment
 
@@ -21,8 +24,11 @@ For this project, you will use the [My First Four Step Model](https://doi.org/10
 Before you can run the model, you will need to install the package. To do this, run the following R code in RStudio:
 
 ```{r, eval=FALSE}
-install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('MyFirstFourStepModel',
+  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 ```
+
+If you are asked whether you want to install from source, choose "No."
 
 All of the code you will need to run the model is available in <a href="https://raw.githubusercontent.com/mattwigway/MyFirstFourStepModel/refs/heads/main/examples/chatham_park_model.R" download>this R file</a>, which you should download and save somewhere you can find it again.
 
