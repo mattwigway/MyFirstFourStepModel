@@ -35,14 +35,14 @@ Most students in transportation planning and engineering programs will fall into
 
 # Learning objectives
 
-My First Four-Step Model is a software package and learning module that allows students with minimal experience and consumer-grade computer hardware to run a simple four-step travel demand model. Specifically, it is designed to address these student learning outcomes:
+My First Four Step Model is a software package and learning module that allows students with minimal experience and consumer-grade computer hardware to run a simple four-step travel demand model. Specifically, it is designed to address these student learning outcomes:
 
 1. Have a basic understanding of the structure and mathematics of travel demand model,
 1. Understand the types of scenarios travel demand models are appropriate for,
 1. Understand the limitations and uncertainty of travel demand modeling, and
 1. Be able to have constructive conversations with travel modelers.
 
-It is implemented as an R package [@r_2026], which has several advantages. R is a free, open-source, and cross-platform statistical programming language, allowing students to run it on their own computers regardless of configuration. Furthermore, R is becoming the _lingua franca_ of quantitative urban planning. Using the My First Four-Step Model package in an assignment gives students a gentle introduction to the language and potentially piques their interest in learning more. The package has several key design goals:
+It is implemented as an R package [@r_2026], which has several advantages. R is a free, open-source, and cross-platform statistical programming language, allowing students to run it on their own computers regardless of configuration. Furthermore, R is becoming the _lingua franca_ of quantitative urban planning. Using the My First Four Step Model package in an assignment gives students a gentle introduction to the language and potentially piques their interest in learning more. The package has several key design goals:
 
 1. The four steps of the model map directly onto four functions in the package;
 1. Any place where there is a tradeoff between simplicity and predictive accuracy, simplicity is chosen;
