@@ -38,7 +38,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
       tenure = stringr::str_split_i(variable, "_", 2),
-      value = pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE),
+      value = as.character(pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE)),
     ) %>%
     group_by(GEOID, marginal, value) %>%
     summarize(count = sum(estimate), moe = sqrt(sum(moe^2))) %>%
@@ -64,7 +64,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID", count = estimate) %>%
     left_join(total_hh, by = "geoid") %>%
@@ -88,7 +88,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID", count = "estimate") %>%
     left_join(total_hh, by = "geoid") %>%
@@ -118,7 +118,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID") %>%
     group_by(geoid, marginal, value) %>%

@@ -2,6 +2,7 @@
 
 using OpenStreetMapPBF, Graphs, EzXML, MetaGraphsNext, Logging,
     GeoDataFrames, ArchGDAL, DataFrames, Geodesy
+import GeoFormatTypes: EPSG
 
 const DEFAULT_SPEEDS_KMH = Dict{String, Float64}(
     "motorway" => 105.0,
@@ -25,6 +26,7 @@ end
 # Data we retain about an edge
 const EdgeData = @NamedTuple begin
     eid::Int64
+    way_id::Int64
     lanes_per_direction::Int64
     length_m::Float64
     highway_type::String
@@ -196,6 +198,7 @@ function create_edges!(G, tags, waynodes, wayid, nodes, intersection_nodes, next
 
             data = EdgeData((
                 next_id,
+                wayid,
                 lanes,
                 length_m,
                 tags["highway"],
@@ -246,7 +249,7 @@ end
 
 function graph_to_gis(out, G)
     gdf = DataFrame(map(x->G[x[1], x[2]], edge_labels(G)))
-    GeoDataFrames.write(out, gdf)
+    GeoDataFrames.write(out, gdf, crs=EPSG(4326))
 end
 
 function graph_to_graphml(out, G; pretty=false)
@@ -265,6 +268,13 @@ function graph_to_graphml(out, G; pretty=false)
     lanes["attr.name"] = "lanes_per_direction"
     lanes["attr.type"] = "int"
     link!(root, lanes)
+
+    way_id = ElementNode("key")
+    way_id["id"] = "way_id"
+    way_id["for"] = "edge"
+    way_id["attr.name"] = "way_id"
+    way_id["attr.type"] = "string"
+    link!(root, way_id)
 
     length_m = ElementNode("key")
     length_m["id"] = "length_m"
@@ -331,6 +341,11 @@ function graph_to_graphml(out, G; pretty=false)
         e["source"] = edge[1].id
         e["target"] = edge[2].id
         link!(gph, e)
+
+        way_id = ElementNode("data")
+        way_id["key"] = "way_id"
+        link!(way_id, TextNode("$(data.way_id)"))
+        link!(e, way_id)
 
         lanes = ElementNode("data")
         lanes["key"] = "lanes_per_direction"

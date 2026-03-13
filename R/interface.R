@@ -44,7 +44,13 @@ estimate = function(
     col_types = cols(o_tract10 = col_character(), d_tract10 = col_character())
   )
   psrc_lodes = read_csv(path_package("MyFirstFourStepModel", "extdata", "wa_wac_S000_JT00_2019.csv.gz"))
-  seed_matrix = read_csv(path_package("MyFirstFourStepModel", "extdata", "seed_matrix.csv"))
+  seed_matrix = read_csv(
+    path_package("MyFirstFourStepModel", "extdata", "seed_matrix.csv"),
+    col_types = cols(
+      # avoid issues with scientific notation
+      income = col_character()
+    )
+  )
 
   production_functions = estimate_production_functions(nhts)
   attraction_functions = estimate_attraction_functions(psrc, psrc_lodes)

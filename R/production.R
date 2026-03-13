@@ -61,7 +61,7 @@ estimate_production_functions <- function(nhts) {
           vehicles = pmin(HHVEHCNT, VEHICLES_TOPCODE),
           workers = pmin(WRKCOUNT, WORKER_TOPCODE),
           hhsize = pmin(HHSIZE, HHSIZE_TOPCODE),
-          income = format(income, scientific = F)
+          income = str_trim(format(income, scientific = F))
         )
 
       if (all(regdata$trip_count == 0)) {
