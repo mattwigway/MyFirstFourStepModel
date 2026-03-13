@@ -47,13 +47,19 @@ calibrate_trip_distance_beta = function(productions, attractions, median_dist_km
     },
     method = "Brent",
     lower = -20,
-    upper = 1
+    upper = 0
   )
 
   beta = opt_res$par[[1]]
 
-  if (opt_res$convergence != 0 || opt_res$value > 1e3 || beta <= -20 || beta >= 0) {
-    print(paste("WARN: calibration was unsatisfactory. Beta:", beta, "objective:", opt_res$value))
+  if (opt_res$convergence != 0 || opt_res$value > 1e3 || beta <= -20 || beta >= -0.01) {
+    cli_warn(
+      c(
+        sprintf("Gravity model calibration was unsatisfactory. Beta: %.3f, objective: %.3f.", beta, opt_res$value),
+        "i" = "This could be because your study area is so small that the median trip distance from the NHTS is further than many of the opportunities.",
+        ">" = "You may need to expand your study area or use a more appropriate subset of the NHTS."
+      )
+    )
   }
 
   return(beta)
