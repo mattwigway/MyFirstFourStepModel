@@ -23,3 +23,7 @@ estimate_vmt(model, network, link_flows, period)
 - link_flows:
 
   Estimated link flows from the network assignment function
+
+- period:
+
+  Time period (AM Peak, Midday, PM Peak, or Overnight)

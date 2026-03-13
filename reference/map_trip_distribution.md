@@ -15,6 +15,10 @@ map_trip_distribution(model, flows, timeperiod, triptype, origin_tract)
 
   the model to use
 
+- flows:
+
+  `trip_distribuion()` results
+
 - timeperiod:
 
   Time period to map (AM Peak, Midday, PM Peak, Overnight)
@@ -26,8 +30,3 @@ map_trip_distribution(model, flows, timeperiod, triptype, origin_tract)
 - origin_tract:
 
   Tract to map productions of
-
-- trip_count:
-
-  [`trip_generation()`](https://projects.indicatrix.org/MyFirstFourStepModel/reference/trip_generation.md)
-  results

@@ -57,6 +57,20 @@
 
         <dt>
 
+          <code><a href="calibrate_trip_distance_beta.html">calibrate_trip_distance_beta()</a></code>
+
+        </dt>
+        <dd>This calibrates the trip distance beta, using the method described in Merlin (2020) A new method using medians to calibrate single-parameter spatial interaction models, JTLU. The basic idea is that we adjust the beta for the decay function until half the distance-weighted accessibility occurs in the median travel distance. For NHB, productions and attractions will be the same</dd>
+
+        <dt>
+
+          <code><a href="calibrate_trip_distance_betas.html">calibrate_trip_distance_betas()</a></code>
+
+        </dt>
+        <dd>Calibrate betas for all trip types median_distances should be a list with element HBW, HBO, and NHB with median crow-flies trip distances in each.</dd>
+
+        <dt>
+
           <code><a href="estimate.html">estimate()</a></code>
 
         </dt>
@@ -74,7 +88,7 @@
           <code><a href="get_mode_shares.html">get_mode_shares()</a></code>
 
         </dt>
-        <dd>This function uses the output of <code><a href="../reference/mode_choice.html">mode_choice()</a></code> to calculate mode shares, returning a data frame with rows for car, bike, walk, and transit.</dd>
+        <dd>This function uses the output of <code><a href="../reference/mode_choice.html">mode_choice()</a></code> to calculate mode shares.</dd>
 
         <dt>
 
@@ -92,10 +106,10 @@
 
         <dt>
 
-          <code><a href="load_model_v1.html">load_model_v1()</a></code>
+          <code><a href="load_model_v0.html">load_model_v0()</a></code>
 
         </dt>
-        <dd>Load a model in model format 1</dd>
+        <dd>Load a model in model format 0 (used with pre-2026 releases)</dd>
 
         <dt>
 
@@ -180,6 +194,20 @@
 
         </dt>
         <dd>This runs the trip generation step of the model.</dd>
+
+        <dt>
+
+          <code><a href="write_lm.html">write_lm()</a></code>
+
+        </dt>
+        <dd>Write the minimal information to be able to reconstruct enough of an lm to be able to do prediction.</dd>
+
+        <dt>
+
+          <code><a href="write_mnl.html">write_mnl()</a></code>
+
+        </dt>
+        <dd>Write just enough of a multinomial logit model that we can deserialize and apply it</dd>
       </dl></div>
   </main></div>
 

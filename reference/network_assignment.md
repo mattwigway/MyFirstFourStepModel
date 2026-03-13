@@ -19,7 +19,11 @@ network_assignment(model, scenario, network, mode_flows, period)
 
 - scenario:
 
-  The scenario to use
+  The land-use scenario to use
+
+- network:
+
+  The network scenario to use
 
 - mode_flows:
 

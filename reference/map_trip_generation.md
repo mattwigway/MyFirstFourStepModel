@@ -14,6 +14,11 @@ map_trip_generation(model, trip_counts, end, timeperiod, triptype)
 
   the model to use
 
+- trip_counts:
+
+  [`trip_generation()`](https://projects.indicatrix.org/MyFirstFourStepModel/reference/trip_generation.md)
+  results
+
 - end:
 
   "productions" or "attractions"
@@ -25,8 +30,3 @@ map_trip_generation(model, trip_counts, end, timeperiod, triptype)
 - triptype:
 
   Trip type to map (HBO, HBW, NHB)
-
-- trip_count:
-
-  [`trip_generation()`](https://projects.indicatrix.org/MyFirstFourStepModel/reference/trip_generation.md)
-  results

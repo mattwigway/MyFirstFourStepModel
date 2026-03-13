@@ -40,3 +40,12 @@ estimate(
 
   Year of ACS and LODES data to use (if you get 404 errors, you are
   probably trying to use a year that LODES is not available for)
+
+- highway_types:
+
+  OSM highway= tags to include in network, default "motorway",
+  "motorway_link", "trunk", "trunk_link", "primary", "primary_link"
+
+- installJulia:
+
+  Install Julia for network building if it is not found (default true)

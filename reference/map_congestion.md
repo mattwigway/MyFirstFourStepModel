@@ -18,7 +18,7 @@ map_congestion(model, network, flows)
 
   the network scenario in use (e.g. model\$networks\$baseline)
 
-- flow:
+- flows:
 
   output of
   [`network_assignment()`](https://projects.indicatrix.org/MyFirstFourStepModel/reference/network_assignment.md)
