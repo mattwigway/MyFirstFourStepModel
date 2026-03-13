@@ -8,13 +8,13 @@
 ## Citation
 
 Bhagat-Conway M (2026). *MyFirstFourStepModel: Highly Simplified
-Four-Step Travel Demand Models for Teaching*. R package version 0.1.0,
+Four-Step Travel Demand Models for Teaching*. R package version 1.0.0,
 <http://projects.indicatrix.org/MyFirstFourStepModel/>.
 
     @Manual{,
       title = {MyFirstFourStepModel: Highly Simplified Four-Step Travel Demand Models for Teaching},
       author = {Matt Bhagat-Conway},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 1.0.0},
       url = {http://projects.indicatrix.org/MyFirstFourStepModel/},
     }
