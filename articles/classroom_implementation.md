@@ -400,7 +400,7 @@ pm_network_flows = network_assignment(
 #> [1] "Iteration 5 relative gap: 0.0311"
 #> [1] "Iteration 6 relative gap: 0.0162"
 #> [1] "Iteration 7 relative gap: 0.0182"
-#> [1] "Assignment converged in 31.1 seconds at iteration 8 with relative gap 0.0066"
+#> [1] "Assignment converged in 31.9 seconds at iteration 8 with relative gap 0.0066"
 ```
 
 ``` r
@@ -470,7 +470,7 @@ cp_link_flows = network_assignment(
 #> [1] "Iteration 4 relative gap: 0.0657"
 #> [1] "Iteration 5 relative gap: 0.0253"
 #> [1] "Iteration 6 relative gap: 0.0202"
-#> [1] "Assignment converged in 28.6 seconds at iteration 7 with relative gap 0.0095"
+#> [1] "Assignment converged in 29.2 seconds at iteration 7 with relative gap 0.0095"
 
 # This maps the congestion under the scenario, and also labels the location of Chatham Park
 map_congestion(model, model$networks$baseline, cp_link_flows) +
@@ -537,7 +537,7 @@ widen_link_flows = network_assignment(
 #> [1] "Iteration 9 relative gap: 0.0138"
 #> [1] "Iteration 10 relative gap: 0.0229"
 #> [1] "Iteration 11 relative gap: 0.0112"
-#> [1] "Assignment converged in 53.0 seconds at iteration 12 with relative gap 0.0071"
+#> [1] "Assignment converged in 54.6 seconds at iteration 12 with relative gap 0.0071"
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
