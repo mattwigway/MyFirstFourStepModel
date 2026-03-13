@@ -12,8 +12,7 @@ estimate(
   county,
   year,
   highway_types = c("motorway", "motorway_link", "trunk", "trunk_link", "primary",
-    "primary_link"),
-  installJulia = T
+    "primary_link")
 )
 }
 \arguments{
@@ -28,10 +27,9 @@ estimate(
 \item{year}{Year of ACS and LODES data to use (if you get 404 errors, you are probably trying to use a year that LODES is not available for)}
 
 \item{highway_types}{OSM highway= tags to include in network, default "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"}
-
-\item{installJulia}{Install Julia for network building if it is not found (default true)}
 }
 \description{
 Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
-you want to use in estimation.
+you want to use in estimation. Julia must already be installed. If you get an error that Julia is not
+found, you need to set the JULIA_HOME environment variable to the directory containing the Julia executable.
 }

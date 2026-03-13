@@ -28,7 +28,8 @@
 #' survey data (for distribution functions).
 #'
 #' Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
-#' you want to use in estimation.
+#' you want to use in estimation. Julia must already be installed. If you get an error that Julia is not
+#' found, you need to set the JULIA_HOME environment variable to the directory containing the Julia executable.
 #'
 #' @param nhts Path to 2017 NHTS CSV files
 #' @param osm Path to OSM .pbf file
@@ -36,7 +37,6 @@
 #' @param county County (or vector of counties) to estimate model for
 #' @param year Year of ACS and LODES data to use (if you get 404 errors, you are probably trying to use a year that LODES is not available for)
 #' @param highway_types OSM highway= tags to include in network, default "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"
-#' @param installJulia Install Julia for network building if it is not found (default true)
 #'
 #' @export
 estimate = function(
@@ -45,8 +45,7 @@ estimate = function(
   state,
   county,
   year,
-  highway_types = c("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"),
-  installJulia = T
+  highway_types = c("motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link")
 ) {
   psrc = read_csv(
     gzfile(path_package("MyFirstFourStepModel", "extdata", "psrc_trips.csv.gz")),
@@ -80,7 +79,8 @@ estimate = function(
   distribution_betas = calibrate_trip_distance_betas(balanced, base_marginals, median_distances)
 
   # build network
-  network = build_network(osm, highway_types, installJulia = installJulia)
+  # disabling installJulia as it is leading to errors about built-in packages not being available.
+  network = build_network(osm, highway_types, installJulia = F)
 
   tazs_geo = tigris::tracts(state, county)
 
