@@ -192,6 +192,7 @@ frank_wolfe = function(odflow_hourly, marginals, network, maxiter = 100, relgap_
   current_flows = all_or_nothing(nodeflow_hourly, marginals, network, get_freeflow_weights(network))
   converged = F
   relgap = 0
+  start_time = Sys.time()
   for (iteration in 1:maxiter) {
     # in each iteration, we create new all-or-nothing flows with the congested weights, and
     # average them into the flows. We iterate until the result is stable.
@@ -201,11 +202,16 @@ frank_wolfe = function(odflow_hourly, marginals, network, maxiter = 100, relgap_
     relgap = get_relative_gap(network, current_flows, new_flows)
     current_flows = new_flows
     if (relgap <= relgap_tol) {
-      print(paste("Assignment converged at iteration", iteration, "with relative gap", relgap))
+      print(sprintf(
+        "Assignment converged in %.1f seconds at iteration %d with relative gap %.4f",
+        as.numeric(Sys.time() - start_time, units = "secs"),
+        iteration,
+        relgap
+      ))
       converged = T
       break
     } else {
-      print(paste("Iteration", iteration, "relative gap:", relgap))
+      print(sprintf("Iteration %d relative gap: %.4f", iteration, relgap))
     }
   }
 
