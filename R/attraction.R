@@ -44,13 +44,6 @@ estimate_attraction_functions = function(trips, lodes) {
         get_time_period()
     )
 
-  # make sure we add zeros for all tracts not in survey in all time periods
-  tracts = tigris::tracts(state = "WA", county = c("King", "Kitsap", "Pierce", "Snohomish"), year = 2010) |>
-    sf::st_drop_geometry() |>
-    select(geoid = GEOID10) |>
-    # make sure tracts not in any time period don't end up with time_period NA
-    cross_join(tibble(time_period = unique(trips$time_period)))
-
   # note that we have a sample of trips, but they have expansion weights, so should be unbiased.
   # calculate the number of trips attracted by each tract
   attract_counts = trips %>%
@@ -58,12 +51,14 @@ estimate_attraction_functions = function(trips, lodes) {
     summarize(tr_count = sum(trip_weight_2017_2019)) %>%
     pivot_wider(names_from = "trip_type", values_from = "tr_count") %>%
     left_join(jobs, by = c("attract_tract10" = "geoid")) %>%
-    # ensure we add zeros to tracts with no trips
-    # while many of these may have actually had trips that were not sampled,
-    # the expansion weights expand the tracts with trips to the full sample
-    # putting zeroes here ensures averages are correct.
-    right_join(tracts, by = c("attract_tract10" = "geoid", "time_period" = "time_period")) %>%
-    mutate(across(matches("^(C|HBO|HBW)"), \(x) replace_na(x, 0)))
+    mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
+
+  # we previously filled in zeros for tracts without any trips attracted to them in the survey,
+  # but that was most tracts so led to most coefficients being close to zero/there being almost no
+  # variation in attractions across tracts. So we don't do that anymore. Since the expansion weights
+  # expand the trips out to the total number of trips in the region but destined for a sample of
+  # tracts, the predicted counts will be too high when applied to all tracts, but that's okay
+  # because we balance them with the productions.
 
   # NHB models don't have a clearly defined production/attraction end, so we use the average
   # of origins and destinations, and use this for both productions and attractions in the
@@ -75,9 +70,7 @@ estimate_attraction_functions = function(trips, lodes) {
     # / 2 to get an average of origins and destinations
     summarize(tr_count = sum(trip_weight_2017_2019) / 2) %>%
     left_join(jobs, by = "geoid") %>%
-    # ensure we add zeros to tracts with no trips
-    right_join(tracts, by = c("geoid", "time_period")) %>%
-    mutate(across(matches("^(C|tr_count)"), \(x) replace_na(x, 0)))
+    mutate(across(starts_with("C"), \(x) replace_na(x, 0)))
 
   result = list()
 
