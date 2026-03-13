@@ -1,3 +1,154 @@
+<<<<<<< HEAD
+=======
+#' Write the minimal information to be able to reconstruct enough of an
+#' lm to be able to do estimation.
+#' @keywords internal
+write_lm = function(model, archive, name) {
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(as.list(coefficients(model)), digits = NA)))
+  abort_on_error(archive$write_entry(paste0(name, ".txt"), capture_output(print(summary(model)))))
+}
+
+write_lm_list = function(models, archive, prefix) {
+  for (name in names(models)) {
+    model = models[[name]]
+    if (class(model) == "lm") {
+      write_lm(model, archive, paste0(prefix, "/", name))
+    } else if (class(model) == "list") {
+      write_lm_list(model, archive, paste0(prefix, "/", name))
+    }
+  }
+}
+
+read_lm = function(archive, name) {
+  result = list(
+    coefficients = fromJSON(abort_on_error(archive$get_entry_as_string(paste0(name, ".json")))),
+    summary = abort_on_error(archive$get_entry_as_string(paste0(name, ".txt")))
+  )
+
+  class(result) = "lm_simple"
+
+  return(result)
+}
+
+#' @method summary lm_simple
+#' @export
+summary.lm_simple = function(model, ...) {
+  cat(model$summary[[1]])
+}
+
+#' @method coefficients lm_simple
+#' @export
+coefficients.lm_simple = function(model, ...) {
+  unlist(model$coefficients)
+}
+
+#' @method predict lm_simple
+#' @export
+predict.lm_simple = function(model, data, ...) {
+  pred = rep(0.0, nrow(data))
+
+  for (name in names(model$coefficients)) {
+    if (str_detect(name, "^factor")) {
+      var = str_extract(name, "factor\\(([^\\)]+)\\)", 1)
+      val = trimws(str_extract(name, "factor\\(.*\\)(.*)", 1))
+
+      if (is.numeric(data[[var]])) {
+        val = as.numeric(val)
+        col = data[[var]]
+      } else {
+        col = trimws(data[[var]])
+      }
+
+      if (!(var %in% names(data))) {
+        stop(paste("Column", var, "not found in data"))
+      }
+      if (!any(col == val)) {
+        warning(paste("Column", var, "has no value", val, "(used in regression)"))
+      }
+
+      pred = pred + (col == val) * model$coefficients[[name]]
+    } else if (name == "(Intercept)") {
+      pred = pred + model$coefficients[[name]]
+    } else {
+      if (!(name %in% names(data))) {
+        stop(paste("Column", name, "not found in data"))
+      }
+      pred = pred + model$coefficients[[name]] * data[[name]]
+    }
+  }
+
+  return(unname(pred))
+}
+
+write_mnl = function(model, archive, name) {
+  simple = list(
+    summary = capture_output(print(summary(model))),
+    coef = as.data.frame(coefficients(model)),
+    lev = model$lev
+  )
+
+  abort_on_error(archive$write_entry(paste0(name, ".json"), toJSON(simple, digits = NA)))
+}
+
+read_mnl = function(archive, name) {
+  mod = fromJSON(abort_on_error(archive$get_entry_as_string(paste0(name, ".json"))))
+  mod$coef = as.matrix(mod$coef)
+  class(mod) = "mnl_simple"
+  return(mod)
+}
+
+#' @method summary mnl_simple
+#' @export
+summary.mnl_simple = function(model, ...) {
+  cat(model$summary[[1]])
+}
+
+#' @method coefficients mnl_simple
+#' @export
+coefficients.mnl_simple = function(model, ...) {
+  model$coef
+}
+
+#' @method predict mnl_simple
+#' @export
+predict.mnl_simple = function(model, data, type, ...) {
+  if (type == "utils") {
+    result = matrix(0.0, nrow(data), length(model$lev))
+    colnames(result) = model$lev
+
+    for (name in colnames(model$coef)) {
+      if (str_detect(name, "^factor")) {
+        var = str_extract(name, "factor\\(([^\\)]+)\\)", 1)
+        val = trimws(str_extract(name, "factor\\(.*\\)(.*)", 1))
+
+        if (is.numeric(data[[var]])) {
+          val = as.numeric(val)
+        }
+
+        # cannot set whole row at once because there is a level
+        # not in the coefficients (reference level)
+        for (outcome in rownames(model$coef)) {
+          result[, outcome] = result[, outcome] + (data[[var]] == val) * model$coef[[outcome, name]]
+        }
+      } else if (name == "(Intercept)") {
+        for (outcome in rownames(model$coef)) {
+          result[, outcome] = result[, outcome] + model$coef[[outcome, name]]
+        }
+      } else {
+        for (outcome in rownames(model$coef)) {
+          result[, outcome] = result[, outcome] + model$coef[[outcome, name]] * data[[name]]
+        }
+      }
+    }
+    return(result)
+  } else if (type == "probs") {
+    util = predict.mnl_simple(model, data, "utils", ...)
+    exputil = exp(util)
+    exputil / rowSums(exputil)
+  }
+}
+
+>>>>>>> 6861001 (more scientific notation fixes)
 write_sf_to_model = function(layer, archive, name) {
   tf = tempfile(fileext = ".gpkg")
   st_write(layer, tf)
@@ -39,6 +190,10 @@ read_network = function(archive, name) {
 
 
 #' Save a model
+#'
+#' @param model model to save
+#' @param filename file to save to (canonical extension .mf4sm)
+#'
 #' @export
 save_model = function(model, filename) {
   invisible(capture.output({
@@ -71,6 +226,9 @@ save_model = function(model, filename) {
 }
 
 #' Load a model
+#'
+#' @param filename File name or URL to load model from
+#'
 #' @export
 load_model = function(filename) {
   capture.output(suppressWarnings({
@@ -78,7 +236,12 @@ load_model = function(filename) {
     inp = abort_on_error(ArchiveReader$new(filename))
     res = list()
 
-    res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")), show_col_types = FALSE)
+    res$seed_matrix = read_csv(
+      abort_on_error(inp$get_entry_as_string("seed_matrix.csv")),
+      # read income as string to avoid scientific notation nonsense
+      col_types = cols(income = col_character()),
+      show_col_types = FALSE
+    )
     res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
     res$direction_factors = read_csv(
       abort_on_error(inp$get_entry_as_string("direction_factors.csv")),

@@ -51,9 +51,9 @@ predict.lm_simple = function(model, data, ...) {
 
       if (is.numeric(data[[var]])) {
         val = as.numeric(val)
-        col = data[, var]
+        col = data[[var]]
       } else {
-        col = trimws(data[, var])
+        col = trimws(data[[var]])
       }
 
       if (!(var %in% names(data))) {
