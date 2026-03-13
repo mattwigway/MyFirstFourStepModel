@@ -35,6 +35,7 @@
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 position_nudge
+#' @importFrom ggplot2 scale_fill_binned
 #' @importFrom ggplot2 scale_fill_fermenter
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_minimal
