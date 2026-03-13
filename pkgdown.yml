@@ -1,0 +1,14 @@
+pandoc: 3.1.11
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  classroom_implementation: classroom_implementation.html
+  estimation: estimation.html
+  homework_assignment: homework_assignment.html
+  methods: methods.html
+  prior_work: prior_work.html
+  scenarios: scenarios.html
+last_built: 2026-03-13T03:23Z
+urls:
+  reference: https://projects.indicatrix.org/MyFirstFourStepModel/reference
+  article: https://projects.indicatrix.org/MyFirstFourStepModel/articles

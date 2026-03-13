@@ -1,0 +1,14 @@
+# This calibrates the trip distance beta, using the method described in Merlin (2020) A new method using medians to calibrate single-parameter spatial interaction models, JTLU. The basic idea is that we adjust the beta for the decay function until half the distance-weighted accessibility occurs in the median travel distance. For NHB, productions and attractions will be the same
+
+This calibrates the trip distance beta, using the method described in
+Merlin (2020) A new method using medians to calibrate single-parameter
+spatial interaction models, JTLU. The basic idea is that we adjust the
+beta for the decay function until half the distance-weighted
+accessibility occurs in the median travel distance. For NHB, productions
+and attractions will be the same
+
+## Usage
+
+``` r
+calibrate_trip_distance_beta(productions, attractions, median_dist_km, dmat)
+```

@@ -1,0 +1,247 @@
+# Scenario creation
+
+The code in the [Classroom
+Implementation](https://projects.indicatrix.org/MyFirstFourStepModel/articles/classroom_implementation.md)
+vignette runs a complete, simplified, four-step model for baseline
+conditions, as well as pre-specified land use and transportation network
+scenarios. This vignette describes how to create those land use and
+transportation network scenarios. This may be used by an instructor
+after [estimating the model for a new
+region](https://projects.indicatrix.org/MyFirstFourStepModel/articles/estimation.md),
+or by advanced students. When I use the model in more advanced classes,
+I add an exercise that involves creating a land use scenario.
+
+## Land use scenarios
+
+There are two ways to create new land use scenarios. The simpler method
+is to use the `add_households` function. This function modifies a
+scenario by adding households with particular characteristics to a
+particular area. The code below adds 20,000 households to Census tract
+`37037020801`, which is the location of a large new residential
+development. The households to add are specified in a tabular format. In
+this case, are all four-person, two-worker households; half have three
+cars and income of \$150,000/year, and half have two cars and income of
+\$75,000/year. Household size can take on values from 1 to 4; workers
+and vehicles can take on values from 0 to 3, and income can take on
+values 0, 35000, 75000, and 100000, each representing the low end of an
+income bin. Every model includes a default “baseline” scenario which
+represents current conditions from the American Community Survey; other
+scenarios can be built by extending or modifying this baseline.
+
+``` r
+model$scenarios$chatham_park = model$scenarios$baseline |>
+  add_households(
+    "37037020801",
+    tibble::tribble(
+      ~hhsize , ~workers , ~vehicles , ~income , ~n    ,
+            4 ,        2 ,         3 ,  150000 , 10000 ,
+            4 ,        2 ,         2 ,   75000 , 10000
+    )
+  )
+```
+
+If you want to add households to more than one tract, simply use
+`add_households` more than once to build up the scenario one piece at a
+time.
+
+If more control is needed, scenarios can be created in a tabular format
+by hand or using external tools. This format is shown in
+@tbl-demographic-scenario, specifying the number of households in
+different household size, income, vehicle ownership, and number of
+worker categories. It is up to the user to ensure that number of
+households in a tract is consistent across all marginal categories
+(i.e. if the four `hhsize` categories total 1000 households, the four
+income categories must also total 1000 households).
+
+| `geoid`     | `marginal` | `value` | `count` |
+|:------------|:-----------|--------:|--------:|
+| 37183053411 | `hhsize`   |       1 |     514 |
+| 37183053411 | `hhsize`   |       2 |     711 |
+| 37183053411 | `hhsize`   |       3 |     940 |
+| 37183053411 | `hhsize`   |       4 |    1907 |
+| 37183053411 | `income`   |       0 |     358 |
+| 37183053411 | `income`   |   35000 |     595 |
+| 37183053411 | `income`   |   75000 |     183 |
+| 37183053411 | `income`   |  100000 |    2936 |
+| 37183053411 | `vehicles` |       0 |     110 |
+| 37183053411 | `vehicles` |       1 |     921 |
+| 37183053411 | `vehicles` |       2 |    2089 |
+| 37183053411 | `vehicles` |       3 |     952 |
+| 37183053411 | `workers`  |       0 |     288 |
+| 37183053411 | `workers`  |       1 |    1784 |
+| 37183053411 | `workers`  |       2 |    1711 |
+| 37183053411 | `workers`  |       3 |     289 |
+
+Specification of a demographic scenario {#tbl-demographic-scenario}
+
+To create such a scenario, first export the baseline scenario into Excel
+format:
+
+``` r
+save_landuse_scenario(model$scenarios$baseline, "scenario.xlsx")
+```
+
+You can then modify the scenario using external tools. In addition to
+the tab specifying household counts, there is also a tab specifying
+employment in each tract, which is used to generate attractions. The
+column names match those [in the LEHD LODES
+dataset](https://lehd.ces.census.gov). Once you are done modifying the
+scenario, you can load it back into R by running:
+
+``` r
+model$scenarios$projected = load_landuse_scenario("scenario.xlsx")
+```
+
+You can replace `projected` with any name you want (as long as it is a
+valid R identifier, e.g. no spaces).
+
+Any scenarios created before the model is saved (see
+[Estimation](https://projects.indicatrix.org/MyFirstFourStepModel/articles/estimation.md))
+will be available for use when the model is loaded.
+
+### Network scenarios
+
+Changes to the network are just as important as changes to land use.
+Currently, My First Four-Step Model only supports changes to existing
+links.
+
+Two link attributes can be changed: the lane count and the roadway type.
+The roadway type uses OpenStreetMap highway tag taxonomy; notable values
+are ‘motorway’, ‘trunk’, and ‘primary’. Changing the attributes of a
+link requires determining its OpenStreetMap ‘way ID’, which can be done
+either by looking at the data on
+[openstreetmap.org](https://openstreetmap.org), or exporting the network
+to GIS format and investigating in GIS:
+
+``` r
+network_to_gis(model$networks$baseline, "baseline.gpkg")
+```
+
+Link attributes can then be modified using the `modify_links` function.
+For example, the code below widens US 15-501 north of Pittsboro, NC,
+from two to three lanes in each direction, and upgrades it to a
+motorway.
+
+``` r
+model$networks$widen_15_501 = model$networks$baseline |>
+  modify_ways(
+    # US 15-501 between Pittsboro and Chapel Hill
+    c(
+      "16468788",
+      "1435835324",
+      "16471803",
+      "1428927957",
+      "16476716",
+      "1435843899",
+      "1435833214",
+      "29335841",
+      "709833467",
+      "29335943",
+      "654023608",
+      "654023604",
+      "29336020",
+      "1428519228",
+      "29336043",
+      "29336065",
+      "1119560022",
+      "690900371",
+      "133051279",
+      "29336072",
+      "690900390",
+      "29336325",
+      "29336326",
+      "29336327",
+      "29336328",
+      "29336338",
+      "29336335",
+      "29336336",
+      "133051274",
+      "133051276",
+      "133051275",
+      "133051277",
+      "1435849758",
+      "133051278",
+      "1119560050",
+      "690900383",
+      "138138830",
+      "1064169646",
+      "285898976",
+      "625793296",
+      "285898977",
+      "712336832",
+      "285898984",
+      "654023612",
+      "285898992",
+      "1424926581",
+      "1423515894",
+      "1426579770",
+      "1423515897",
+      "1423515898",
+      "1423515900",
+      "398223958",
+      "712336806",
+      "398223959",
+      "712336808",
+      "1424926579",
+      "1425787647",
+      "1424926580",
+      "1426816070",
+      "1424926582",
+      "518951244",
+      "709833464",
+      "713044971",
+      "1425787648",
+      "1425792246",
+      "1426357461",
+      "574612704",
+      "614242454",
+      "1426357462",
+      "1426357465",
+      "614242450",
+      "614242453",
+      "1426579771",
+      "1426816072",
+      "1428519229",
+      "1428927958",
+      "690900386",
+      "690900353",
+      "690900357",
+      "1428247555",
+      "1428247554",
+      "694843964",
+      "1425792245",
+      "694843965",
+      "1423515895",
+      "1426357464",
+      "709833465",
+      "709833466",
+      "998595933",
+      "712336807",
+      "712336820",
+      "712336809",
+      "712336821",
+      "712336826",
+      "712336827",
+      "998595932",
+      "822063218",
+      "1435833215",
+      "1435833216",
+      "1435835323",
+      "1435835325",
+      "1435851262",
+      "1435851263",
+      "1028209511",
+      "1435849757",
+      "1064169630",
+      "1064169631",
+      "1064169647",
+      "1265931335"
+    ),
+    lanes_per_direction = 3,
+    highway_type = "motorway"
+  )
+```
+
+[This work](https://projects.indicatrix.org/MyFirstFourStepModel) © 2026
+by [Matt Bhagat-Conway](https://indicatrix.org) is licensed under [CC BY
+4.0](https://creativecommons.org/licenses/by/4.0/)![](https://mirrors.creativecommons.org/presskit/icons/cc.svg)![](https://mirrors.creativecommons.org/presskit/icons/by.svg)
