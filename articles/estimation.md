@@ -19,10 +19,8 @@ most recent year available, as this is based on American Community
 Survey and Longitudinal Employer-Household Dynamics data availability.
 
 Parsing the OpenStreetMap data uses Julia (Bezanson et al. 2017) for
-performance, which can be installed if it is not already by running
-[`JuliaCall::install_julia()`](https://rdrr.io/pkg/JuliaCall/man/install_julia.html)
-from within R. Julia is only required for estimation; students do not
-need to install Julia.
+performance, which can be installed from <https://julialang.org>. Julia
+is only required for estimation; students do not need to install Julia.
 
 ``` r
 library(MyFirstFourStepModel)
