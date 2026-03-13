@@ -203,21 +203,22 @@ summary(model$attraction_functions$`AM Peak`$HBW)
 #> 
 #> Residuals:
 #>     Min      1Q  Median      3Q     Max 
-#> -1335.1  -260.4  -248.5  -212.8 14322.9 
+#> -3197.5  -659.0  -343.8   -43.7  8065.0 
 #> 
 #> Coefficients:
-#>               Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) 246.899464  42.471019   5.813 8.96e-09 ***
-#> C000          0.007887   0.010620   0.743    0.458    
-#> CNS07         0.075372   0.097327   0.774    0.439    
-#> CNS15         0.042306   0.039035   1.084    0.279    
-#> CNS18        -0.109382   0.141692  -0.772    0.440    
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) 279.14694  123.51096   2.260 0.024724 *  
+#> C000          0.62690    0.07337   8.544  1.6e-15 ***
+#> CNS07         0.14668    0.45880   0.320 0.749472    
+#> CNS15        -0.52962    0.14650  -3.615 0.000367 ***
+#> CNS18        -1.84046    0.63814  -2.884 0.004287 ** 
 #> ---
 #> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #> 
-#> Residual standard error: 1051 on 771 degrees of freedom
-#> Multiple R-squared:  0.004715,   Adjusted R-squared:  -0.0004483 
-#> F-statistic: 0.9132 on 4 and 771 DF,  p-value: 0.4556
+#> Residual standard error: 1458 on 237 degrees of freedom
+#>   (493 observations deleted due to missingness)
+#> Multiple R-squared:  0.3099, Adjusted R-squared:  0.2982 
+#> F-statistic:  26.6 on 4 and 237 DF,  p-value: < 2.2e-16
 ```
 
 Once students have interpreted the regressions, I have them run the trip
@@ -271,13 +272,13 @@ and interpret them.
 ``` r
 model$distribution_betas
 #> $HBW
-#> [1] -1.283468
+#> [1] -1.23908
 #> 
 #> $HBO
-#> [1] -1.890383
+#> [1] -1.884465
 #> 
 #> $NHB
-#> [1] -1.822949
+#> [1] -1.69133
 ```
 
 Then, they can run the trip distribution step with the following code:
@@ -370,7 +371,7 @@ get_mode_shares(flows_by_mode)
 #> # A tibble: 1 × 4
 #>     Car    Bike   Walk Transit
 #>   <dbl>   <dbl>  <dbl>   <dbl>
-#> 1 0.915 0.00562 0.0537  0.0258
+#> 1 0.916 0.00559 0.0523  0.0258
 ```
 
 ### Network assignment
@@ -393,14 +394,16 @@ pm_network_flows = network_assignment(
   flows_by_mode,
   "PM Peak"
 )
-#> [1] "Iteration 1 relative gap: 0.4347"
-#> [1] "Iteration 2 relative gap: 0.1624"
-#> [1] "Iteration 3 relative gap: 0.0726"
-#> [1] "Iteration 4 relative gap: 0.0489"
-#> [1] "Iteration 5 relative gap: 0.0311"
-#> [1] "Iteration 6 relative gap: 0.0162"
-#> [1] "Iteration 7 relative gap: 0.0182"
-#> [1] "Assignment converged in 31.9 seconds at iteration 8 with relative gap 0.0066"
+#> [1] "Iteration 1 relative gap: 0.4910"
+#> [1] "Iteration 2 relative gap: 0.2382"
+#> [1] "Iteration 3 relative gap: 0.1072"
+#> [1] "Iteration 4 relative gap: 0.0702"
+#> [1] "Iteration 5 relative gap: 0.0385"
+#> [1] "Iteration 6 relative gap: 0.0285"
+#> [1] "Iteration 7 relative gap: 0.0183"
+#> [1] "Iteration 8 relative gap: 0.0133"
+#> [1] "Iteration 9 relative gap: 0.0108"
+#> [1] "Assignment converged in 39.1 seconds at iteration 10 with relative gap 0.0077"
 ```
 
 ``` r
@@ -422,7 +425,7 @@ reasonable.
 
 ``` r
 estimate_vmt(model, model$networks$baseline, pm_network_flows, "PM Peak")
-#> [1] 7593706
+#> [1] 7790382
 ```
 
 ### Land use scenarios
@@ -464,13 +467,17 @@ cp_link_flows = network_assignment(
   cp_flows_by_mode,
   "PM Peak"
 )
-#> [1] "Iteration 1 relative gap: 0.5529"
-#> [1] "Iteration 2 relative gap: 0.3769"
-#> [1] "Iteration 3 relative gap: 0.1295"
-#> [1] "Iteration 4 relative gap: 0.0657"
-#> [1] "Iteration 5 relative gap: 0.0253"
-#> [1] "Iteration 6 relative gap: 0.0202"
-#> [1] "Assignment converged in 29.2 seconds at iteration 7 with relative gap 0.0095"
+#> [1] "Iteration 1 relative gap: 0.5242"
+#> [1] "Iteration 2 relative gap: 0.4323"
+#> [1] "Iteration 3 relative gap: 0.1606"
+#> [1] "Iteration 4 relative gap: 0.0810"
+#> [1] "Iteration 5 relative gap: 0.0405"
+#> [1] "Iteration 6 relative gap: 0.0341"
+#> [1] "Iteration 7 relative gap: 0.0252"
+#> [1] "Iteration 8 relative gap: 0.0198"
+#> [1] "Iteration 9 relative gap: 0.0115"
+#> [1] "Iteration 10 relative gap: 0.0105"
+#> [1] "Assignment converged in 44.2 seconds at iteration 11 with relative gap 0.0064"
 
 # This maps the congestion under the scenario, and also labels the location of Chatham Park
 map_congestion(model, model$networks$baseline, cp_link_flows) +
@@ -526,18 +533,22 @@ widen_link_flows = network_assignment(
   widen_flows_by_mode,
   "PM Peak"
 )
-#> [1] "Iteration 1 relative gap: 0.6248"
-#> [1] "Iteration 2 relative gap: 0.2768"
-#> [1] "Iteration 3 relative gap: 0.1727"
-#> [1] "Iteration 4 relative gap: 0.0902"
-#> [1] "Iteration 5 relative gap: 0.0689"
-#> [1] "Iteration 6 relative gap: 0.0310"
-#> [1] "Iteration 7 relative gap: 0.0260"
-#> [1] "Iteration 8 relative gap: 0.0149"
-#> [1] "Iteration 9 relative gap: 0.0138"
-#> [1] "Iteration 10 relative gap: 0.0229"
-#> [1] "Iteration 11 relative gap: 0.0112"
-#> [1] "Assignment converged in 54.6 seconds at iteration 12 with relative gap 0.0071"
+#> [1] "Iteration 1 relative gap: 0.5492"
+#> [1] "Iteration 2 relative gap: 0.3553"
+#> [1] "Iteration 3 relative gap: 0.2121"
+#> [1] "Iteration 4 relative gap: 0.1357"
+#> [1] "Iteration 5 relative gap: 0.0889"
+#> [1] "Iteration 6 relative gap: 0.0413"
+#> [1] "Iteration 7 relative gap: 0.0390"
+#> [1] "Iteration 8 relative gap: 0.0219"
+#> [1] "Iteration 9 relative gap: 0.0308"
+#> [1] "Iteration 10 relative gap: 0.0200"
+#> [1] "Iteration 11 relative gap: 0.0137"
+#> [1] "Iteration 12 relative gap: 0.0144"
+#> [1] "Iteration 13 relative gap: 0.0109"
+#> [1] "Iteration 14 relative gap: 0.0133"
+#> [1] "Iteration 15 relative gap: 0.0102"
+#> [1] "Assignment converged in 69.0 seconds at iteration 16 with relative gap 0.0089"
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +

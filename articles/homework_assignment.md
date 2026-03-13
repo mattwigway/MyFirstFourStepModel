@@ -25,8 +25,11 @@ Before you can run the model, you will need to install the package. To
 do this, run the following R code in RStudio:
 
 ``` r
-install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('MyFirstFourStepModel',
+  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 ```
+
+If you are asked whether you want to install from source, choose “No.”
 
 All of the code you will need to run the model is available in [this R
 file](https://raw.githubusercontent.com/mattwigway/MyFirstFourStepModel/refs/heads/main/examples/chatham_park_model.R),

@@ -260,21 +260,22 @@ functions:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Residuals:</span></span>
 <span><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
-<span><span class="co">#&gt; -1335.1  -260.4  -248.5  -212.8 14322.9 </span></span>
+<span><span class="co">#&gt; -3197.5  -659.0  -343.8   -43.7  8065.0 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span><span class="co">#&gt; (Intercept) 246.899464  42.471019   5.813 8.96e-09 ***</span></span>
-<span><span class="co">#&gt; C000          0.007887   0.010620   0.743    0.458    </span></span>
-<span><span class="co">#&gt; CNS07         0.075372   0.097327   0.774    0.439    </span></span>
-<span><span class="co">#&gt; CNS15         0.042306   0.039035   1.084    0.279    </span></span>
-<span><span class="co">#&gt; CNS18        -0.109382   0.141692  -0.772    0.440    </span></span>
+<span><span class="co">#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">#&gt; (Intercept) 279.14694  123.51096   2.260 0.024724 *  </span></span>
+<span><span class="co">#&gt; C000          0.62690    0.07337   8.544  1.6e-15 ***</span></span>
+<span><span class="co">#&gt; CNS07         0.14668    0.45880   0.320 0.749472    </span></span>
+<span><span class="co">#&gt; CNS15        -0.52962    0.14650  -3.615 0.000367 ***</span></span>
+<span><span class="co">#&gt; CNS18        -1.84046    0.63814  -2.884 0.004287 ** </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Residual standard error: 1051 on 771 degrees of freedom</span></span>
-<span><span class="co">#&gt; Multiple R-squared:  0.004715,   Adjusted R-squared:  -0.0004483 </span></span>
-<span><span class="co">#&gt; F-statistic: 0.9132 on 4 and 771 DF,  p-value: 0.4556</span></span></code></pre></div>
+<span><span class="co">#&gt; Residual standard error: 1458 on 237 degrees of freedom</span></span>
+<span><span class="co">#&gt;   (493 observations deleted due to missingness)</span></span>
+<span><span class="co">#&gt; Multiple R-squared:  0.3099, Adjusted R-squared:  0.2982 </span></span>
+<span><span class="co">#&gt; F-statistic:  26.6 on 4 and 237 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>Once students have interpreted the regressions, I have them run the
 trip generation step. True to the design goals, this requires only a
 single function.</p>
@@ -313,13 +314,13 @@ the code below, and interpret them.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span><span class="op">$</span><span class="va">distribution_betas</span></span>
 <span><span class="co">#&gt; $HBW</span></span>
-<span><span class="co">#&gt; [1] -1.283468</span></span>
+<span><span class="co">#&gt; [1] -1.23908</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $HBO</span></span>
-<span><span class="co">#&gt; [1] -1.890383</span></span>
+<span><span class="co">#&gt; [1] -1.884465</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $NHB</span></span>
-<span><span class="co">#&gt; [1] -1.822949</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -1.69133</span></span></code></pre></div>
 <p>Then, they can run the trip distribution step with the following
 code:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -399,7 +400,7 @@ shares, using the code below:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
 <span><span class="co">#&gt;     Car    Bike   Walk Transit</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0.915 0.005<span style="text-decoration: underline;">62</span> 0.053<span style="text-decoration: underline;">7</span>  0.025<span style="text-decoration: underline;">8</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0.916 0.005<span style="text-decoration: underline;">59</span> 0.052<span style="text-decoration: underline;">3</span>  0.025<span style="text-decoration: underline;">8</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="network-assignment">Network assignment<a class="anchor" aria-label="anchor" href="#network-assignment"></a>
@@ -421,14 +422,16 @@ automatically when <code>MyFirstFourStepModel</code> is installed.</p>
 <span>  <span class="va">flows_by_mode</span>,</span>
 <span>  <span class="st">"PM Peak"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.4347"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.1624"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.0726"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.0489"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0311"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0162"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0182"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 31.9 seconds at iteration 8 with relative gap 0.0066"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.4910"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.2382"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.1072"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.0702"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0385"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0285"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0183"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0133"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0108"</span></span>
+<span><span class="co">#&gt; [1] "Assignment converged in 39.1 seconds at iteration 10 with relative gap 0.0077"</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">baseline</span>, <span class="va">pm_network_flows</span><span class="op">)</span></span></code></pre></div>
 <p><img src="classroom_implementation_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere." width="700"></p>
@@ -442,7 +445,7 @@ calculations from Bureau of Transportation Statistics 2024)</span>, so 7
 million in the PM Peak is reasonable.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/estimate_vmt.html">estimate_vmt</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">baseline</span>, <span class="va">pm_network_flows</span>, <span class="st">"PM Peak"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 7593706</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 7790382</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="land-use-scenarios">Land use scenarios<a class="anchor" aria-label="anchor" href="#land-use-scenarios"></a>
@@ -482,13 +485,17 @@ again map congestion and compare to baseline conditions.</p>
 <span>  <span class="va">cp_flows_by_mode</span>,</span>
 <span>  <span class="st">"PM Peak"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.5529"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.3769"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.1295"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.0657"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0253"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0202"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 29.2 seconds at iteration 7 with relative gap 0.0095"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.5242"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.4323"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.1606"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.0810"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0405"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0341"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0252"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0198"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0115"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 10 relative gap: 0.0105"</span></span>
+<span><span class="co">#&gt; [1] "Assignment converged in 44.2 seconds at iteration 11 with relative gap 0.0064"</span></span>
 <span></span>
 <span><span class="co"># This maps the congestion under the scenario, and also labels the location of Chatham Park</span></span>
 <span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">baseline</span>, <span class="va">cp_link_flows</span><span class="op">)</span> <span class="op">+</span></span>
@@ -538,18 +545,22 @@ widened highway:</p>
 <span>  <span class="va">widen_flows_by_mode</span>,</span>
 <span>  <span class="st">"PM Peak"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.6248"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.2768"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.1727"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.0902"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0689"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0310"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0260"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0149"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0138"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 10 relative gap: 0.0229"</span></span>
-<span><span class="co">#&gt; [1] "Iteration 11 relative gap: 0.0112"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 54.6 seconds at iteration 12 with relative gap 0.0071"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 1 relative gap: 0.5492"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 2 relative gap: 0.3553"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 3 relative gap: 0.2121"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 4 relative gap: 0.1357"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 5 relative gap: 0.0889"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 6 relative gap: 0.0413"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0390"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0219"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0308"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 10 relative gap: 0.0200"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 11 relative gap: 0.0137"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 12 relative gap: 0.0144"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 13 relative gap: 0.0109"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 14 relative gap: 0.0133"</span></span>
+<span><span class="co">#&gt; [1] "Iteration 15 relative gap: 0.0102"</span></span>
+<span><span class="co">#&gt; [1] "Assignment converged in 69.0 seconds at iteration 16 with relative gap 0.0089"</span></span>
 <span></span>
 <span><span class="co"># This maps the congestion under the scenario (Extra credit)</span></span>
 <span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">widen_15_501</span>, <span class="va">widen_link_flows</span><span class="op">)</span> <span class="op">+</span></span>
