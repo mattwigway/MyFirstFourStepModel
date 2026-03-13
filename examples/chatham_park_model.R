@@ -35,7 +35,7 @@ model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 # - vehicles: number of vehicles
 # - hhsize: household size (number of people)
 # - income: income in bins 0-35000 (left out), 35000-75000 (factor(income) 35000), 75000-10000 (factor(income) 75000),
-#.     and over 100000 (factor(income) 100000)
+#      and over 100000 (factor(income) 100000)
 summary(model$production_functions$`AM Peak`$HBW)
 
 # Next, we run the actual trip generation step
