@@ -3,6 +3,7 @@
 #' The basic idea is that we adjust the beta for the decay function until half the distance-weighted
 #' accessibility occurs in the median travel distance.
 #' For NHB, productions and attractions will be the same
+#' @keywords external
 calibrate_trip_distance_beta = function(productions, attractions, median_dist_km, dmat) {
   # we assume that the betas for each trip type are the same at all time periods
   origins = productions %>%
@@ -61,6 +62,7 @@ calibrate_trip_distance_beta = function(productions, attractions, median_dist_km
 #' Calibrate betas for all trip types
 #' median_distances should be a list with element HBW, HBO, and NHB with median crow-flies
 #' trip distances in each.
+#' @keywords external
 calibrate_trip_distance_betas = function(balanced, marginals, median_distances_m) {
   dmat = get_distance_matrix(marginals)
   return(list(

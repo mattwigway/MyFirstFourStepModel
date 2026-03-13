@@ -29,6 +29,13 @@
 #'
 #' Load the NHTS data with load_nhts(), and if desired filter the households table to just the households
 #' you want to use in estimation.
+#'
+#' @param nhts Path to 2017 NHTS CSV files
+#' @param osm Path to OSM .pbf file
+#' @param state State to estimate model for
+#' @param county County (or vector of counties) to estimate model for
+#' @param year Year of ACS and LODES data to use (if you get 404 errors, you are probably trying to use a year that LODES is not available for)
+#'
 #' @export
 estimate = function(
   nhts,
@@ -44,7 +51,13 @@ estimate = function(
     col_types = cols(o_tract10 = col_character(), d_tract10 = col_character())
   )
   psrc_lodes = read_csv(path_package("MyFirstFourStepModel", "extdata", "wa_wac_S000_JT00_2019.csv.gz"))
-  seed_matrix = read_csv(path_package("MyFirstFourStepModel", "extdata", "seed_matrix.csv"))
+  seed_matrix = read_csv(
+    path_package("MyFirstFourStepModel", "extdata", "seed_matrix.csv"),
+    col_types = cols(
+      # avoid issues with scientific notation
+      income = col_character()
+    )
+  )
 
   production_functions = estimate_production_functions(nhts)
   attraction_functions = estimate_attraction_functions(psrc, psrc_lodes)
@@ -93,10 +106,14 @@ estimate = function(
 #' Trip production is based on the marginal distributions for vehicles, workers, household size, and
 #' income. Trip attraction is based on job counts. Attractions are balanced to match productions before
 #' being returned.
+#'
+#' @param model the model object, loaded via [load_model()]
+#' @param scenario the scenario to use, often `model$scenarios$baseline` or a scenario created with [add_households()]
+#'
 #' @export
-trip_generation = function(model, marginals) {
-  productions = get_production_counts(marginals, model$production_functions, model$seed_matrix)
-  attractions = get_attraction_counts(marginals, model$attraction_functions)
+trip_generation = function(model, scenario) {
+  productions = get_production_counts(scenario, model$production_functions, model$seed_matrix)
+  attractions = get_attraction_counts(scenario, model$attraction_functions)
   return(balance_production_attraction(productions, attractions))
 }
 
@@ -105,21 +122,26 @@ trip_generation = function(model, marginals) {
 #' Trip distribution is based on the relative locations of the tracts (in `marginals`),
 #' the betas estimated during the estimation phase of the model, and the total trip productions
 #' and attractions.
+#'
+#' @param model the model object, loaded via [load_model()]
+#' @param scenario the scenario to use, often `model$scenarios$baseline` or a scenario created with [add_households()]
+#' @param balanced the balanced productions and attractions, returned by [trip_generation()]
+#'
 #' @export
-trip_distribution = function(model, marginals, balanced) {
-  return(get_flows(balanced, marginals, model$distribution_betas))
+trip_distribution = function(model, scenario, balanced) {
+  return(get_flows(balanced, scenario, model$distribution_betas))
 }
 
 #' This runs the mode choice step of the model, and returns flows differentiated
 #' by mode for each trip type and time of day.
 #'
 #' @param model The estimated model object
-#' @param marginals The scenario to use
+#' @param scenario The scenario to use
 #' @param flows The output of trip_distribution
 #'
 #' @export
-mode_choice = function(model, marginals, flows) {
-  return(flow_by_mode(flows, marginals, model$mode_choice_models))
+mode_choice = function(model, scenario, flows) {
+  return(flow_by_mode(flows, scenario, model$mode_choice_models))
 }
 
 #' This runs the network assignment step of the model.
@@ -129,12 +151,12 @@ mode_choice = function(model, marginals, flows) {
 #' before doing assignment to convert period person-trips to hourly vehicle-trips.
 #'
 #' @param model The estimated model
-#' @param marginals The scenario to use
+#' @param scenario The scenario to use
 #' @param mode_flows Flows by mode and time of day, output of mode_choice function
 #' @param period Time period to assign, can be "AM Peak", "Midday", "PM Peak", or "Overnight".
 #'
 #' @export
-network_assignment = function(model, marginals, network, mode_flows, period) {
+network_assignment = function(model, scenario, network, mode_flows, period) {
   hourly_flows = mode_flows %>%
     apply_direction_factors(model$direction_factors) %>%
     filter(time_period == period) %>%
@@ -142,9 +164,9 @@ network_assignment = function(model, marginals, network, mode_flows, period) {
     left_join(filter(model$occupancy_factors, time_period == period), by = "trip_type") %>%
     mutate(Car = Car / average_occupancy)
 
-  marginals = link_tracts(network$network, marginals)
+  scenario = link_tracts(network$network, scenario)
 
-  return(frank_wolfe(hourly_flows, marginals, network$network))
+  return(frank_wolfe(hourly_flows, scenario, network$network))
 }
 
 #' Calculates VMT based on flows.
@@ -153,6 +175,7 @@ network_assignment = function(model, marginals, network, mode_flows, period) {
 #' you would have to do this for each period to get total daily VMT.
 #'
 #' @param model The estimated model object
+#' @param network The network to use (should be the same one used in [network_assignment()]
 #' @param link_flows Estimated link flows from the network assignment function
 #'
 #' @export

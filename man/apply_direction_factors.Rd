@@ -9,3 +9,4 @@ apply_direction_factors(matrix, direction_factors)
 \description{
 This applies direction factors to an origin-destination matrix
 }
+\keyword{internal}

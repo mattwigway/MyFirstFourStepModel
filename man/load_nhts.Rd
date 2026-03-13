@@ -6,6 +6,9 @@
 \usage{
 load_nhts(base_path)
 }
+\arguments{
+\item{base_path}{path to folder containing 2017 NHTS CSV files}
+}
 \description{
 Load 2017 NHTS data, handling types appropriately
 }

@@ -39,6 +39,10 @@ read_network = function(archive, name) {
 
 
 #' Save a model
+#'
+#' @param model model to save
+#' @param filename file to save to (canonical extension .mf4sm)
+#'
 #' @export
 save_model = function(model, filename) {
   invisible(capture.output({
@@ -71,6 +75,9 @@ save_model = function(model, filename) {
 }
 
 #' Load a model
+#'
+#' @param filename File name or URL to load model from
+#'
 #' @export
 load_model = function(filename) {
   capture.output(suppressWarnings({
@@ -78,7 +85,12 @@ load_model = function(filename) {
     inp = abort_on_error(ArchiveReader$new(filename))
     res = list()
 
-    res$seed_matrix = read_csv(abort_on_error(inp$get_entry_as_string("seed_matrix.csv")), show_col_types = FALSE)
+    res$seed_matrix = read_csv(
+      abort_on_error(inp$get_entry_as_string("seed_matrix.csv")),
+      # read income as string to avoid scientific notation nonsense
+      col_types = cols(income = col_character()),
+      show_col_types = FALSE
+    )
     res$distribution_betas = fromJSON(abort_on_error(inp$get_entry_as_string("distribution_betas.json")))
     res$direction_factors = read_csv(
       abort_on_error(inp$get_entry_as_string("direction_factors.csv")),

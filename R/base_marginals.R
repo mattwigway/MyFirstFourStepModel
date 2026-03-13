@@ -1,4 +1,5 @@
 #' Aggregate LODES data to tracts
+#' @keywords internal
 aggregate_lodes_to_tracts = function(lodes) {
   lodes %>%
     mutate(
@@ -11,7 +12,7 @@ aggregate_lodes_to_tracts = function(lodes) {
 }
 
 #' This gets baseline marginals for a region, from the 5-year ACS
-#' @export
+#' @keywords internal
 get_base_marginals = function(state, county = NULL, year = NULL) {
   vehicles = tidycensus::get_acs(
     geography = "tract",
@@ -38,7 +39,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
       tenure = stringr::str_split_i(variable, "_", 2),
-      value = pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE),
+      value = as.character(pmin(as.integer(stringr::str_split_i(variable, "_", 3)), VEHICLES_TOPCODE)),
     ) %>%
     group_by(GEOID, marginal, value) %>%
     summarize(count = sum(estimate), moe = sqrt(sum(moe^2))) %>%
@@ -64,7 +65,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID", count = estimate) %>%
     left_join(total_hh, by = "geoid") %>%
@@ -88,7 +89,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID", count = "estimate") %>%
     left_join(total_hh, by = "geoid") %>%
@@ -118,7 +119,7 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
   ) %>%
     mutate(
       marginal = stringr::str_split_i(variable, "_", 1),
-      value = as.integer(stringr::str_split_i(variable, "_", 2))
+      value = stringr::str_split_i(variable, "_", 2)
     ) %>%
     rename(geoid = "GEOID") %>%
     group_by(geoid, marginal, value) %>%
@@ -181,19 +182,26 @@ get_base_marginals = function(state, county = NULL, year = NULL) {
 }
 
 #' Save a land use scenario in Excel format
+#'
+#' @param scenario scenario to save (often `model$scenarios$baseline`)
+#' @param filename file to save in
+#'
 #' @export
-save_landuse_scenario = function(marginals, filename) {
+save_landuse_scenario = function(scenario, filename) {
   write_xlsx(
     list(
-      Residences = marginals$marginals,
-      Jobs = marginals$jobs,
-      `Tract Areas` = marginals$areas
+      Residences = scenario$marginals,
+      Jobs = scenario$jobs,
+      `Tract Areas` = scenario$areas
     ),
     filename
   )
 }
 
 #' Load a land use scenario in Excel format
+#'
+#' @param filename file to read from
+#'
 #' @export
 load_landuse_scenario = function(filename) {
   return(list(

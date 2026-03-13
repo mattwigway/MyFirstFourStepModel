@@ -2,10 +2,17 @@
 % Please edit documentation in R/mapping.R
 \name{map_congestion}
 \alias{map_congestion}
-\title{Given a model,}
+\title{Produce a congestion map}
 \usage{
 map_congestion(model, network, flows)
 }
+\arguments{
+\item{model}{the model in use}
+
+\item{network}{the network scenario in use (e.g. model$networks$baseline)}
+
+\item{flow}{output of \code{\link[=network_assignment]{network_assignment()}}}
+}
 \description{
-Given a model,
+Produce a congestion map
 }

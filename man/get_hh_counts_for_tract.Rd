@@ -9,3 +9,4 @@ get_hh_counts_for_tract(grp, id, seed)
 \description{
 This generates the number of households in each category for a specific geographic area (e.g. tract).
 }
+\keyword{internal}

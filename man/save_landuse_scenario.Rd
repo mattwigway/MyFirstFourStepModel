@@ -4,7 +4,12 @@
 \alias{save_landuse_scenario}
 \title{Save a land use scenario in Excel format}
 \usage{
-save_landuse_scenario(marginals, filename)
+save_landuse_scenario(scenario, filename)
+}
+\arguments{
+\item{scenario}{scenario to save (often \code{model$scenarios$baseline})}
+
+\item{filename}{file to save in}
 }
 \description{
 Save a land use scenario in Excel format

@@ -6,6 +6,9 @@
 \usage{
 load_landuse_scenario(filename)
 }
+\arguments{
+\item{filename}{file to read from}
+}
 \description{
 Load a land use scenario in Excel format
 }

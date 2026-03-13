@@ -6,6 +6,9 @@
 \usage{
 load_model(filename)
 }
+\arguments{
+\item{filename}{File name or URL to load model from}
+}
 \description{
 Load a model
 }

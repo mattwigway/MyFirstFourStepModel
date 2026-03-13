@@ -6,6 +6,11 @@
 \usage{
 save_model(model, filename)
 }
+\arguments{
+\item{model}{model to save}
+
+\item{filename}{file to save to (canonical extension .mf4sm)}
+}
 \description{
 Save a model
 }

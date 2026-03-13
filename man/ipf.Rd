@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipf.R
 \name{ipf}
 \alias{ipf}
-\title{We implement IPF on our own in base R, because it's too slow in ipfr/tidyverse}
+\title{We implement IPF on our own in base R and Rust.}
 \usage{
 ipf(seed, marginals)
 }
@@ -17,5 +17,6 @@ a column \code{value} indicating what value of the marginal this is (should matc
 and a column \code{count} indicating the target households in this marginal/value combination.}
 }
 \description{
-We implement IPF on our own in base R, because it's too slow in ipfr/tidyverse
+We implement IPF on our own in base R and Rust.
 }
+\keyword{internal}

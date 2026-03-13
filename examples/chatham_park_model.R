@@ -35,7 +35,7 @@ model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 # - vehicles: number of vehicles
 # - hhsize: household size (number of people)
 # - income: income in bins 0-35000 (left out), 35000-75000 (factor(income) 35000), 75000-10000 (factor(income) 75000),
-#.     and over 100000 (factor(income) 100000)
+#      and over 100000 (factor(income) 100000)
 summary(model$production_functions$`AM Peak`$HBW)
 
 # Next, we run the actual trip generation step
@@ -81,7 +81,7 @@ get_mode_shares(flows_by_mode)
 
 # Lastly, we can assign all PM peak trips to the network.
 # Every so often it will print a status update, something like
-# Iteration 1 relative gap: 0.40825352014596
+# Iteration 1 relative gap: 0.4347
 # When that number falls below 0.01, the algorithm will finish.
 # This may a few minutes, depending on the speed of your computer.
 link_flows = network_assignment(

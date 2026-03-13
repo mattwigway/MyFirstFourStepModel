@@ -30,14 +30,14 @@ add_households = function(scenario, tract, hhs) {
   new_tract_marginals = hhs %>%
     # topcode and bin to match model marginals
     mutate(
-      hhsize = pmin(hhsize, HHSIZE_TOPCODE),
-      vehicles = pmin(vehicles, VEHICLES_TOPCODE),
-      workers = pmin(workers, WORKER_TOPCODE),
+      hhsize = as.character(pmin(hhsize, HHSIZE_TOPCODE)),
+      vehicles = as.character(pmin(vehicles, VEHICLES_TOPCODE)),
+      workers = as.character(pmin(workers, WORKER_TOPCODE)),
       income = case_when(
-        income < 35000 ~ 0,
-        income < 75000 ~ 35000,
-        income < 100000 ~ 75000,
-        income >= 100000 ~ 100000,
+        income < 35000 ~ "0",
+        income < 75000 ~ "35000",
+        income < 100000 ~ "75000",
+        income >= 100000 ~ "100000",
         .default = NA
       )
     ) %>%

@@ -12,6 +12,8 @@ use ndarray::ArrayView2;
 /// @param target_values The value of this marginal (e.g. for income, might be 2 to represent $25-50,000)
 /// @param target_counts The number of households expected with this value.
 /// @param convergence The largest error in absolute terms that can be tolerated, e.g. 0.01 -> errors of no more than 0.02 hhs on any marginal.
+///
+/// @keywords internal
 #[extendr]
 fn do_ipf(orig_counts: &[f64], marginal_values: ArrayView2<i32>, target_marginals: &[i32], target_values: &[i32], target_counts: &[f64], convergence: f64) -> Result<Vec<f64>> {
     if orig_counts.len() != marginal_values.dim().0 {

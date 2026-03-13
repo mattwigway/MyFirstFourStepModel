@@ -9,3 +9,4 @@ calculate_occupancy_factors(nhts)
 \description{
 This calculates vehicle occupancy factors by trip type and time period
 }
+\keyword{internal}

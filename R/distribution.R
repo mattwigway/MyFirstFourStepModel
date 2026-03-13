@@ -1,6 +1,7 @@
 #' We use a singly-constrained (at origin) gravity model. For simplicity, we use straight-line
 #' (great circle) distance between points.
 #' This function estimates that distance matrix.
+#' @keywords internal
 get_distance_matrix = function(marginals) {
   locs = sf::st_as_sf(marginals$areas, coords = c("lon", "lat"), crs = 4269)
   dists = sf::st_distance(locs, locs) %>% as_tibble()
@@ -30,6 +31,7 @@ get_distance_matrix = function(marginals) {
 
 #' Estimates the median crow-flies distance from the NHTS in kilometers, by dividing the horse-flies distance
 #' by 1.3. This is based on the paper https://arxiv.org/abs/2406.06490
+#' @keywords internal
 estimate_median_crow_flies_distance = function(nhts) {
   meddist = nhts$trips %>%
     mutate(
@@ -55,6 +57,7 @@ estimate_median_crow_flies_distance = function(nhts) {
 
 #' Perform the singly-constrained gravity model to get zone-to-zone flows based on balanced
 #' trip tables and estimated betas from above.
+#' @keywords internal
 get_flows = function(balanced, marginals, betas) {
   dmat = get_distance_matrix(marginals)
   purrr::map(unique(balanced$productions$trip_type), function(tt) {

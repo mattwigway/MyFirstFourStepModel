@@ -1,0 +1,272 @@
+---
+title: "Learning module"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Learning module}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: bibliography.bib
+---
+
+## Introduction
+
+```{r, include = FALSE}
+# fmt: skip file
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+My First Four-Step Model is a software package that allows students with minimal experience and consumer-grade computer hardware to run a simple four-step travel demand model. Specifically, it is designed to address these student learning outcomes:
+
+1. Have a basic understanding of the structure and mathematics of travel demand model,
+1. Understand the types of scenarios travel demand models are appropriate for,
+1. Understand the limitations and uncertainty of travel demand modeling, and
+1. Be able to have constructive conversations with travel modelers.
+
+It is implemented as an R package [@r_2026], which has several advantages. R is a free, open-source, and cross-platform statistical programming language, allowing students to run it on their own computers regardless of configuration. Furthermore, R is becoming the _lingua franca_ of quantitative urban planning. Using the My First Four-Step Model package in an assignment gives students a gentle introduction to the language and potentially piques their interest in learning more. The package has several key design goals:
+
+1. The four steps of the model map directly onto four functions in the package;
+1. Any place where there is a tradeoff between simplicity and predictive accuracy, simplicity is chosen;
+1. It can be estimated for any location in the United States using only publicly-available data;
+1. There are intuitive tools to visualize model inputs, outputs, and parameters, so students can interpret and understand the model;
+1. Preparing land-use and transportation scenarios is simple;
+1. It runs on any computer a student is likely to have (including Windows, Macs, and Chromebooks); and
+1. It depends only on R itself and common R packages that are easily installed from the Comprehensive R Archive Network (CRAN).
+
+To meet these goals, the model is highly simplified, and this certainly affects its predictive accuracy, but predictive accuracy is not one of the goals. Epstein [-@epstein_why_2008] lists 16 reasons to build models other than prediction. One of them, train practitioners, is the primary goal of this model. This goal does not depend on high predictive accuracy. Computer games and simulations have a [long history as educational tools](prior_work.html)
+
+I use the package in my Planning Methods course in the [Department of City and Regional Planning at the University of North Carolina at Chapel Hill](https://planning.unc.edu). This is an introductory master's level course which all planning students (not only those in transportation) take, generally during their first semester. In the course, I spend a week discussing transportation planning and engineering. I give a single hour-and-fifteen-minute lecture on transportation modeling, covering primarily the four-step model, but with a nod to activity-based models. We discuss the general structure of the model. We cover some basic mathematical underpinnings of discrete-choice models. We discuss travel surveys and how they are used in model development.
+
+I then have an assignment where all students run and interpret the output of a four-step model. Specifically, students first run a baseline model. They then change land use inputs to reflect Chatham Park, a large proposed housing development in Pittsboro, NC. Pittsboro is a town that is quickly becoming an exurb of the Research Triangle. For each step of the model, I have 1–2 homework questions. These questions cover interpretation the coefficients of the constituent models, and what the outputs indicate about the transportation system and differences between scenarios. The model is estimated for the Research Triangle region because that is where my university is located, so it is a region my students are familiar with. Estimation for other regions [is straightforward](estimation.html).
+
+There is also an extra credit section worth two points where students run their scenario again with a network where US 15-501, the main highway between Pittsboro and Chapel Hill, is widened from two to three lanes. I have them interpret how congestion changes in this scenario. Modeled results of widening projects are often overstated due to induced demand, the phenomenon where building more roadway capacity induces more people to take trips on that road. Like many four-step models, My First Four-Step Model does not account for induced demand. I have students discuss how this biases the results.
+
+I provide the students with an R file to run the model, [which is available here](https://github.com/mattwigway/MyFirstFourStepModel/examples/chatham_park_model.R); most of the code in this file is also included inline in this document. The full homework assignment is [available here](homework_assignment.html).
+
+Students do well on this assignment. In Spring 2025, the mean score was 5.96 (n=42, s.d.=1.51, median=5.5, 25th percentile=5, 75th percentile=7.45). 20 students (48%) attempted the two-point extra credit section looking at highway widening. Unfortunately, this class did not cover travel demand modeling prior to the introduction of My First Four-Step Model, so it is not possible to evaluate how the tool has changed learning outcomes.^[This use of student grade data was reviewed and approved by the University of North Carolina at Chapel Hill Registrar and Institutional Review Board (approval 24-2069). The requirement for consent was waived due to the aggregate nature of the data.]
+
+The goal is to enable students in all specializations, not just transportation, to understand basic demand model structure and have productive conversations with modelers. For students who want to work more closely with models in their careers, our program also teaches a semester-long travel demand modeling course using a more complex model developed in TransCAD. Most transportation specialization students take this course later in their program.
+
+### Installation
+
+All students already have R and RStudio installed on their machines from a previous exercise on linear regression. Installing My First Four-Step Model is simple; students run the following R code in the console to install the package:
+
+```{r, eval=FALSE}
+install.packages("MyFirstFourStepModel",
+  repos = c("https://mattwigway.r-universe.dev", getOption("repos")))
+```
+
+This installs a pre-compiled R package containing the model. It also automatically installs the R packages `MyFirstFourStepModel` depends on—notably `tidyverse` [@tidyverse], `sf` [@sf], `igraph` [@igraph], `readxl` and `writexl` [@readxl;@writexl], `tidycensus` [@tidycensus], `tigris` [@tigris], and `nnet` [@nnet].
+
+The development version can be installed from Github. There is a small amount of compiled Rust code using `extendr` [@reimert_extendr_2024], which is used to improve performance of the assignment, IPF, and model serialization algorithms, so a Rust development environment is needed. Most users will want to use the compiled version above, which does not require a Rust development environment, but to install from Github you would use the following code:
+
+```{r, eval=FALSE}
+devtools::install_github("mattwigway/MyFirstFourStepModel")
+```
+
+### Loading the package and the model
+
+Next, students load the `MyFirstFourStepModel` package, and an already-estimated model. Most model users will never estimate a model themselves, so I provide an already-estimated model for the Research Triangle region of North Carolina. The model can be read either from a local file or directly from an `https` URL. Reading directly from a URL requires the instructor to have access to a server, but avoids needing to troubleshoot local file paths. The URL included below is a live URL with the model for the Research Triangle, which you are welcome to use in your own teaching.
+
+```{r}
+library(MyFirstFourStepModel)
+model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
+```
+
+
+### Trip generation
+
+The first step of the four-step process is trip generation. Trip generation is done at the household level using linear regression. I use linear regression rather than traditional cross-classification or more complex regression methods because of its ease of interpretation, and because I teach demand modeling shortly after teaching linear regression. Before running the trip generation model, I have students view the trip generation model for AM Peak home-based work trips, using the code below, and interpret the coefficients.
+
+```{r}
+summary(model$production_functions$`AM Peak`$HBW)
+```
+
+I similarly have them interpret one of the regressions for attraction functions:
+
+```{r}
+summary(model$attraction_functions$`AM Peak`$HBW)
+```
+
+Once students have interpreted the regressions, I have them run the trip generation step. True to the design goals, this requires only a single function.
+
+```{r}
+productions_attractions = trip_generation(model, model$scenarios$baseline)
+```
+
+Students can then map the number of trips produced in each Census tract in the region using the `map_trip_generation` function as shown below.
+
+```{r, fig.alt="AM Peak home-based work trip productions and attractions. Productions are spread across the region, with somewhat higher density in urban areas."}
+map_trip_generation(
+  model,
+  productions_attractions,
+  "Productions",
+  "AM Peak",
+  "HBW"
+)
+```
+
+I likewise have them map the trips attracted:
+
+```{r, fig.alt="AM Peak home-based work trip attractions. Unlike productions, attractions are concentrated in downtown areas."}
+map_trip_generation(
+  model,
+  productions_attractions,
+  "Attractions",
+  "AM Peak",
+  "HBW"
+)
+```
+
+### Trip distribution
+
+Trip distribution uses a simple gravity model, with different parameters estimated for home-based work, home-based other, and non-home-based trips. I first have students print the parameters using the code below, and interpret them.
+
+```{r}
+model$distribution_betas
+```
+
+Then, they can run the trip distribution step with the following code:
+
+```{r}
+flows = trip_distribution(
+  model,
+  model$scenarios$baseline,
+  productions_attractions
+)
+```
+
+Students can then map the trip distribution results for any origin Census tracts, and interpret them. The code below shows the results for AM Peak home-based work trips originating from a tract in suburban Durham; results show that many trips stay local, but there are also pockets of activity in further-flung large employment centers (e.g., Raleigh).
+
+```{r, fig.alt="AM Peak trip distribution from a census tract in suburban Durham, NC; most trips go to nearby destinations, but some go to further-flung large employment centers near Raleigh"}
+map_trip_distribution(
+  model,
+  flows,
+  "AM Peak",
+  "HBW",
+  origin_tract = "37063002025"
+)
+
+```
+
+### Mode choice
+
+The mode choice model is a multinomial logit model with four modes: walk, bike, transit, and drive. Since the model is estimated from public data, there are minimal attributes of each individual trip available, so the model is very simple and primarily based on Euclidean distance between the origin and destination. I give a very basic expanation of the multinomial logit model, highlighting  commonalities with linear regression, and have students print the mode choice model using the code below, and interpret a few coefficients :
+
+```{r}
+summary(model$mode_choice_models$HB)
+```
+
+I then have students run the mode choice step and calculate mode shares, using the code below:
+
+```{r}
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
+get_mode_shares(flows_by_mode)
+```
+
+
+### Network assignment
+
+The final step of the model is network assignment. A simple Frank-Wolfe static traffic assignment algorithm is used to assign trips to the network. Since network assignment is time consuming, a relatively simple network is used. The network used in the Research Triangle example model has 7529 nodes and 10497 edges. The code below performs assignment for the PM Peak. To maximize network assignment performance, a small amount of code written in the Rust language [@klabnickRustProgrammingLanguage2025] is used to efficiently process routing results; this code is pre-compiled and will be installed automatically when `MyFirstFourStepModel` is installed.
+
+```{r}
+pm_network_flows = network_assignment(
+  model,
+  model$scenarios$baseline,
+  model$networks$baseline,
+  flows_by_mode,
+  "PM Peak"
+)
+```
+
+```{r, fig.alt="Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere."}
+map_congestion(model, model$networks$baseline, pm_network_flows)
+```
+
+Agencies are increasingly interested in vehicle miles traveled. The assignment step can also estimate VMT by period using the code below. For the PM Peak in the Research Triangle, this is estimated to be 7 million miles/day. The 2017 Local Area Transportation Characteristics for Households (LATCH) statistics estimate total VMT in the Triangle region to be 26 million miles/day [author calculations from @bureauoftransportationstatistics_2017_2024], so 7 million in the PM Peak is reasonable.
+
+```{r}
+estimate_vmt(model, model$networks$baseline, pm_network_flows, "PM Peak")
+```
+
+### Land use scenarios
+
+Travel demand models are primarily used to evaluate scenarios. After running the baseline model, I have students run the model again with a land use scenario that is included in the model they loaded. This land use scenario models the real-world [Chatham Park development](https://chathampark.com/), which will eventually add 22,000 new homes to Pittsboro, NC and the surrounding region. This increases the population of this area several times over. This is done by simply replacing `model$scenarios$baseline` with `model$scenarios$chatham_park`. I then have students again map congestion and compare to baseline conditions.
+
+```{r, fig.alt="Map of forecast PM Peak congestion with many more homes added to Chatham Park. US 15-501 from Pittsboro to Chapel Hill now shows heavy congestion."}
+cp_productions_attractions = trip_generation(
+  model,
+  model$scenarios$chatham_park
+)
+
+cp_flows = trip_distribution(
+  model,
+  model$scenarios$chatham_park,
+  cp_productions_attractions
+)
+
+cp_flows_by_mode = mode_choice(
+  model,
+  model$scenarios$chatham_park,
+  cp_flows
+)
+
+# This step may again take a few minutes
+cp_link_flows = network_assignment(
+  model,
+  model$scenarios$chatham_park,
+  model$networks$baseline,
+  cp_flows_by_mode,
+  "PM Peak"
+)
+
+# This maps the congestion under the scenario, and also labels the location of Chatham Park
+map_congestion(model, model$networks$baseline, cp_link_flows) +
+  ggplot2::annotate("text", -8809915, 4267605, label = "Chatham Park")
+```
+
+Given the brief treatment of modeling overall, I don't have students create their own scenarios; I pre-create the Chatham Park scenario and distribute it with the model. In more advanced classes, it may be appropriate to have students create their own scenarios. Details of how to create scenarios is in the [scenarios vignette](scenarios.html).
+
+### Network scenarios
+
+The other type of scenario frequently evaluated with travel demand models is changes to the transportation network. In the extra credit section, I have students re-run the model with a scenario that widens and converts to a freeway US 15-501, the main highway connecting Chatham Park to Chapel Hill, the location of the University of North Carolina. I also provide this network scenario with the model; instructions for creating your own network scenarios are in the [scenarios vignette](scenarios.html). I have students run the code below to run the model with both the land-use scenario and the widened highway:
+
+```{r, fig.alt="Map of forecast PM Peak congestion with many more homes added to Chatham Park, and with US 15-501 widened and converted to a freeway. US 15-501 from Pittsboro to Chapel Hill now shows no congestion."}
+widen_productions_attractions = trip_generation(
+  model,
+  model$scenarios$chatham_park
+)
+
+widen_flows = trip_distribution(
+  model,
+  model$scenarios$chatham_park,
+  widen_productions_attractions
+)
+
+widen_flows_by_mode = mode_choice(
+  model,
+  model$scenarios$chatham_park,
+  widen_flows
+)
+
+widen_link_flows = network_assignment(
+  model,
+  model$scenarios$chatham_park,
+  model$networks$widen_15_501,
+  widen_flows_by_mode,
+  "PM Peak"
+)
+
+# This maps the congestion under the scenario (Extra credit)
+map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
+  ggplot2::annotate("text", -8809915, 4267605, label = "Chatham Park")
+
+```
+
+I then have them interpret how congestion has changed, and what assumptions are being made about induced demand. Insufficient accounting for induced demand—the phenomenon of roadway expansion leading to additional demand [@downs_still_2004]—is a common criticism of four-step models. This is a particular concern among planning students. My First Four-Step Model is worse even than most production travel models; it does not account for induced demand at all. While most models would use estimates of network travel time and travel cost in the distribution and mode choice, and thus be at least somewhat sensitive to changes in the network, My First Four-Step Model relies entirely on crow-flies distances.
+
+<a href="https://projects.indicatrix.org/MyFirstFourStepModel">This work</a> © 2026 by <a href="https://indicatrix.org">Matt Bhagat-Conway</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+
+## References

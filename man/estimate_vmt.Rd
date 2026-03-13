@@ -9,6 +9,8 @@ estimate_vmt(model, network, link_flows, period)
 \arguments{
 \item{model}{The estimated model object}
 
+\item{network}{The network to use (should be the same one used in \code{\link[=network_assignment]{network_assignment()}}}
+
 \item{link_flows}{Estimated link flows from the network assignment function}
 }
 \description{

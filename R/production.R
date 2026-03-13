@@ -11,6 +11,7 @@ WORK_PURPOSES = c(3, 4)
 #' HBW - Home based work
 #' HBO - Home based other
 #' NHB - Non-home-based
+#' @keywords internal
 get_trip_type <- function(whyfrom, whyto) {
   case_when(
     whyfrom %in% HOME_PURPOSES & whyto %in% WORK_PURPOSES ~ "HBW",
@@ -25,6 +26,7 @@ get_trip_type <- function(whyfrom, whyto) {
 }
 
 #' Get the trip counts in each category and time period for each household
+#' @keywords internal
 get_nhts_trip_counts <- function(trips) {
   trips %>%
     mutate(
@@ -45,6 +47,7 @@ get_nhts_trip_counts <- function(trips) {
 #'
 #' Note that everything is ultimately joined to the households table; if you wish to filter households, you
 #' can filter that table and not any of the others.
+#' @keywords internal
 estimate_production_functions <- function(nhts) {
   # calculate trip counts by purpose and time of day
   hh_trip_counts = get_nhts_trip_counts(nhts$trips)
@@ -61,7 +64,7 @@ estimate_production_functions <- function(nhts) {
           vehicles = pmin(HHVEHCNT, VEHICLES_TOPCODE),
           workers = pmin(WRKCOUNT, WORKER_TOPCODE),
           hhsize = pmin(HHSIZE, HHSIZE_TOPCODE),
-          income = format(income, scientific = F)
+          income = str_trim(format(income, scientific = F))
         )
 
       if (all(regdata$trip_count == 0)) {
@@ -83,6 +86,7 @@ estimate_production_functions <- function(nhts) {
 # US, only that the relationships between the marginals are constant across the US.
 
 #' This generates the number of households in each category for a specific geographic area (e.g. tract).
+#' @keywords internal
 get_hh_counts_for_tract = function(grp, id, seed) {
   # marginals = grp %>%
   #     select(marginal, value, count) %>%
@@ -115,6 +119,7 @@ get_hh_counts_for_tract = function(grp, id, seed) {
 #' where geoid is a tract ID, marginal is the name of one of the marginals (above),
 #' value is the value for that marginal (e.g. vehicles = 2 for two-vehicle households),
 #' and count is the expected count in that category
+#' @keywords internal
 get_hh_counts = function(marginals, seed) {
   marginals$marginals %>%
     group_by(geoid) %>%
@@ -148,6 +153,7 @@ prepare_regression_data = function(marginals, seed) {
 #' trip regressions. It expects marginals in the format described in the docs for
 #' get_hh_counts, and areas with a geoid and area_sqmi column with the area of each
 #' geographic unit
+#' @keywords internal
 get_production_counts = function(marginals, generation_functions, seed) {
   hh_counts = prepare_regression_data(marginals, seed)
 

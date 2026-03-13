@@ -4,6 +4,7 @@ NHTS_CAR_MODES = c(3, 4, 5, 6, 18)
 #' This is much simplified from the traditional mode choice models used in demand modeling,
 #' because we don't have attributes of the alternatives (or enough information to create them).
 #' So we just use demographics and mode-invariant trip characteristics to estimate mode choice.
+#' @keywords internal
 estimate_mode_choice_model = function(nhts) {
   # we have four mode-choice alternatives: car, transit, walk, bike
   trips_hb = nhts$trips %>%
@@ -63,6 +64,7 @@ estimate_mode_choice_model = function(nhts) {
 }
 
 #' Estimate numbers of trips by purpose and mode
+#' @keywords internal
 flow_by_mode = function(odmat, marginals, mode_choice_models) {
   # density at the home end of home-based trips
   densities = get_densities(marginals)
@@ -84,7 +86,7 @@ flow_by_mode = function(odmat, marginals, mode_choice_models) {
   return(bind_rows(hb_data, nhb_data))
 }
 
-#' This function uses the output of [flow_by_mode()] to calculate mode shares, returning a data frame with
+#' This function uses the output of [mode_choice()] to calculate mode shares, returning a data frame with
 #' rows for car, bike, walk, and transit.
 #'
 #' @export

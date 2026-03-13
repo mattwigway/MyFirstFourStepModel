@@ -1,0 +1,46 @@
+---
+title: "Estimation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: bibliography.bib
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Estimating a new model requires only a few lines of code, however it does require the 2017 National Household Travel Survey [NHTS, @NHTS_2017] and an OpenStreetMap PBF file for the region modeled.^[OpenStreetMap PBF files for any region are easily obtained from <https://slice.openstreetmap.us>] The code to estimate a model for the Research Triangle region is below. First, it loads the relevant libraries, and then the NHTS (`NHTS_PATH` should be replaced with a directory containing the NHTS CSV files). I filter the NHTS to only North Carolina households with a weekday travel day ($n=7,146$). The final line estimates the model. It requires the (possibly filtered) NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below but should be replaced with the actual path), the state and a vector of counties to define the region under study, and a year. Currently 2021 is most recent year available, as this is based on American Community Survey and Longitudinal Employer-Household Dynamics data availability.
+
+Parsing the OpenStreetMap data uses Julia [@bezanson_julia_2017] for performance, which can be installed if it is not already by running `JuliaCall::install_julia()` from within R. Julia is only required for estimation; students do not need to install Julia.
+
+```{r, eval=FALSE}
+library(MyFirstFourStepModel)
+library(tidyverse)
+
+# Load NHTS and filter to North Carolina weekday data
+nhts = load_nhts(NHTS_PATH)
+nhts$households = filter(
+  nhts$households,
+  HHSTATE == "NC" & TRAVDAY %in% c(2, 3, 4, 5, 6)
+)
+
+# Estimate the model using 2023 Census/LODES data for the Triangle
+model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake", "Chatham"), 2023)
+```
+
+Lastly, the model can be saved to a file for distribution to students. 
+```{r, eval=FALSE}
+save_model(model, "chatham_park.mf4sm")
+```
+
+This can be loaded by the `load_model` function described above, either from a file or a URL. If any [land-use or network scenarios](scenarios.html) are created or loaded prior to saving the model, they will be included in the saved file.
+
+<a href="https://projects.indicatrix.org/MyFirstFourStepModel">This work</a> © 2026 by <a href="https://indicatrix.org">Matt Bhagat-Conway</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a><img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+
+## References

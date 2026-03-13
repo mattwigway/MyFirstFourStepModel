@@ -32,3 +32,4 @@ household has for each marginal.}
 Internal IPF code, similar to what was previously done in R. For efficiency, marginal names and values
 are converted to integers before calling.
 }
+\keyword{internal}

@@ -13,7 +13,7 @@ NULL
 #' This function takes the output from igraph and updates the flows using it. Doing this in R requires too many levels
 #' of indirection and is really slow, so we hand this little piece off to Rust (though this does require a complation step
 #' so may ultimately not be worth it).
-#' @export
+#' @keywords internal
 update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, origin) .Call(wrap__update_flows, edge_flows, flows_to_node, predecessor, incoming_edge, origin)
 
 #' Internal IPF code, similar to what was previously done in R. For efficiency, marginal names and values
@@ -26,6 +26,8 @@ update_flows <- function(edge_flows, flows_to_node, predecessor, incoming_edge, 
 #' @param target_values The value of this marginal (e.g. for income, might be 2 to represent $25-50,000)
 #' @param target_counts The number of households expected with this value.
 #' @param convergence The largest error in absolute terms that can be tolerated, e.g. 0.01 -> errors of no more than 0.02 hhs on any marginal.
+#'
+#' @keywords internal
 do_ipf <- function(orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence) .Call(wrap__do_ipf, orig_counts, marginal_values, target_marginals, target_values, target_counts, convergence)
 
 ArchiveReader <- new.env(parent = emptyenv())

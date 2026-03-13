@@ -19,3 +19,4 @@ A list with members $network (igraph network) and $network_geo (sf DataFrame wit
 \description{
 Build the OSM network (using Julia)
 }
+\keyword{internal}
