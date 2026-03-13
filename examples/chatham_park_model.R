@@ -81,7 +81,7 @@ get_mode_shares(flows_by_mode)
 
 # Lastly, we can assign all PM peak trips to the network.
 # Every so often it will print a status update, something like
-# Iteration 1 relative gap: 0.40825352014596
+# Iteration 1 relative gap: 0.4347
 # When that number falls below 0.01, the algorithm will finish.
 # This may a few minutes, depending on the speed of your computer.
 link_flows = network_assignment(
