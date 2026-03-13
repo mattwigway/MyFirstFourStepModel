@@ -54,6 +54,6 @@ It is implemented as an R package [@r_2026], which has several advantages. R is 
 
 To meet these goals, the model is highly simplified, and this certainly affects its predictive accuracy, but predictive accuracy is not one of the goals. Epstein [-@epstein_why_2008] lists 16 reasons to build models other than prediction. One of them, train practitioners, is the primary goal of this model. This goal does not depend on high predictive accuracy. My First Four Step Model will never be appropriate for production travel demand modeling. It is also not appropriate as a sole teaching tool for students who will ultimately become modelers. However, it is useful as a first exercise even in courses that focus only on demand modeling, where students can have a chance to work with a simple model before diving into the more complex theories and software that are necessary for a detailed education in this area.
 
-The open-source package is available on Github at <https://github.com/mattwigway/MyFirstFourStepModel>, with documentation (including the learning module and example assignments) at <https://projects.indicatrix.org/MyFirstFourStepModel>
+The open-source package is available on Github at <https://github.com/mattwigway/MyFirstFourStepModel>, with documentation (including the learning module and example assignments) at <https://projects.indicatrix.org/MyFirstFourStepModel>.
 
 # References
