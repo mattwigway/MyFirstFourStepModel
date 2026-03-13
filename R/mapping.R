@@ -20,12 +20,19 @@ map_trip_generation = function(model, trip_counts, end, timeperiod, triptype) {
   counts = counts %>%
     filter(time_period == timeperiod & trip_type == triptype)
 
-  model$tazs_geo %>%
+  map_data = model$tazs_geo %>%
     st_transform(3857) %>%
     left_join(counts, by = c("GEOID" = "geoid")) %>%
-    ggplot(aes(fill = n_trips / ALAND * (1000 * 1000))) +
+    mutate(trips_sqkm = n_trips / ALAND * (1000 * 1000))
+
+  map_data %>%
+    ggplot(aes(fill = trips_sqkm)) +
     geom_sf() +
-    scale_fill_fermenter(palette = "Blues", direction = 1) +
+    scale_fill_binned(
+      palette = "Blues",
+      limits = range(map_data$trips_sqkm),
+      breaks = round(unname(quantile(map_data$trips_sqkm, c(0.2, 0.4, 0.6, 0.8), na.rm = T)))
+    ) +
     labs(fill = "Trips per\nsquare kilometer") +
     ggtitle(paste0(triptype, " ", str_to_lower(end), ", ", timeperiod)) +
     geom_sf(data = model$networks$baseline$network_geo, fill = "black", linewidth = 0.15) +
