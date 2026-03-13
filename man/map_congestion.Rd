@@ -11,7 +11,7 @@ map_congestion(model, network, flows)
 
 \item{network}{the network scenario in use (e.g. model$networks$baseline)}
 
-\item{flow}{output of \code{\link[=network_assignment]{network_assignment()}}}
+\item{flows}{output of \code{\link[=network_assignment]{network_assignment()}}}
 }
 \description{
 Produce a congestion map

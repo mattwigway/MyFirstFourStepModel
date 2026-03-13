@@ -35,6 +35,8 @@
 #' @param state State to estimate model for
 #' @param county County (or vector of counties) to estimate model for
 #' @param year Year of ACS and LODES data to use (if you get 404 errors, you are probably trying to use a year that LODES is not available for)
+#' @param highway_types OSM highway= tags to include in network, default "motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link"
+#' @param installJulia Install Julia for network building if it is not found (default true)
 #'
 #' @export
 estimate = function(
@@ -151,7 +153,8 @@ mode_choice = function(model, scenario, flows) {
 #' before doing assignment to convert period person-trips to hourly vehicle-trips.
 #'
 #' @param model The estimated model
-#' @param scenario The scenario to use
+#' @param scenario The land-use scenario to use
+#' @param network The network scenario to use
 #' @param mode_flows Flows by mode and time of day, output of mode_choice function
 #' @param period Time period to assign, can be "AM Peak", "Midday", "PM Peak", or "Overnight".
 #'
@@ -177,6 +180,7 @@ network_assignment = function(model, scenario, network, mode_flows, period) {
 #' @param model The estimated model object
 #' @param network The network to use (should be the same one used in [network_assignment()]
 #' @param link_flows Estimated link flows from the network assignment function
+#' @param period Time period (AM Peak, Midday, PM Peak, or Overnight)
 #'
 #' @export
 estimate_vmt = function(model, network, link_flows, period) {

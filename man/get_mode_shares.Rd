@@ -2,12 +2,16 @@
 % Please edit documentation in R/modechoice.R
 \name{get_mode_shares}
 \alias{get_mode_shares}
-\title{This function uses the output of \code{\link[=mode_choice]{mode_choice()}} to calculate mode shares, returning a data frame with
-rows for car, bike, walk, and transit.}
+\title{This function uses the output of \code{\link[=mode_choice]{mode_choice()}} to calculate mode shares.}
 \usage{
 get_mode_shares(flows_by_mode)
 }
+\arguments{
+\item{flows_by_mode}{output of \code{\link[=mode_choice]{mode_choice()}}}
+}
+\value{
+a data frame with columns for car, bike, walk, and transit.
+}
 \description{
-This function uses the output of \code{\link[=mode_choice]{mode_choice()}} to calculate mode shares, returning a data frame with
-rows for car, bike, walk, and transit.
+This function uses the output of \code{\link[=mode_choice]{mode_choice()}} to calculate mode shares.
 }

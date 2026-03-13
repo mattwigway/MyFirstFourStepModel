@@ -137,8 +137,9 @@ load_model = function(filename) {
   return(res)
 }
 
-#' Load a model in model format 1
-load_model_v1 = function(filename) {
+#' Load a model in model format 0 (used with pre-2026 releases)
+#' @param filename Filename or URL for model
+load_model_v0 = function(filename) {
   if (str_starts(filename, "https://")) {
     return(readRDS(gzcon(url(filename))))
   } else {

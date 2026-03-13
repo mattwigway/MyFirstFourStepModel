@@ -9,13 +9,13 @@ map_trip_distribution(model, flows, timeperiod, triptype, origin_tract)
 \arguments{
 \item{model}{the model to use}
 
+\item{flows}{\code{\link[=trip_distribuion]{trip_distribuion()}} results}
+
 \item{timeperiod}{Time period to map (AM Peak, Midday, PM Peak, Overnight)}
 
 \item{triptype}{Trip type to map (HBO, HBW, NHB)}
 
 \item{origin_tract}{Tract to map productions of}
-
-\item{trip_count}{\code{\link[=trip_generation]{trip_generation()}} results}
 }
 \description{
 Produces a map showing where trips produced in \code{origin_tract} are attracted.

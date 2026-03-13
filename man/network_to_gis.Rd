@@ -6,6 +6,11 @@
 \usage{
 network_to_gis(network, file)
 }
+\arguments{
+\item{network}{the network to export, e.g. model$networks$baseline}
+
+\item{file}{where to save the file (file type determined by extension).}
+}
 \description{
 Convenience function to export a network scenario to a GIS file
 }

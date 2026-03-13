@@ -12,6 +12,8 @@ estimate_vmt(model, network, link_flows, period)
 \item{network}{The network to use (should be the same one used in \code{\link[=network_assignment]{network_assignment()}}}
 
 \item{link_flows}{Estimated link flows from the network assignment function}
+
+\item{period}{Time period (AM Peak, Midday, PM Peak, or Overnight)}
 }
 \description{
 Note that this is total VMT for the period the flows are for;

@@ -3,7 +3,7 @@
 #' Produces a map showing where trips are produced or attracted.
 #'
 #' @param model the model to use
-#' @param trip_count [trip_generation()] results
+#' @param trip_counts [trip_generation()] results
 #' @param end "productions" or "attractions"
 #' @param timeperiod Time period to map (AM Peak, Midday, PM Peak, Overnight)
 #' @param triptype Trip type to map (HBO, HBW, NHB)
@@ -50,7 +50,7 @@ map_trip_generation = function(model, trip_counts, end, timeperiod, triptype) {
 #' Produces a map showing where trips produced in `origin_tract` are attracted.
 #'
 #' @param model the model to use
-#' @param trip_count [trip_generation()] results
+#' @param flows [trip_distribuion()] results
 #' @param timeperiod Time period to map (AM Peak, Midday, PM Peak, Overnight)
 #' @param triptype Trip type to map (HBO, HBW, NHB)
 #' @param origin_tract Tract to map productions of
@@ -102,7 +102,7 @@ map_trip_distribution = function(model, flows, timeperiod, triptype, origin_trac
 #'
 #' @param model the model in use
 #' @param network the network scenario in use (e.g. model$networks$baseline)
-#' @param flow output of [network_assignment()]
+#' @param flows output of [network_assignment()]
 #'
 #' @export
 map_congestion = function(model, network, flows) {
@@ -190,6 +190,10 @@ label_cities = function(model, buffer = 500) {
 }
 
 #' Convenience function to export a network scenario to a GIS file
+#'
+#' @param network the network to export, e.g. model$networks$baseline
+#' @param file where to save the file (file type determined by extension).
+#'
 #' @export
 network_to_gis = function(network, file) {
   write_sf(network$network_geo, file)

@@ -9,7 +9,9 @@ network_assignment(model, scenario, network, mode_flows, period)
 \arguments{
 \item{model}{The estimated model}
 
-\item{scenario}{The scenario to use}
+\item{scenario}{The land-use scenario to use}
+
+\item{network}{The network scenario to use}
 
 \item{mode_flows}{Flows by mode and time of day, output of mode_choice function}
 

@@ -9,13 +9,13 @@ map_trip_generation(model, trip_counts, end, timeperiod, triptype)
 \arguments{
 \item{model}{the model to use}
 
+\item{trip_counts}{\code{\link[=trip_generation]{trip_generation()}} results}
+
 \item{end}{"productions" or "attractions"}
 
 \item{timeperiod}{Time period to map (AM Peak, Midday, PM Peak, Overnight)}
 
 \item{triptype}{Trip type to map (HBO, HBW, NHB)}
-
-\item{trip_count}{\code{\link[=trip_generation]{trip_generation()}} results}
 }
 \description{
 Produces a map showing where trips are produced or attracted.
