@@ -29,22 +29,22 @@ read_lm = function(archive, name) {
 
 #' @method summary lm_simple
 #' @export
-summary.lm_simple = function(model, ...) {
-  cat(model$summary[[1]])
+summary.lm_simple = function(object, ...) {
+  cat(object$summary[[1]])
 }
 
 #' @method coefficients lm_simple
 #' @export
-coefficients.lm_simple = function(model, ...) {
-  unlist(model$coefficients)
+coefficients.lm_simple = function(object, ...) {
+  unlist(object$coefficients)
 }
 
 #' @method predict lm_simple
 #' @export
-predict.lm_simple = function(model, data, ...) {
+predict.lm_simple = function(object, data, ...) {
   pred = rep(0.0, nrow(data))
 
-  for (name in names(model$coefficients)) {
+  for (name in names(object$coefficients)) {
     if (str_detect(name, "^factor")) {
       var = str_extract(name, "factor\\(([^\\)]+)\\)", 1)
       val = trimws(str_extract(name, "factor\\(.*\\)(.*)", 1))
@@ -63,14 +63,14 @@ predict.lm_simple = function(model, data, ...) {
         warning(paste("Column", var, "has no value", val, "(used in regression)"))
       }
 
-      pred = pred + (col == val) * model$coefficients[[name]]
+      pred = pred + (col == val) * object$coefficients[[name]]
     } else if (name == "(Intercept)") {
-      pred = pred + model$coefficients[[name]]
+      pred = pred + object$coefficients[[name]]
     } else {
       if (!(name %in% names(data))) {
         stop(paste("Column", name, "not found in data"))
       }
-      pred = pred + model$coefficients[[name]] * data[[name]]
+      pred = pred + object$coefficients[[name]] * data[[name]]
     }
   }
 
