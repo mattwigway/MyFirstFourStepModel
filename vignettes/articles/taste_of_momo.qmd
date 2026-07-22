@@ -21,6 +21,8 @@ execute:
     output: true
     cache: true
 fig-dpi: 300
+pkgdown:
+  as_is: true
 ---
 
 ```{r}
