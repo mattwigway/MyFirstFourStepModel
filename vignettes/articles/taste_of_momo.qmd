@@ -87,7 +87,7 @@ library(sf)
 #| include: false
 #| echo: false
 library(MyFirstFourStepModel)
-model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
+model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```
 
 ```{r}
@@ -95,11 +95,14 @@ model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 #| eval: false
 
 # installation steps, only needed first time
-install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages(
+  'MyFirstFourStepModel',
+  repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org')
+)
 
 # model loading
 library(MyFirstFourStepModel)
-model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
+model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```
 
 ## Running the model: trip generation
@@ -113,7 +116,7 @@ model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```{r}
 #| eval: false
 # Run trip generation
-trip_ends <- trip_generation(model, model$scenarios$baseline)
+trip_ends = trip_generation(model, model$scenarios$baseline)
 ```
 
 ## Trip generation results
@@ -122,14 +125,20 @@ trip_ends <- trip_generation(model, model$scenarios$baseline)
 #| echo: false
 #| fig-alt: AM Peak home-based work trip productions and attractions. Productions are spread across the region, whereas attractions are more concentrated.
 # Run trip generation
-trip_ends <- trip_generation(model, model$scenarios$baseline)
+trip_ends = trip_generation(model, model$scenarios$baseline)
 
 # Map results
 grid.arrange(
   map_trip_generation(model, trip_ends, "Productions", "AM Peak", "HBW") +
-    theme(legend.position = "bottom", legend.text = element_text(angle = -45, hjust = 0)),
+    theme(
+      legend.position = "bottom",
+      legend.text = element_text(angle = -45, hjust = 0)
+    ),
   map_trip_generation(model, trip_ends, "Attractions", "AM Peak", "HBW") +
-    theme(legend.position = "bottom", legend.text = element_text(angle = -45, hjust = 0)),
+    theme(
+      legend.position = "bottom",
+      legend.text = element_text(angle = -45, hjust = 0)
+    ),
   nrow = 1,
   ncol = 2
 )
@@ -143,7 +152,7 @@ grid.arrange(
     - maps of trip destinations from a tract of their choice
 
 ```{r}
-flows <- trip_distribution(model, model$scenarios$baseline, trip_ends)
+flows = trip_distribution(model, model$scenarios$baseline, trip_ends)
 ```
 
 ---
@@ -151,7 +160,13 @@ flows <- trip_distribution(model, model$scenarios$baseline, trip_ends)
 ```{r}
 #| echo: false
 #| fig-alt: AM Peak trip distribution from a census tract Carrboro, NC (near the UNC campus); most trips go to nearby destinations, but some go to further-flung large employment centers in Durham, Raleigh, and Research Triangle Park
-map_trip_distribution(model, flows, "AM Peak", "HBW", origin_tract = "37135010705")
+map_trip_distribution(
+  model,
+  flows,
+  "AM Peak",
+  "HBW",
+  origin_tract = "37135010705"
+)
 ```
 
 ## Understanding mode choice
@@ -161,12 +176,12 @@ map_trip_distribution(model, flows, "AM Peak", "HBW", origin_tract = "3713501070
 
 ```{r}
 #| eval: false
-flows_by_mode <- mode_choice(model, model$scenarios$baseline, flows)
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
 ```
 
 ```{r}
 #| echo: false
-flows_by_mode <- mode_choice(model, model$scenarios$baseline, flows)
+flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
 get_mode_shares(flows_by_mode) %>%
   gt() %>%
   fmt_number() %>%
@@ -179,7 +194,7 @@ get_mode_shares(flows_by_mode) %>%
 
 ```{r}
 #| eval: false
-pm_network_flows <- network_assignment(
+pm_network_flows = network_assignment(
   model,
   model$scenarios$baseline,
   model$networks$baseline,
@@ -193,7 +208,7 @@ pm_network_flows <- network_assignment(
 ```{r}
 #| echo: false
 #| output: false
-pm_network_flows <- network_assignment(
+pm_network_flows = network_assignment(
   model,
   model$scenarios$baseline,
   model$networks$baseline,
@@ -216,7 +231,7 @@ map_congestion(model, model$networks$baseline, pm_network_flows)
   - Adding 20,000 households to Pittsboro, a bedroom community west of Raleigh
 
 ```{r}
-model$scenarios$future <- model$scenarios$baseline |>
+model$scenarios$future = model$scenarios$baseline |>
   add_households(
     "37037020801",
     tribble(
@@ -233,10 +248,10 @@ model$scenarios$future <- model$scenarios$baseline |>
 #| echo: false
 #| output: false
 #| include: false
-cp_trips <- trip_generation(model, model$scenarios$future)
-cp_flows <- trip_distribution(model, model$scenarios$future, cp_trips)
-cp_modeflows <- mode_choice(model, model$scenarios$future, cp_flows)
-cp_pm_network_flows <- network_assignment(
+cp_trips = trip_generation(model, model$scenarios$future)
+cp_flows = trip_distribution(model, model$scenarios$future, cp_trips)
+cp_modeflows = mode_choice(model, model$scenarios$future, cp_flows)
+cp_pm_network_flows = network_assignment(
   model,
   model$scenarios$future,
   model$networks$baseline,
@@ -274,7 +289,7 @@ map_congestion(model, model$networks$baseline, pm_network_flows) +
 
 ggsave("base.png", width = 6, height = 6, dpi = 1200)
 
-p2 <- map_congestion(model, model$networks$baseline, cp_pm_network_flows) +
+p2 = map_congestion(model, model$networks$baseline, cp_pm_network_flows) +
   geom_sf(
     data = st_as_sf(
       tribble(
@@ -317,7 +332,7 @@ model$networks$widen = model$networks$baseline |>
 
 ```{r}
 #| include: false
-model$networks$widen <- model$networks$baseline |>
+model$networks$widen = model$networks$baseline |>
   modify_ways(
     # US 15-501 between Pittsboro and Chapel Hill
     c(
@@ -430,7 +445,13 @@ model$networks$widen <- model$networks$baseline |>
 #| output: false
 #| echo: false
 #| include: false
-cpw_pm_network_flows <- network_assignment(model, model$scenarios$future, model$networks$widen, cp_modeflows, "PM Peak")
+cpw_pm_network_flows = network_assignment(
+  model,
+  model$scenarios$future,
+  model$networks$widen,
+  cp_modeflows,
+  "PM Peak"
+)
 ```
 
 ---
