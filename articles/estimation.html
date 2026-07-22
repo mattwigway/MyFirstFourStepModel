@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Estimation • MyFirstFourStepModel</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimation">
 </head>
@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/methods.html">Methods and input data</a></li>
     <li><a class="dropdown-item" href="../articles/prior_work.html">Prior work</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenario creation</a></li>
+    <li><a class="dropdown-item" href="../articles/taste_of_momo.html">My First Four-Step Model</a></li>
   </ul>
 </li>
       </ul>
@@ -95,7 +96,7 @@ estimation; students do not need to install Julia.</p>
 <span></span>
 <span><span class="co"># Load NHTS and filter to North Carolina weekday data</span></span>
 <span><span class="va">nhts</span> <span class="op">=</span> <span class="fu"><a href="../reference/load_nhts.html">load_nhts</a></span><span class="op">(</span><span class="va">NHTS_PATH</span><span class="op">)</span></span>
-<span><span class="va">nhts</span><span class="op">$</span><span class="va">households</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span><span class="va">nhts</span><span class="op">$</span><span class="va">households</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>  <span class="va">nhts</span><span class="op">$</span><span class="va">households</span>,</span>
 <span>  <span class="va">HHSTATE</span> <span class="op">==</span> <span class="st">"NC"</span> <span class="op">&amp;</span> <span class="va">TRAVDAY</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -118,15 +119,15 @@ Bhagat-Conway</a> is licensed under
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-bezanson_julia_2017" class="csl-entry">
 Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B. Shah. 2017.
 <span>“Julia: A Fresh Approach to Numerical Computing.”</span> <em>SIAM
 Review</em> 59 (1): 65–98. <a href="https://doi.org/10.1137/141000671" class="external-link">https://doi.org/10.1137/141000671</a>.
 </div>
 <div id="ref-NHTS_2017" class="csl-entry">
-Federal Highway Administration. 2017. <span>“2017 National Household
-Travel Survey.”</span> <a href="https://nhts.ornl.gov/downloads" class="external-link">https://nhts.ornl.gov/downloads</a>.
+Federal Highway Administration. 2017. <em>2017 National Household Travel
+Survey</em>. <a href="https://nhts.ornl.gov/downloads" class="external-link">https://nhts.ornl.gov/downloads</a>.
 </div>
 </div>
 </div>
@@ -140,7 +141,7 @@ Travel Survey.”</span> <a href="https://nhts.ornl.gov/downloads" class="extern
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

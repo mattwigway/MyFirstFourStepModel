@@ -25,6 +25,7 @@ Before you can run the model, you will need to install the package. To
 do this, run the following R code in RStudio:
 
 ``` r
+
 install.packages('MyFirstFourStepModel',
   repos = c('https://mattwigway.r-universe.dev', 'https://cloud.r-project.org'))
 ```
@@ -52,7 +53,7 @@ You should not need to make any modifications to the code.
     Is this statistically significant? \[0.5 point\]
 2.  Include your map of trip generation. Does the map look like you
     would expect? \[0.5 point\]
-3.  In the trip distribution model, the $\beta$’s are not the same
+3.  In the trip distribution model, the $`\beta`$’s are not the same
     across all trip types. Compare the home-based work and home based
     other betas. Which is smaller? What does this mean? Does this match
     your expectations? \[1 point\]

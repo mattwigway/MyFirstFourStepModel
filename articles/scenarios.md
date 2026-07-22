@@ -29,6 +29,7 @@ represents current conditions from the American Community Survey; other
 scenarios can be built by extending or modifying this baseline.
 
 ``` r
+
 model$scenarios$chatham_park = model$scenarios$baseline |>
   add_households(
     "37037020801",
@@ -72,12 +73,14 @@ income categories must also total 1000 households).
 | 37183053411 | `workers`  |       2 |    1711 |
 | 37183053411 | `workers`  |       3 |     289 |
 
-Specification of a demographic scenario {#tbl-demographic-scenario}
+Specification of a demographic scenario {#tbl-demographic-scenario
+.table}
 
 To create such a scenario, first export the baseline scenario into Excel
 format:
 
 ``` r
+
 save_landuse_scenario(model$scenarios$baseline, "scenario.xlsx")
 ```
 
@@ -89,6 +92,7 @@ dataset](https://lehd.ces.census.gov). Once you are done modifying the
 scenario, you can load it back into R by running:
 
 ``` r
+
 model$scenarios$projected = load_landuse_scenario("scenario.xlsx")
 ```
 
@@ -114,6 +118,7 @@ either by looking at the data on
 to GIS format and investigating in GIS:
 
 ``` r
+
 network_to_gis(model$networks$baseline, "baseline.gpkg")
 ```
 
@@ -123,6 +128,7 @@ from two to three lanes in each direction, and upgrades it to a
 motorway.
 
 ``` r
+
 model$networks$widen_15_501 = model$networks$baseline |>
   modify_ways(
     # US 15-501 between Pittsboro and Chapel Hill

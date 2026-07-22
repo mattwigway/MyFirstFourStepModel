@@ -10,7 +10,7 @@ OpenStreetMap PBF files, but one easy source is
 Research Triangle region is below. First, it loads the relevant
 libraries, and then the NHTS (`NHTS_PATH` should be replaced with a
 directory containing the NHTS CSV files). I filter the NHTS to only
-North Carolina households with a weekday travel day ($n = 7,146$). The
+North Carolina households with a weekday travel day ($`n=7,146`$). The
 final line estimates the model. It requires the (possibly filtered)
 NHTS, the path to the OpenStreetMap data (written as `OSM_PATH` below
 but should be replaced with the actual path), the state and a vector of
@@ -23,6 +23,7 @@ performance, which can be installed from <https://julialang.org>. Julia
 is only required for estimation; students do not need to install Julia.
 
 ``` r
+
 library(MyFirstFourStepModel)
 library(tidyverse)
 
@@ -40,6 +41,7 @@ model = estimate(nhts, OSM_PATH, "NC", c("Durham", "Orange", "Wake", "Chatham"),
 Lastly, the model can be saved to a file for distribution to students.
 
 ``` r
+
 save_model(model, "chatham_park.mf4sm")
 ```
 
@@ -59,5 +61,5 @@ Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B. Shah. 2017.
 “Julia: A Fresh Approach to Numerical Computing.” *SIAM Review* 59 (1):
 65–98. <https://doi.org/10.1137/141000671>.
 
-Federal Highway Administration. 2017. “2017 National Household Travel
-Survey.” <https://nhts.ornl.gov/downloads>.
+Federal Highway Administration. 2017. *2017 National Household Travel
+Survey*. <https://nhts.ornl.gov/downloads>.

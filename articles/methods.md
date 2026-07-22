@@ -66,8 +66,8 @@ The median trip distance comes from the NHTS. I approximate the
 crow-flies distance for each NHTS trip by dividing the network distance
 by 1.3, a factor determined by Wang et al. (2024).
 
-For intrazonal trips, I assume a travel distance of $0.52\sqrt{s}$,
-where $s$ is the area of the TAZ. This is based on a Monte Carlo
+For intrazonal trips, I assume a travel distance of $`0.52 \sqrt{s}`$,
+where $`s`$ is the area of the TAZ. This is based on a Monte Carlo
 simulation of the average distance between random points in a square.
 There are two opposing factors that bias this. TAZ’s are not square,
 increasing average travel distance. However, development within a TAZ is
@@ -87,30 +87,32 @@ simple demand model, not to produce accurate forecasts.
 ## Network assignment
 
 The network assignment uses a Frank-Wolfe traffic assignment algorithm
-(Boyles, Lownes, and Unnikrishnan 2023). First, I convert
-production-attraction format home-based trips into origin-destination
-format, using directionality factors estimated from the NHTS. I
-calculate peak hourly vehicle flows during each period using average
-vehicle occupancy for each period and trip type, and an assumed “peaking
-factor” that accounts for the proportion of traffic during the time
-period that occurs in the busiest hour—for example, I assume 45% of the
-traffic in the three-hour PM Peak period occurs during the busiest hour.
-Then, I run the assignment algorithm, with impedances based on a Bureau
-of Public Roads-style function:
-$$t_{congested} = \left( 1 + 0.6\left\lbrack \frac{f}{c} \right\rbrack^{5} \right)t_{freeflow}$$
+(Boyles et al. 2023). First, I convert production-attraction format
+home-based trips into origin-destination format, using directionality
+factors estimated from the NHTS. I calculate peak hourly vehicle flows
+during each period using average vehicle occupancy for each period and
+trip type, and an assumed “peaking factor” that accounts for the
+proportion of traffic during the time period that occurs in the busiest
+hour—for example, I assume 45% of the traffic in the three-hour PM Peak
+period occurs during the busiest hour. Then, I run the assignment
+algorithm, with impedances based on a Bureau of Public Roads-style
+function:
+``` math
+t_{\mathrm{congested}} = \left(1 + 0.6 \left[\frac{f}{c}\right] ^ 5 \right) t_{\mathrm{freeflow}} 
+```
 
-where $f$ is the predicted flow, $c$ is the link capacity, and
-$t_{congested}$ and $t_{freeflow}$ are congested and free-flow link
-travel times. The factors 0.6 and 5 are from the Southern California
-Association of Governments travel demand model (Southern California
-Association of Governments 2012).
+where $`f`$ is the predicted flow, $`c`$ is the link capacity, and
+$`t_{\mathrm{congested}}`$ and $`t_\mathrm{freeflow}`$ are congested and
+free-flow link travel times. The factors 0.6 and 5 are from the Southern
+California Association of Governments travel demand model (Southern
+California Association of Governments 2012).
 
 I derive the network from OpenStreetMap. By default, I retain only the
 most major roads—motorways, trunk, and primary roads (and associated
 ramps). Furthermore, I run the assignment algorithm only until the
 “relative gap”—a measure of the error in the estimate—is 1%, rather than
-the typically recommended 0.01% (Boyce, Ralevic-Dekic, and Bar-Gera
-2004), to improve performance.
+the typically recommended 0.01% (Boyce et al. 2004), to improve
+performance.
 
 [This work](https://projects.indicatrix.org/MyFirstFourStepModel) © 2026
 by [Matt Bhagat-Conway](https://indicatrix.org) is licensed under [CC BY
@@ -130,20 +132,18 @@ Merlin, Louis A. 2020. “A New Method Using Medians to Calibrate
 Single-Parameter Spatial Interaction Models.” *Journal of Transport and
 Land Use* 13 (1, 1): 49–70. <https://doi.org/10.5198/jtlu.2020.1614>.
 
-Puget Sound Regional Council. 2024. “Household Travel Survey Trips.”
+Puget Sound Regional Council. 2024. *Household Travel Survey Trips*.
 <https://psrc-psregcncl.hub.arcgis.com/datasets/household-travel-survey-trips/explore>.
 
-Ruggles, Steven, Sarah Flood, Matthew Sobek, Daniel Backman, Annie Chen,
-Grace Cooper, Stephanie Richards, Renae Rodgers, and Megan Schouweiler.
-2024. “IPUMS USA: Version 15.0.” <https://doi.org/10.18128/D010.V15.0>.
+Ruggles, Steven, Sarah Flood, Matthew Sobek, et al. 2024. “IPUMS USA:
+Version 15.0.” Version 15.0. <https://doi.org/10.18128/D010.V15.0>.
 
-Southern California Association of Governments. 2012. “SCAG Regional
-Travel Demand Model and 2012 Model Validation.”
+Southern California Association of Governments. 2012. *SCAG Regional
+Travel Demand Model and 2012 Model Validation*.
 
 Travel Forecasting Resource. 2020. “Destination Choice: Theoretical
-Foundations.” Travel Forecasting Resource. 2020.
-<https://tfresource.org>.
+Foundations.” Travel Forecasting Resource. <https://tfresource.org>.
 
 Wang, Shanshan, Henrik M. Bette, Michael Schreckenberg, and Thomas Guhr.
 2024. “How Much Longer Do You Have to Drive Than the Crow Has to Fly?”
-June 10, 2024. <https://doi.org/10.48550/arXiv.2406.06490>.
+Pre-published June 10. <https://doi.org/10.48550/arXiv.2406.06490>.

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Learning module • MyFirstFourStepModel</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Learning module">
 </head>
@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/methods.html">Methods and input data</a></li>
     <li><a class="dropdown-item" href="../articles/prior_work.html">Prior work</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenario creation</a></li>
+    <li><a class="dropdown-item" href="../articles/taste_of_momo.html">My First Four-Step Model</a></li>
   </ul>
 </li>
       </ul>
@@ -431,7 +432,7 @@ automatically when <code>MyFirstFourStepModel</code> is installed.</p>
 <span><span class="co">#&gt; [1] "Iteration 7 relative gap: 0.0183"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0133"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0108"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 39.0 seconds at iteration 10 with relative gap 0.0077"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "Assignment converged in 43.7 seconds at iteration 10 with relative gap 0.0077"</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">baseline</span>, <span class="va">pm_network_flows</span><span class="op">)</span></span></code></pre></div>
 <p><img src="classroom_implementation_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="Map of forecast PM Peak congestion, with heavy congestion on some major routes and light congestion elsewhere." width="700"></p>
@@ -495,7 +496,7 @@ again map congestion and compare to baseline conditions.</p>
 <span><span class="co">#&gt; [1] "Iteration 8 relative gap: 0.0198"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 9 relative gap: 0.0115"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 10 relative gap: 0.0105"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 44.5 seconds at iteration 11 with relative gap 0.0064"</span></span>
+<span><span class="co">#&gt; [1] "Assignment converged in 52.2 seconds at iteration 11 with relative gap 0.0064"</span></span>
 <span></span>
 <span><span class="co"># This maps the congestion under the scenario, and also labels the location of Chatham Park</span></span>
 <span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">baseline</span>, <span class="va">cp_link_flows</span><span class="op">)</span> <span class="op">+</span></span>
@@ -560,7 +561,7 @@ widened highway:</p>
 <span><span class="co">#&gt; [1] "Iteration 13 relative gap: 0.0109"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 14 relative gap: 0.0133"</span></span>
 <span><span class="co">#&gt; [1] "Iteration 15 relative gap: 0.0102"</span></span>
-<span><span class="co">#&gt; [1] "Assignment converged in 69.6 seconds at iteration 16 with relative gap 0.0089"</span></span>
+<span><span class="co">#&gt; [1] "Assignment converged in 75.3 seconds at iteration 16 with relative gap 0.0089"</span></span>
 <span></span>
 <span><span class="co"># This maps the congestion under the scenario (Extra credit)</span></span>
 <span><span class="fu"><a href="../reference/map_congestion.html">map_congestion</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span><span class="op">$</span><span class="va">networks</span><span class="op">$</span><span class="va">widen_15_501</span>, <span class="va">widen_link_flows</span><span class="op">)</span> <span class="op">+</span></span>
@@ -587,7 +588,7 @@ Bhagat-Conway</a> is licensed under
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-bureauoftransportationstatistics_2017_2024" class="csl-entry">
 Bureau of Transportation Statistics. 2024. <span>“2017 <span>Local Area
 Transportation Characteristics</span> for <span>Households
@@ -601,11 +602,11 @@ Complex Systems: 1695. <a href="https://igraph.org" class="external-link">https:
 <div id="ref-downs_still_2004" class="csl-entry">
 Downs, Anthony. 2004. <em>Still Stuck in Traffic: Coping with Peak-Hour
 Traffic Congestion</em>. James <span>A</span>. <span>Johnson</span>
-Metro Series. Washington, D.C: Brookings Institution Press.
+Metro Series. Brookings Institution Press.
 </div>
 <div id="ref-epstein_why_2008" class="csl-entry">
 Epstein, J M. 2008. <span>“Why Model?”</span> <em>Journal of Artificial
-Societies and Social Simulation</em>, January. <a href="http://jasss.soc.surrey.ac.uk/11/4/12.html" class="external-link">http://jasss.soc.surrey.ac.uk/11/4/12.html</a>.
+Societies and Social Simulation</em>, January 1. <a href="http://jasss.soc.surrey.ac.uk/11/4/12.html" class="external-link">http://jasss.soc.surrey.ac.uk/11/4/12.html</a>.
 </div>
 <div id="ref-klabnickRustProgrammingLanguage2025" class="csl-entry">
 Klabnick, Steve, Carol Nichols, Chris Krycho, and Rust Community. 2025.
@@ -622,19 +623,17 @@ Hall/CRC</span>. <a href="https://doi.org/10.1201/9780429459016" class="external
 </div>
 <div id="ref-r_2026" class="csl-entry">
 R Core Team. 2026. <em>R: A Language and Environment for Statistical
-Computing</em>. Vienna, Austria: R Foundation for Statistical Computing.
-<a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
+Computing</em>. R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
 <div id="ref-reimert_extendr_2024" class="csl-entry">
-Reimert, Mossa Merhi, Josiah D. Parry, Matt Denwood, Maya Katrin
-Gussmann, Claus O. Wilke, Ilia Kosenkov, Michael Milton, and Amy
-Thomason. 2024. <span>“Extendr: <span>Frictionless</span> Bindings for
-<span>R</span> and <span>Rust</span>.”</span> <em>Journal of Open Source
-Software</em> 9 (99): 6394. <a href="https://doi.org/10.21105/joss.06394" class="external-link">https://doi.org/10.21105/joss.06394</a>.
+Reimert, Mossa Merhi, Josiah D. Parry, Matt Denwood, et al. 2024.
+<span>“Extendr: <span>Frictionless</span> Bindings for <span>R</span>
+and <span>Rust</span>.”</span> <em>Journal of Open Source Software</em>
+9 (99): 6394. <a href="https://doi.org/10.21105/joss.06394" class="external-link">https://doi.org/10.21105/joss.06394</a>.
 </div>
 <div id="ref-nnet" class="csl-entry">
 Venables, W. N., and B. D. Ripley. 2002. <em>Modern Applied Statistics
-with <span>S</span></em>. Fourth. New York: Springer. <a href="https://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
+with <span>S</span></em>. Fourth. Springer. <a href="https://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
 </div>
 <div id="ref-tigris" class="csl-entry">
 Walker, Kyle. 2024. <em>Tigris: Load Census TIGER/Line Shapefiles</em>.
@@ -646,8 +645,7 @@ Boundary and Attribute Data as ’Tidyverse’ and ’Sf’-Ready Data
 Frames</em>. <a href="https://CRAN.R-project.org/package=tidycensus" class="external-link">https://CRAN.R-project.org/package=tidycensus</a>.
 </div>
 <div id="ref-tidyverse" class="csl-entry">
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
-D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
+Wickham, Hadley, Mara Averick, Jennifer Bryan, et al. 2019.
 <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span>
 <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686" class="external-link">https://doi.org/10.21105/joss.01686</a>.
 </div>
@@ -669,7 +667,7 @@ Files</em>. <a href="https://CRAN.R-project.org/package=readxl" class="external-
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -13,3 +13,5 @@
   work](https://projects.indicatrix.org/MyFirstFourStepModel/articles/prior_work.md):
 - [Scenario
   creation](https://projects.indicatrix.org/MyFirstFourStepModel/articles/scenarios.md):
+- [My First Four-Step
+  Model](https://projects.indicatrix.org/MyFirstFourStepModel/articles/taste_of_momo.md):

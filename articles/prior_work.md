@@ -30,10 +30,10 @@ transportation engineering education (Hurwitz et al. 2015). Liao, Liu,
 and Levinson (2009) built a web-based traffic simulation tool to help
 students experiment with signal timing practices. The interactive A/B
 Street traffic-simulation software has likewise been used in
-undergraduate courses at Arizona State University (Carlino, Li, and Kirk
-2024). An economic simulation of airline operations has also been
-applied to help budding engineers understand airline operations (Luken
-et al. 2011).
+undergraduate courses at Arizona State University (Carlino et al. 2024).
+An economic simulation of airline operations has also been applied to
+help budding engineers understand airline operations (Luken et al.
+2011).
 
 Computer-based simulations have also been applied in planning, although
 perhaps less frequently. Simulations in planning classrooms often take
@@ -46,25 +46,25 @@ system dynamics to support enjoyable gameplay rather than educational
 outcomes (Gaber 2007; Walker 2009). The advantage is that commercial
 games are more likely to receive significant upfront investment as well
 as continued support, a significant problem with games developed for
-educational purposes (Söbke, Harder, and Planck-Wiedenbeck 2018).
+educational purposes (Söbke et al. 2018).
 
 Public education and communication are another arena of planning where
 gamification and simulation have been deployed. The *Future Energy
 Chicago* exhibit at Chicago’s Museum of Science and Industry engaged
 participants in a several-hour, facilitated game to improve energy
 outcomes. Survey data suggests that the game improved some aspects of
-willingness to conserve energy (Applebaum, Price, and Foster 2021). The
-CityScope platform provides a hands-on physical environment wherein
-members of the public can make land-use changes to a Lego model of a
-neighborhood and see computer simulation output regarding transport and
-energy consumption in real time (Alonso et al. 2018). The CoAXs platform
-allows meeting participants to see how proposed Bus Rapid Transit routes
-would affect their ability and the ability of other citizens to reach
-key destinations, and was found to support improved learning and
-discussion outcomes among participants (Stewart and Zegras 2016; Stewart
-2017). All of these simulations are perforce somewhat simpler than might
-be used in a classroom environment, since they target the general public
-rather than future practitioners.
+willingness to conserve energy (Applebaum et al. 2021). The CityScope
+platform provides a hands-on physical environment wherein members of the
+public can make land-use changes to a Lego model of a neighborhood and
+see computer simulation output regarding transport and energy
+consumption in real time (Alonso et al. 2018). The CoAXs platform allows
+meeting participants to see how proposed Bus Rapid Transit routes would
+affect their ability and the ability of other citizens to reach key
+destinations, and was found to support improved learning and discussion
+outcomes among participants (Stewart and Zegras 2016; Stewart 2017). All
+of these simulations are perforce somewhat simpler than might be used in
+a classroom environment, since they target the general public rather
+than future practitioners.
 
 Teaching travel demand modeling differs from other places where
 simulations have been deployed in transportation education. Travel
@@ -76,13 +76,13 @@ rudimentary understanding of the theory and mathematics involved.
 
 The only travel demand modeling software designed specifically for
 education I am aware of is the now-defunct Agent-Based Demand and
-Assignment Model (ADAM) software (Zhu, Xie, and Levinson 2011). ADAM
-implemented a simple agent-based model for transportation education.
-This model focused on a network assignment for simple networks; it
-started with production (workers) and attractions (jobs), and students
-modified the network to reduce congestion. Likely due to computational
-limits in place at the time, it worked with a very simple network of
-only 24 nodes and 68 links.
+Assignment Model (ADAM) software (Zhu et al. 2011). ADAM implemented a
+simple agent-based model for transportation education. This model
+focused on a network assignment for simple networks; it started with
+production (workers) and attractions (jobs), and students modified the
+network to reduce congestion. Likely due to computational limits in
+place at the time, it worked with a very simple network of only 24 nodes
+and 68 links.
 
 I focus on the ubiquitous four-step model in my introductory courses.
 The four-step model was one of the earliest travel demand models
@@ -101,12 +101,11 @@ by [Matt Bhagat-Conway](https://indicatrix.org) is licensed under [CC BY
 Abt, Clark C. 1970. *Serious Games*. New York, Viking Press.
 <http://archive.org/details/seriousgames0000abtc>.
 
-Alonso, Luis, Yan Ryan Zhang, Arnaud Grignard, Ariel Noyman, Yasushi
-Sakai, Markus ElKatsha, Ronan Doorley, and Kent Larson. 2018.
-“CityScope: A Data-Driven Interactive Simulation Tool for Urban Design.
-Use Case Volpe.” In *Unifying Themes in Complex Systems IX*, edited by
-Alfredo J. Morales, Carlos Gershenson, Dan Braha, Ali A. Minai, and
-Yaneer Bar-Yam, 253–61. Cham: Springer International Publishing.
+Alonso, Luis, Yan Ryan Zhang, Arnaud Grignard, et al. 2018. “CityScope:
+A Data-Driven Interactive Simulation Tool for Urban Design. Use Case
+Volpe.” In *Unifying Themes in Complex Systems IX*, edited by Alfredo J.
+Morales, Carlos Gershenson, Dan Braha, Ali A. Minai, and Yaneer Bar-Yam.
+Springer International Publishing.
 <https://doi.org/10.1007/978-3-319-96661-8_27>.
 
 Applebaum, Lauren R., C. Aaron Price, and Anjylla Y. Foster. 2021.
@@ -114,12 +113,12 @@ Applebaum, Lauren R., C. Aaron Price, and Anjylla Y. Foster. 2021.
 Literacy.” *Journal of Museum Education* 46 (1): 113–26.
 <https://doi.org/10.1080/10598650.2020.1858268>.
 
-Carlino, Dustin, Yuwen Li, and Michael Kirk. 2024. “A/B Street.” 2024.
+Carlino, Dustin, Yuwen Li, and Michael Kirk. 2024. “A/B Street.”
 <https://a-b-street.github.io/docs/index.html>.
 
-Federal Highway Administration. 1977. “PLANPAC/BACKPAC General
+Federal Highway Administration. 1977. *PLANPAC/BACKPAC General
 Information Manual : Computer Programs for Urban Transportation
-Planning.” <https://hdl.handle.net/2027/ien.35556021025184>.
+Planning*. <https://hdl.handle.net/2027/ien.35556021025184>.
 
 Gaber, John. 2007. “Simulating Planning: SimCity as a Pedagogical Tool.”
 *Journal of Planning Education and Research* 27 (2): 113–21.
@@ -138,8 +137,8 @@ Khan, Tayyeb Ahmed, and Xin Zhao. 2021. “Perceptions of Students for a
 Gamification Approach: Cities Skylines as a Pedagogical Tool in Urban
 Planning Education.” In *Responsible AI and Analytics for an Ethical and
 Inclusive Digitized Society*, edited by Denis Dennehy, Anastasia Griva,
-Nancy Pouloudi, Yogesh K. Dwivedi, Ilias Pappas, and Matti Mäntymäki,
-763–73. Cham: Springer International Publishing.
+Nancy Pouloudi, Yogesh K. Dwivedi, Ilias Pappas, and Matti Mäntymäki.
+Springer International Publishing.
 <https://doi.org/10.1007/978-3-030-85447-8_64>.
 
 Liao, Chen-Fu, Henry X. Liu, and David M. Levinson. 2009. “Simulating
@@ -150,8 +149,8 @@ Engaging Undergraduate Students in Transportation Studies.”
 
 Luken, Brittany, Susan Hotle, Meltem Alemdar, and Laurie Garrow. 2011.
 “A Case Study: Educating Transportation Engineers with Simulation
-Software.” In *2011 ASEE Annual Conference & Exposition Proceedings*,
-22.19.1–10. Vancouver, BC: ASEE Conferences.
+Software.” *2011 ASEE Annual Conference & Exposition Proceedings*
+(Vancouver, BC), June, 22.19.1–10.
 <https://doi.org/10.18260/1-2--17301>.
 
 McGaghie, William C, S Barry Issenberg, Emil R Petrusa, and Ross J
@@ -165,17 +164,16 @@ Urban Planning.” *Journal of the American Institute of Planners* 32 (1):
 
 Mladenovic, Milos, and Aleksandar Trifunovic. 2014. “The Shortcomings of
 the Conventional Four Step Travel Demand Forecasting Process.” *Journal
-of Road and Traffic Engineering*, January.
+of Road and Traffic Engineering*, January 1.
 
-Paget-Seekins, Laurel. 2021. “Transform Transit.” Laurel in Transit.
-October 20, 2021. <https://laurelintransit.com/transform-transit/>.
+Paget-Seekins, Laurel. 2021. “Transform Transit.” Laurel in Transit,
+October 20. <https://laurelintransit.com/transform-transit/>.
 
 Söbke, Heinrich, Raimo Harder, and Uwe Planck-Wiedenbeck. 2018. “Two
 Decades of Traffic System Education Using the Simulation Game MOBILITY.”
 In *Serious Games*, edited by Stefan Göbel, Augusto Garcia-Agundez,
-Thomas Tregel, Minhua Ma, Jannicke Baalsrud Hauge, Manuel Oliveira, Tim
-Marsh, and Polona Caserman, 43–53. Cham: Springer International
-Publishing. <https://doi.org/10.1007/978-3-030-02762-9_6>.
+Thomas Tregel, et al. Springer International Publishing.
+<https://doi.org/10.1007/978-3-030-02762-9_6>.
 
 Stewart, Anson F. 2017. “Mapping Transit Accessibility: Possibilities
 for Public Participation.” *Transportation Research Part A* 104
@@ -184,7 +182,7 @@ for Public Participation.” *Transportation Research Part A* 104
 Stewart, Anson F, and P Christopher Zegras. 2016. “CoAXs: A
 Collaborative Accessibility-based Stakeholder Engagement System for
 Communicating Transport Impacts.” *Research in Transportation
-Economics*, September, 1–11.
+Economics*, September 30, 1–11.
 <https://doi.org/10.1016/j.retrec.2016.07.016>.
 
 Turochy, Rod E. 2013. “Structuring the Content of the First Course in
@@ -192,17 +190,15 @@ Transportation Engineering: Perspectives of Engineers and Educators.”
 *Journal of Professional Issues in Engineering Education & Practice* 139
 (3): 206–10. <https://doi.org/10.1061/(ASCE)EI.1943-5541.0000149>.
 
-Walker. 2009. “Did Sim City Make Us Stupid?” Human Transit. June 8,
-2009.
+Walker. 2009. “Did Sim City Make Us Stupid?” Human Transit, June 8.
 <https://humantransit.org/2009/06/did-sim-city-make-us-stupid.html>.
 
 Weiner, Edward. 2013. *Urban Transportation Planning in the United
-States: History, Policy, and Practice*. New York, NY: Springer New York.
+States: History, Policy, and Practice*. Springer New York.
 <https://doi.org/10.1007/978-1-4614-5407-6>.
 
 Weir, Jennifer Anne. 2004. “Active Learning in Transportation
-Engineering Education.” PhD thesis, United States – Massachusetts:
-Worcester Polytechnic Institute.
+Engineering Education.” PhD thesis, Worcester Polytechnic Institute.
 <https://www.proquest.com/docview/305366413/abstract/FD41D00F66B9407EPQ/1>.
 
 Zhou, Jiangping, and Lisa Schweitzer. 2009. “Transportation Planning

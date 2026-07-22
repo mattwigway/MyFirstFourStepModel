@@ -1,5 +1,5 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   classroom_implementation: classroom_implementation.html
@@ -8,7 +8,8 @@ articles:
   methods: methods.html
   prior_work: prior_work.html
   scenarios: scenarios.html
-last_built: 2026-03-13T21:11Z
+  articles/taste_of_momo: taste_of_momo.html
+last_built: 2026-07-22T19:59Z
 urls:
   reference: https://projects.indicatrix.org/MyFirstFourStepModel/reference
   article: https://projects.indicatrix.org/MyFirstFourStepModel/articles

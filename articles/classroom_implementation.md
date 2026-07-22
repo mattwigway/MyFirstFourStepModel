@@ -94,7 +94,7 @@ percentile=7.45). 20 students (48%) attempted the two-point extra credit
 section looking at highway widening. Unfortunately, this class did not
 cover travel demand modeling prior to the introduction of My First
 Four-Step Model, so it is not possible to evaluate how the tool has
-changed learning outcomes.[¹](#fn1)
+changed learning outcomes.[^1]
 
 The goal is to enable students in all specializations, not just
 transportation, to understand basic demand model structure and have
@@ -112,6 +112,7 @@ Model is simple; students run the following R code in the console to
 install the package:
 
 ``` r
+
 install.packages("MyFirstFourStepModel",
   repos = c("https://mattwigway.r-universe.dev", getOption("repos")))
 ```
@@ -132,6 +133,7 @@ require a Rust development environment, but to install from Github you
 would use the following code:
 
 ``` r
+
 devtools::install_github("mattwigway/MyFirstFourStepModel")
 ```
 
@@ -148,6 +150,7 @@ with the model for the Research Triangle, which you are welcome to use
 in your own teaching.
 
 ``` r
+
 library(MyFirstFourStepModel)
 model = load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```
@@ -164,6 +167,7 @@ view the trip generation model for AM Peak home-based work trips, using
 the code below, and interpret the coefficients.
 
 ``` r
+
 summary(model$production_functions$`AM Peak`$HBW)
 #> 
 #> Call:
@@ -196,6 +200,7 @@ I similarly have them interpret one of the regressions for attraction
 functions:
 
 ``` r
+
 summary(model$attraction_functions$`AM Peak`$HBW)
 #> 
 #> Call:
@@ -226,6 +231,7 @@ generation step. True to the design goals, this requires only a single
 function.
 
 ``` r
+
 productions_attractions = trip_generation(model, model$scenarios$baseline)
 ```
 
@@ -233,6 +239,7 @@ Students can then map the number of trips produced in each Census tract
 in the region using the `map_trip_generation` function as shown below.
 
 ``` r
+
 map_trip_generation(
   model,
   productions_attractions,
@@ -249,6 +256,7 @@ areas.](classroom_implementation_files/figure-html/unnamed-chunk-8-1.png)
 I likewise have them map the trips attracted:
 
 ``` r
+
 map_trip_generation(
   model,
   productions_attractions,
@@ -270,6 +278,7 @@ trips. I first have students print the parameters using the code below,
 and interpret them.
 
 ``` r
+
 model$distribution_betas
 #> $HBW
 #> [1] -1.23908
@@ -284,6 +293,7 @@ model$distribution_betas
 Then, they can run the trip distribution step with the following code:
 
 ``` r
+
 flows = trip_distribution(
   model,
   model$scenarios$baseline,
@@ -299,6 +309,7 @@ pockets of activity in further-flung large employment centers (e.g.,
 Raleigh).
 
 ``` r
+
 map_trip_distribution(
   model,
   flows,
@@ -325,6 +336,7 @@ regression, and have students print the mode choice model using the code
 below, and interpret a few coefficients :
 
 ``` r
+
 summary(model$mode_choice_models$HB)
 #> Call:
 #> multinom(formula = choice ~ HTRESDN + dist_km + factor(time_period) + 
@@ -366,6 +378,7 @@ I then have students run the mode choice step and calculate mode shares,
 using the code below:
 
 ``` r
+
 flows_by_mode = mode_choice(model, model$scenarios$baseline, flows)
 get_mode_shares(flows_by_mode)
 #> # A tibble: 1 × 4
@@ -387,6 +400,7 @@ efficiently process routing results; this code is pre-compiled and will
 be installed automatically when `MyFirstFourStepModel` is installed.
 
 ``` r
+
 pm_network_flows = network_assignment(
   model,
   model$scenarios$baseline,
@@ -403,10 +417,11 @@ pm_network_flows = network_assignment(
 #> [1] "Iteration 7 relative gap: 0.0183"
 #> [1] "Iteration 8 relative gap: 0.0133"
 #> [1] "Iteration 9 relative gap: 0.0108"
-#> [1] "Assignment converged in 39.0 seconds at iteration 10 with relative gap 0.0077"
+#> [1] "Assignment converged in 43.7 seconds at iteration 10 with relative gap 0.0077"
 ```
 
 ``` r
+
 map_congestion(model, model$networks$baseline, pm_network_flows)
 ```
 
@@ -424,6 +439,7 @@ Transportation Statistics 2024), so 7 million in the PM Peak is
 reasonable.
 
 ``` r
+
 estimate_vmt(model, model$networks$baseline, pm_network_flows, "PM Peak")
 #> [1] 7790382
 ```
@@ -442,6 +458,7 @@ replacing `model$scenarios$baseline` with
 congestion and compare to baseline conditions.
 
 ``` r
+
 cp_productions_attractions = trip_generation(
   model,
   model$scenarios$chatham_park
@@ -477,7 +494,7 @@ cp_link_flows = network_assignment(
 #> [1] "Iteration 8 relative gap: 0.0198"
 #> [1] "Iteration 9 relative gap: 0.0115"
 #> [1] "Iteration 10 relative gap: 0.0105"
-#> [1] "Assignment converged in 44.5 seconds at iteration 11 with relative gap 0.0064"
+#> [1] "Assignment converged in 52.2 seconds at iteration 11 with relative gap 0.0064"
 
 # This maps the congestion under the scenario, and also labels the location of Chatham Park
 map_congestion(model, model$networks$baseline, cp_link_flows) +
@@ -509,6 +526,7 @@ I have students run the code below to run the model with both the
 land-use scenario and the widened highway:
 
 ``` r
+
 widen_productions_attractions = trip_generation(
   model,
   model$scenarios$chatham_park
@@ -548,7 +566,7 @@ widen_link_flows = network_assignment(
 #> [1] "Iteration 13 relative gap: 0.0109"
 #> [1] "Iteration 14 relative gap: 0.0133"
 #> [1] "Iteration 15 relative gap: 0.0102"
-#> [1] "Assignment converged in 69.6 seconds at iteration 16 with relative gap 0.0089"
+#> [1] "Assignment converged in 75.3 seconds at iteration 16 with relative gap 0.0089"
 
 # This maps the congestion under the scenario (Extra credit)
 map_congestion(model, model$networks$widen_15_501, widen_link_flows) +
@@ -587,11 +605,11 @@ Complex Network Research.” *InterJournal* Complex Systems: 1695.
 <https://igraph.org>.
 
 Downs, Anthony. 2004. *Still Stuck in Traffic: Coping with Peak-Hour
-Traffic Congestion*. James A. Johnson Metro Series. Washington, D.C:
-Brookings Institution Press.
+Traffic Congestion*. James A. Johnson Metro Series. Brookings
+Institution Press.
 
 Epstein, J M. 2008. “Why Model?” *Journal of Artificial Societies and
-Social Simulation*, January.
+Social Simulation*, January 1.
 [http://jasss.soc.surrey.ac.uk/11/4/12.html](http://jasss.soc.surrey.ac.uk/11/4/12.md).
 
 Klabnick, Steve, Carol Nichols, Chris Krycho, and Rust Community. 2025.
@@ -605,17 +623,15 @@ applications in R*. Chapman and Hall/CRC.
 <https://doi.org/10.1201/9780429459016>.
 
 R Core Team. 2026. *R: A Language and Environment for Statistical
-Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+Computing*. R Foundation for Statistical Computing.
 <https://www.R-project.org/>.
 
-Reimert, Mossa Merhi, Josiah D. Parry, Matt Denwood, Maya Katrin
-Gussmann, Claus O. Wilke, Ilia Kosenkov, Michael Milton, and Amy
-Thomason. 2024. “Extendr: Frictionless Bindings for R and Rust.”
-*Journal of Open Source Software* 9 (99): 6394.
-<https://doi.org/10.21105/joss.06394>.
+Reimert, Mossa Merhi, Josiah D. Parry, Matt Denwood, et al. 2024.
+“Extendr: Frictionless Bindings for R and Rust.” *Journal of Open Source
+Software* 9 (99): 6394. <https://doi.org/10.21105/joss.06394>.
 
 Venables, W. N., and B. D. Ripley. 2002. *Modern Applied Statistics with
-S*. Fourth. New York: Springer. <https://www.stats.ox.ac.uk/pub/MASS4/>.
+S*. Fourth. Springer. <https://www.stats.ox.ac.uk/pub/MASS4/>.
 
 Walker, Kyle. 2024. *Tigris: Load Census TIGER/Line Shapefiles*.
 <https://CRAN.R-project.org/package=tigris>.
@@ -624,17 +640,14 @@ Walker, Kyle, and Matt Herman. 2024. *Tidycensus: Load US Census
 Boundary and Attribute Data as ’Tidyverse’ and ’Sf’-Ready Data Frames*.
 <https://CRAN.R-project.org/package=tidycensus>.
 
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
-D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
-“Welcome to the tidyverse.” *Journal of Open Source Software* 4 (43):
-1686. <https://doi.org/10.21105/joss.01686>.
+Wickham, Hadley, Mara Averick, Jennifer Bryan, et al. 2019. “Welcome to
+the tidyverse.” *Journal of Open Source Software* 4 (43): 1686.
+<https://doi.org/10.21105/joss.01686>.
 
 Wickham, Hadley, and Jennifer Bryan. 2023. *Readxl: Read Excel Files*.
 <https://CRAN.R-project.org/package=readxl>.
 
-------------------------------------------------------------------------
-
-1.  This use of student grade data was reviewed and approved by the
+[^1]: This use of student grade data was reviewed and approved by the
     University of North Carolina at Chapel Hill Registrar and
     Institutional Review Board (approval 24-2069). The requirement for
     consent was waived due to the aggregate nature of the data.
