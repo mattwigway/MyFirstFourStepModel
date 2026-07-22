@@ -33,7 +33,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, any::quarto, local::.
+          extra-packages: any::pkgdown, any::quarto, any::tidyverse, any::gridExtra, any::gt, any::sf, any::local::.
           needs: website
   
       - uses: quarto-dev/quarto-actions/setup@v2
