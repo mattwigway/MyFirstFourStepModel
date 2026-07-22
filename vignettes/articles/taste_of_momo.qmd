@@ -13,7 +13,7 @@ format:
         height: 1080
         logo: UNC_logo_RGB.png
         slide-number: true
-        html-math-method: katex
+        html-math-method: mathjax
         footer: projects.indicatrix.org/MyFirstFourStepModel
 execute:
     eval: true
@@ -87,7 +87,7 @@ library(sf)
 #| include: false
 #| echo: false
 library(MyFirstFourStepModel)
-model <- load_model("https://files.indicatrix.org/rdu_chatham.model")
+model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```
 
 ```{r}
@@ -99,7 +99,7 @@ install.packages('MyFirstFourStepModel', repos = c('https://mattwigway.r-univers
 
 # model loading
 library(MyFirstFourStepModel)
-model <- load_model("https://files.indicatrix.org/rdu_chatham.model")
+model <- load_model("https://files.indicatrix.org/chatham_park.mf4sm")
 ```
 
 ## Running the model: trip generation
